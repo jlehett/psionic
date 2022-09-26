@@ -1,0 +1,22 @@
+{
+  "name": "psionic",
+  "version": "0.0.1",
+  "description": "Psionic is a collection of packages designed to make web development more ergonomic, fun, and maintainable.",
+  "main": "index.js",
+  "scripts": {
+    "generate-docs": "jsdoc --configure jsdoc.json --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jlehett/psionic.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jlehett/psionic/issues"
+  },
+  "homepage": "https://github.com/jlehett/psionic#readme",
+  "devDependencies": {
+    "psionic-doc-gen": "^2.7.3"
+  }
+}

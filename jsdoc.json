@@ -1,0 +1,33 @@
+{
+    "source": {
+        "include": ["lib", "package.json", "README.md"],
+        "includePattern": ".js$",
+        "excludePattern": "(node_modules/|docs)"
+    },
+    "plugins": [
+        "plugins/markdown",
+        "category",
+        "component",
+        "load",
+        "typescript"
+    ],
+    "opts": {
+        "encoding": "utf8",
+        "template": "node_modules/psionic-doc-gen",
+        "destination": "docs/",
+        "recurse": true,
+        "verbose": true
+    },
+    "templates": {
+        "search": true,
+        "better-docs": {
+            "name": "Psionic"
+        }
+    },
+    "markdown": {
+        "hardwrap": false,
+        "idInHeadings": true,
+        "tags": ["load"]
+    },
+    "sourceType": "module"
+}
