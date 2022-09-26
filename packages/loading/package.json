@@ -1,0 +1,39 @@
+{
+  "name": "@psionic/loading",
+  "version": "0.0.1",
+  "description": "Package full of loading utilities.",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "tests": "tests"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "accesss": "public"
+  },
+  "scripts": {
+    "build": "npx babel src --out-dir lib",
+    "test": "npm run build && mocha -r @babel/register tests",
+    "prepublishOnly": "npm run test"
+  },
+  "keywords": [
+    "psionic",
+    "loading",
+    "utility"
+  ],
+  "author": "John Tanner Lehett",
+  "license": "ISC",
+  "dependencies": {
+    "core-js": "^3.25.3",
+    "regenerator-runtime": "^0.13.9"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.18.10",
+    "@babel/core": "^7.19.1",
+    "@babel/preset-env": "^7.19.1",
+    "@babel/register": "^7.18.9",
+    "mocha": "^10.0.0"
+  }
+}
