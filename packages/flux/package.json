@@ -11,7 +11,7 @@
     "lib"
   ],
   "publishConfig": {
-    "accesss": "public"
+    "access": "public"
   },
   "scripts": {
     "build": "npx babel src --out-dir lib",
@@ -36,7 +36,7 @@
     "@babel/preset-env": "7.19.1",
     "@babel/register": "7.18.9",
     "chai": "4.3.6",
-    "delay": "^5.0.0",
+    "delay": "5.0.0",
     "mocha": "10.0.0"
   }
 }

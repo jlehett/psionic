@@ -84,6 +84,13 @@ class FluxCache {
      */
     #startStaleTimerOnLastFetchResolve = false;
 
+    /**
+     * Array of dependencies for the FluxCache; if any of the dependencies becomes stale, then this cache also becomes stale.
+     * @private
+     * @type {Array<FluxCache | FluxState>}
+     */
+    #dependencies = [];
+
     //#endregion
 
     //#region Constructor
@@ -110,6 +117,7 @@ class FluxCache {
 
         this.#staleAfterTime = staleAfter || null;
         this.#startStaleTimerOnLastFetchResolve = startStaleTimerOnLastFetchResolve;
+        this.#dependencies = dependencies;
 
         if (fetchOnInit) {
             this.fetch();

@@ -1,11 +1,11 @@
-# `@psionic/loading`
+# `@psionic/flux`
 
-#### <b>A collection of ergonomic utilities for loading operations</b>
+#### <b>A collection of ergonomic utilities for loading operations.</b>
 
 ## Installation
 
-Install the `@psionic/loading` NPM module:
+Install the `@psionic/flux` NPM module:
 
 ```
-$ npm install @psionic/loading
+$ npm install @psionic/flux
 ```

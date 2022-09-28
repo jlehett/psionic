@@ -1,3 +1,3 @@
-# @psionic/loading
+# @psionic/flux
 
 ## 0.0.1

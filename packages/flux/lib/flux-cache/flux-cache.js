@@ -57,6 +57,8 @@ var _staleAfterTime = /*#__PURE__*/new WeakMap();
 
 var _startStaleTimerOnLastFetchResolve = /*#__PURE__*/new WeakMap();
 
+var _dependencies = /*#__PURE__*/new WeakMap();
+
 var _performExternalFetch = /*#__PURE__*/new WeakSet();
 
 var _getCopyOfDataFromCache = /*#__PURE__*/new WeakSet();
@@ -136,6 +138,12 @@ var FluxCache = /*#__PURE__*/function () {
    * @private
    * @type {boolean}
    */
+
+  /**
+   * Array of dependencies for the FluxCache; if any of the dependencies becomes stale, then this cache also becomes stale.
+   * @private
+   * @type {Array<FluxCache | FluxState>}
+   */
   //#endregion
   //#region Constructor
 
@@ -204,6 +212,11 @@ var FluxCache = /*#__PURE__*/function () {
       value: false
     });
 
+    _classPrivateFieldInitSpec(this, _dependencies, {
+      writable: true,
+      value: []
+    });
+
     // Force the fetching function to be asynchronous for consistency
     _classPrivateFieldSet(this, _fetchFn, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
       return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -227,6 +240,8 @@ var FluxCache = /*#__PURE__*/function () {
     _classPrivateFieldSet(this, _staleAfterTime, staleAfter || null);
 
     _classPrivateFieldSet(this, _startStaleTimerOnLastFetchResolve, startStaleTimerOnLastFetchResolve);
+
+    _classPrivateFieldSet(this, _dependencies, dependencies);
 
     if (fetchOnInit) {
       this.fetch();
