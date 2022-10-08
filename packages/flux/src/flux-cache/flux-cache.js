@@ -7,7 +7,7 @@ import cloneDeep from 'lodash/cloneDeep';
 //#region Classes
 
 /**
- * Class representing a singular cache of data. `DataCache`s store cache-able data which can be marked as stale
+ * Class representing a singular cache of data. DataCache`s store cache-able data which can be marked as stale
  * after a set amount of time, and set to auto-renew after a set amount of time, if desired.
  *
  * `DataCache`s are initialized with a function that can be used to fetch the data it is intended to hold. These

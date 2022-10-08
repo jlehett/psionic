@@ -1,26 +1,32 @@
 import { expect } from 'chai';
 import delay from 'delay';
-import { FluxCache } from '../lib';
+import { createFluxCache, _UNSAFE_nukeFluxManager } from '../lib';
 
 const delayTime = 50;
 
 describe('FluxCache', () => {
 
+    beforeEach(() => {
+        _UNSAFE_nukeFluxManager();
+    });
+
     it('is able to retrieve data on the first `get` call', async () => {
-        const profileCache = new FluxCache(
-            () => ({ name: 'John' }),
-        );
+        const profileCache = createFluxCache({
+            id: 'profileCache',
+            fetch: () => ({ name: 'John' }),
+        });
         const profile = await profileCache.get();
         expect(profile).to.deep.equal({ name: 'John' });
     });
 
     it('is able to cache data after the first `get` call', async () => {
-        const profileCache = new FluxCache(
-            async () => {
+        const profileCache = createFluxCache({
+            id: 'profileCache',
+            fetch: async () => {
                 await delay(delayTime);
                 return { name: 'John' };
             },
-        );
+        });
         const firstHitStartTime = new Date();
         await profileCache.get();
         const firstHitEndTime = new Date();
@@ -32,32 +38,31 @@ describe('FluxCache', () => {
         const secondHitTimeElapsed = secondHitEndTime - secondHitStartTime;
 
         // Expect the results to be correct
-        expect(secondProfileHit).to.deep.equal({ name: 'John' })
+        expect(secondProfileHit).to.deep.equal({ name: 'John' }) &&
         // And expect the time the first hit took to be greater than the delay time
-        && expect(firstHitTimeElapsed).to.be.above(delayTime-1, `First hit took ${firstHitTimeElapsed}ms`)
+        expect(firstHitTimeElapsed).to.be.above(delayTime-1, `First hit took ${firstHitTimeElapsed}ms`) &&
         // And expect the time the second hit took to be less than the delay time
-        && expect(secondHitTimeElapsed).to.be.below(delayTime, `Second hit took ${secondHitTimeElapsed}ms`);
+        expect(secondHitTimeElapsed).to.be.below(delayTime, `Second hit took ${secondHitTimeElapsed}ms`);
     });
 
     it('is able to automatically mark the cache as stale after the set amount of time', async () => {
-        const profileCache = new FluxCache(
-            () => ({ name: 'John' }),
-            {
-                staleAfter: delayTime,
-            }
-        );
-        const firstStaleQuery = profileCache.getStale();
+        const profileCache = createFluxCache({
+            id: 'profileCache',
+            fetch: async () => ({ name: 'John' }),
+            staleAfter: delayTime,
+        });
+        const firstStaleQuery = profileCache.stale;
         await profileCache.get();
-        const secondStaleQuery = profileCache.getStale();
+        const secondStaleQuery = profileCache.stale;
         await delay(delayTime);
-        const thirdStaleQuery = profileCache.getStale();
+        const thirdStaleQuery = profileCache.stale;
 
         // Expect the first stale query to read true, since no data has been fetched yet
-        expect(firstStaleQuery).to.equal(true)
+        expect(firstStaleQuery).to.equal(true) &&
         // Expect the second stale query to read false, since the data has just been fetched
-        && expect(secondStaleQuery).to.equal(false)
+        expect(secondStaleQuery).to.equal(false) &&
         // Expect the third stale query to read true, since the stale timer has elapsed
-        && expect(thirdStaleQuery).to.equal(true);
+        expect(thirdStaleQuery).to.equal(true);
     });
 
 });

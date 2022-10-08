@@ -1,27 +1,67 @@
 import { expect } from 'chai';
-import { FluxState } from '../lib';
+import { createFluxState, _UNSAFE_nukeFluxManager } from '../lib';
 
 describe('FluxState', () => {
 
-    it('is able to set an initial value and read that value', async () => {
-        const profileState = new FluxState({ name: 'John' });
-        const profile = profileState.get();
-        expect(profile).to.deep.equal({ name: 'John' });
+    beforeEach(() => {
+        _UNSAFE_nukeFluxManager();
     });
 
-    it('clones the return of the `get` method so changes to that reference don\'t affect the internal FluxState data', async () => {
-        const profileState = new FluxState({ name: 'John' });
-        const profileToModify = profileState.get();
-        profileToModify.favoriteNumber = 42;
-        const profile = profileState.get();
-        expect(profile).to.deep.equal({ name: 'John' });
+    it('is able to hold some initial value', async () => {
+        const userState = createFluxState({
+            id: 'userState',
+            value: { id: 'test-user' },
+        });
+
+        const user = userState.get();
+        expect(user).to.deep.equal({ id: 'test-user' });
     });
 
-    it('is able to set a new value for the FluxState', async () => {
-        const profileState = new FluxState({ name: 'John', favoriteNumber: 42 });
-        profileState.set({ name: 'Roni' });
-        const profile = profileState.get();
-        expect(profile).to.deep.equal({ name: 'Roni' });
+    it('is able to set a new value', async () => {
+        const userState = createFluxState({
+            id: 'userState',
+            value: null,
+        });
+
+        const userFirstValue = userState.get();
+        userState.set({ id: 'test-user' });
+        const userSecondValue = userState.get();
+
+        expect(userFirstValue).to.equal(null) &&
+        expect(userSecondValue).to.deep.equal({ id: 'test-user' });
+    });
+
+    it('creates a deep copy of the stored value when calling `get` to prevent external modification of the value', async () => {
+        const userState = createFluxState({
+            id: 'userState',
+            value: {
+                id: 'test-user',
+                friends: {
+                    'John': { displayName: 'John' },
+                    'Roni': { displayName: 'Roni' },
+                }
+            }
+        });
+
+        const modifiedUser = userState.get();
+        modifiedUser.id = 'modified-test-user';
+        modifiedUser.friends['Roni'].displayName = 'Modified Roni';
+        const unmodifiedUser = userState.get();
+
+        expect(modifiedUser).to.deep.equal({
+            id: 'modified-test-user',
+            friends: {
+                'John': { displayName: 'John' },
+                'Roni': { displayName: 'Modified Roni' }
+            }
+        }) &&
+        expect(unmodifiedUser).to.deep.equal({
+            id: 'test-user',
+            friends: {
+                'John': { displayName: 'John' },
+                'Roni': { displayName: 'Roni' },
+            }
+        });
     });
 
 });
