@@ -1,5 +1,6 @@
 import { expect } from 'chai';
-import { createFluxState, _UNSAFE_nukeFluxManager } from '../lib';
+import { createFluxState } from '../lib';
+import { _UNSAFE_nukeFluxManager } from '../lib/flux-manager/flux-manager';
 
 describe('FluxState', () => {
 
@@ -62,6 +63,29 @@ describe('FluxState', () => {
                 'Roni': { displayName: 'Roni' },
             }
         });
+    });
+
+    it('does not create an additional FluxState if one already exists for the given ID', async () => {
+        let userState = createFluxState({
+            id: 'userState',
+            value: { displayName: 'John' },
+        });
+        userState = createFluxState({
+            id: 'userState',
+            value: { displayName: 'Roni' },
+        });
+        const user = userState.get();
+
+        const newUserState = createFluxState({
+            id: 'newUserState',
+            value: { displayName: 'Rob' },
+        });
+        const newUser = newUserState.get();
+
+        // Expect the second `createFluxState` call to simply return the existing flux state with the given ID
+        expect(user).to.deep.equal({ displayName: 'John' }) &&
+        // Expect the third `createFluxState` call to create a new flux state since a new ID was given
+        expect(newUser).to.deep.equal({ displayName: 'Rob' });
     });
 
 });

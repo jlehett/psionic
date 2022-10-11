@@ -1,15 +1,16 @@
 //#region Imports
 
 import cloneDeep from 'lodash/cloneDeep';
+import { FluxManager } from '../flux-manager/flux-manager';
 
 //#endregion
 
-//#region Classes
+//#region Protected Classes
 
 /**
  * Class representing a state whose value can be set, read, and used as a dependency within the Flux framework.
  *
- * @public
+ * @protected
  * @memberof module:@psionic/flux
  * @alias module:@psionic/flux.FluxState
  */
@@ -22,18 +23,18 @@ class FluxState {
     //#region Private Variables
 
     /**
-     * Variable tracking the data in state.
+     * The ID of the Flux object.
+     * @private
+     * @type {string}
+     */
+    #id;
+
+    /**
+     * The data to track in the Flux state.
      * @private
      * @type {*}
      */
     #data;
-
-    /**
-     * Variable tracking the change listener callbacks by ID.
-     * @private
-     * @type {Map<string, function>}
-     */
-    #changeListenerCallbacksByID = new Map();
 
     //#endregion
 
@@ -41,11 +42,17 @@ class FluxState {
 
     /**
      * @constructor
-     * @param {*} initialValue The initial value to set as data; this will be recursively cloned so that any changes
-     * to this value (if it is an object) will not affect the `FluxState` instance's value
+     * @param {Object} config The configuration object
+     * @param {string} config.id The ID to use for the FluxState; should be unique among all other active Flux objects
+     * @param {*} config.value The initial value to set as data; this will be recursively cloned so that any changes to
+     * this value (if it is an object) will not affect the `FluxState` instance's value
      */
-    constructor(initialValue) {
-        this.#data = cloneDeep(initialValue);
+    constructor({
+        id,
+        value,
+    }) {
+        this.#id = id;
+        this.#data = cloneDeep(value);
     }
 
     //#endregion
@@ -53,47 +60,46 @@ class FluxState {
     //#region Public Functions
 
     /**
-     * Sets the `FluxState` instance's new value.
+     * Gets a deeply-cloned copy of the current data from the FluxState.
      * @public
      *
      * @example
-     * async () => {
-     *      // Create the profile FluxState
-     *      const profileState = new FluxState(null);
+     * // Create a FluxState object
+     * const profileState = createFluxState({
+     *      id: 'profileState',
+     *      value: { name: 'John' },
+     * });
      *
-     *      // Fetch the profile data
-     *      const profile = await getProfileData();
+     * // Read the FluxState object's current value
+     * const profile = profileState.get(); // { name: 'John' }
      *
-     *      // Set the profile FluxState's value
-     *      profileState.set(profile);
-     * }
-     *
-     * @param {*} value The new value to store in the `FluxState` instance
+     * @returns {*} A deeply-cloned copy of the current data from the FluxState.
      */
-    set(value) {
-        this.#data = value;
-        for (const callback of this.#changeListenerCallbacksByID) {
-            callback();
-        }
+    get() {
+        return cloneDeep(this.#data);
     }
 
     /**
-     * Reads the `FluxState` instance's current value.
+     * Sets the new value for the FluxState.
      * @public
      *
      * @example
-     * async () => {
-     *      // Create the profile FluxState
-     *      const profileState = new FluxState({ name: 'John' });
+     * // Create a FluxState object
+     * const profileState = createFluxState({
+     *      id: 'profileState',
+     *      value: null,
+     * });
      *
-     *      // Read the profile FluxState's value
-     *      return profileState.get(); // { name: 'John' }
-     * }
+     * // Set the FluxState object's new value
+     * profileState.set({ name: 'John' });
      *
-     * @returns {*} The recursively cloned copy of the `FluxState` instance's current value
+     * // The FluxState will now hold the new value
+     * const profile = profileState.get(); // { name: 'John' }
+     *
+     * @param {*} newValue The new value to store in the FluxState
      */
-    get() {
-        return this.#getClonedCopyOfLocalData();
+    set(newValue) {
+        this.#data = newValue;
     }
 
     //#endregion
@@ -101,42 +107,49 @@ class FluxState {
     //#region Protected Functions
 
     /**
-     * Add a change listener function to the change listener callbacks by ID.
+     * Get the Flux object's ID.
      * @protected
      *
-     * @param {string} id The ID to use for the callback
-     * @param {function} callback The function to call whenever changes occur to this `FluxState` instance's
-     * data
+     * @return {string} The Flux object's ID
      */
-    _addChangeListener(id, callback) {
-        this.#changeListenerCallbacksByID.set(id, callback);
+    getID() {
+        return this.#id;
     }
 
-    /**
-     * Removes a change listener callback by ID.
-     * @protected
-     *
-     * @param {string} id The ID of the change listener callback to remove
-     */
-    _removeChangeListener(id) {
-        this.#changeListenerCallbacksByID.delete(id);
-    }
-
-    //#endregion
+    //#region
 
     //#region Private Functions
 
-    /**
-     * Returns a recursively cloned copy of the data currently stored in the `FluxState` instance.
-     * @private
-     *
-     * @returns {*} The recursively cloned copy of the `FluxState` instance's current value
-     */
-    #getClonedCopyOfLocalData() {
-        return cloneDeep(this.#data);
-    }
-
     //#endregion
+}
+
+//#endregion
+
+//#region Public Functions
+
+/**
+ * Creates a new `FluxState` with the given ID. If the ID is already taken by another Flux object, that object will be returned instead of
+ * a new Flux object being created.
+ * @public
+ * @memberof module:@psionic/flux
+ * @alias module:@psionic/flux.createFluxState
+ *
+ * @param {Object} config The configuration object
+ * @param {string} config.id The ID to use for the FluxState; should be unique among all other active Flux objects
+ * @param {*} config.value The initial value to set as data; this will be recursively cloned so that any changes to
+ * this value (if it is an object) will not affect the `FluxState` instance's value
+ * @returns {FluxState | FluxCache | FluxEngine} The created Flux object, or the old Flux object with the given ID
+ */
+function createFluxState({
+    id,
+    value
+}) {
+    return FluxManager.getOrCreateFluxObject(
+        new FluxState({
+            id,
+            value,
+        })
+    );
 }
 
 //#endregion
@@ -144,7 +157,8 @@ class FluxState {
 //#region Exports
 
 export {
-    FluxState
+    createFluxState,
+    FluxState,
 };
 
 //#endregion

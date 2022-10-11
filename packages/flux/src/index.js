@@ -4,7 +4,7 @@
  *
  * @public
  * @module @psionic/flux
- **/
+ */
 
 export * from './flux-cache/flux-cache';
 export * from './flux-state/flux-state';

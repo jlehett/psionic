@@ -2,12 +2,9 @@
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.FluxCache = void 0;
-
 var _cloneDeep = _interopRequireDefault(require("lodash/cloneDeep"));
+
+var _fluxManager = require("../flux-manager/flux-manager");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -41,46 +38,35 @@ function _classExtractFieldDescriptor(receiver, privateMap, action) { if (!priva
 
 function _classApplyDescriptorSet(receiver, descriptor, value) { if (descriptor.set) { descriptor.set.call(receiver, value); } else { if (!descriptor.writable) { throw new TypeError("attempted to set read only private field"); } descriptor.value = value; } }
 
-var _data = /*#__PURE__*/new WeakMap();
-
-var _fetchFn = /*#__PURE__*/new WeakMap();
-
-var _loadingPromise = /*#__PURE__*/new WeakMap();
-
-var _currentLoadingPromiseResolved = /*#__PURE__*/new WeakMap();
-
 var _stale = /*#__PURE__*/new WeakMap();
 
-var _staleTimeoutID = /*#__PURE__*/new WeakMap();
+var _data = /*#__PURE__*/new WeakMap();
 
-var _staleAfterTime = /*#__PURE__*/new WeakMap();
+var _id = /*#__PURE__*/new WeakMap();
 
-var _startStaleTimerOnLastFetchResolve = /*#__PURE__*/new WeakMap();
+var _fetch = /*#__PURE__*/new WeakMap();
 
-var _dependencies = /*#__PURE__*/new WeakMap();
+var _fetchPromise = /*#__PURE__*/new WeakMap();
 
-var _performExternalFetch = /*#__PURE__*/new WeakSet();
+var _staleAfter = /*#__PURE__*/new WeakMap();
 
-var _getCopyOfDataFromCache = /*#__PURE__*/new WeakSet();
+var _cancelStaleSetter = /*#__PURE__*/new WeakMap();
 
-var _handleStaleTimerStart = /*#__PURE__*/new WeakSet();
+var _cacheData = /*#__PURE__*/new WeakSet();
 
-var _startStaleTimer = /*#__PURE__*/new WeakSet();
+var _markStale = /*#__PURE__*/new WeakSet();
 
-var _cancelStaleTimer = /*#__PURE__*/new WeakSet();
+var _unmarkStale = /*#__PURE__*/new WeakSet();
 
 //#endregion
-//#region Classes
+//#region Protected Classes
 
 /**
- * Class representing a singular cache of data. `DataCache`s store cache-able data which can be marked as stale
- * after a set amount of time, and set to auto-renew after a set amount of time, if desired.
+ * Class representing a Flux cache. A Flux cache has a defined `fetch` function which can be used to
+ * fetch the data asynchronously. After the data has been fetched, it will be cached. The next time the
+ * data needs to be fetched, it will be taken from the cache, unless it was marked as stale.
  *
- * `DataCache`s are initialized with a function that can be used to fetch the data it is intended to hold. These
- * fetching functions can depend on other `DataCache`s, and can optionally be configured to be marked as stale whenever
- * a `DataCache` it depends on becomes marked as stale.
- *
- * @public
+ * @protected
  * @memberof module:@psionic/flux
  * @alias module:@psionic/flux.FluxCache
  */
@@ -90,146 +76,118 @@ var FluxCache = /*#__PURE__*/function () {
   //#region Private Variables
 
   /**
-   * Variable tracking the last data fetched.
+   * Tracks whether the cache is currently stale or not.
+   * @private
+   * @type {boolean}
+   */
+
+  /**
+   * The data to track in the Flux cache.
    * @private
    * @type {*}
    */
 
   /**
-   * Tracker for the function to call to fetch the data from outside the cache.
+   * The ID of the Flux object.
+   * @private
+   * @type {string}
+   */
+
+  /**
+   * The function to call to fetch the data from outside the cache.
    * @private
    * @type {function}
    */
 
   /**
-   * Tracker for the active loading promise. Starts off `null` since no loading promise is active.
+   * The promise tracking the most recent external `fetch` call.
    * @private
-   * @type {Promise<null> | null}
+   * @type {Promise<*>}
    */
 
   /**
-   * Tracker for whether the current loading promise has resolved or not yet.
+   * The number of milliseconds after which the data in the cache should be marked as stale.
    * @private
-   * @type {boolean}
+   * @type {Number}
    */
 
   /**
-   * Tracker for whether the data in the data cache is stale or not. Starts off `true`, since no data has been
-   * fetched yet, which means we can't rely on the cache.
+   * The function to call to cancel the active stale setter timer.
    * @private
-   * @type {boolean}
-   */
-
-  /**
-   * Tracker for the timeout function ID that sets the cache as stale after a set amount of time. Starts off
-   * `null` since no timeout function has been defined yet.
-   * @private
-   * @type {number}
-   */
-
-  /**
-   * Tracker for the amount of time in milliseconds to wait before marking the data cache as stale.
-   * @private
-   * @type {number}
-   */
-
-  /**
-   * Tracker for whether the stale timer should start when the last fetch resolves, or when the last fetch begins.
-   * @private
-   * @type {boolean}
-   */
-
-  /**
-   * Array of dependencies for the FluxCache; if any of the dependencies becomes stale, then this cache also becomes stale.
-   * @private
-   * @type {Array<FluxCache | FluxState>}
+   * @type {function}
    */
   //#endregion
   //#region Constructor
 
   /**
    * @constructor
-   * @param {function} fetchFn The function to call to fetch the data represented by this
-   * cache
+   * @param {Object} config The configuration object
+   * @param {string} config.id The ID to use for the FluxCache; should be unique among all other active Flux objects
+   * @param {function} config.fetch The function to call to asynchronously fetch the data to store in the cache, if non-stale
+   * data does not already exist in the cache
+   * @param {Array<FluxCache, FluxState, FluxEngine>} config.dependsOn The array of Flux objects this cache depends on; if any of the
+   * Flux objects' values change or become marked as stale, then this cache will also become marked as stale
    */
-  function FluxCache(fetchFn) {
-    var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-        staleAfter = _ref.staleAfter,
-        autoRefreshWhenStale = _ref.autoRefreshWhenStale,
-        dependencies = _ref.dependencies,
-        fetchOnInit = _ref.fetchOnInit,
-        startStaleTimerOnLastFetchResolve = _ref.startStaleTimerOnLastFetchResolve;
+  function FluxCache(_ref) {
+    var id = _ref.id,
+        fetch = _ref.fetch,
+        dependsOn = _ref.dependsOn,
+        staleAfter = _ref.staleAfter;
 
     _classCallCheck(this, FluxCache);
 
-    _classPrivateMethodInitSpec(this, _cancelStaleTimer);
+    _classPrivateMethodInitSpec(this, _unmarkStale);
 
-    _classPrivateMethodInitSpec(this, _startStaleTimer);
+    _classPrivateMethodInitSpec(this, _markStale);
 
-    _classPrivateMethodInitSpec(this, _handleStaleTimerStart);
-
-    _classPrivateMethodInitSpec(this, _getCopyOfDataFromCache);
-
-    _classPrivateMethodInitSpec(this, _performExternalFetch);
-
-    _classPrivateFieldInitSpec(this, _data, {
-      writable: true,
-      value: void 0
-    });
-
-    _classPrivateFieldInitSpec(this, _fetchFn, {
-      writable: true,
-      value: void 0
-    });
-
-    _classPrivateFieldInitSpec(this, _loadingPromise, {
-      writable: true,
-      value: null
-    });
-
-    _classPrivateFieldInitSpec(this, _currentLoadingPromiseResolved, {
-      writable: true,
-      value: true
-    });
+    _classPrivateMethodInitSpec(this, _cacheData);
 
     _classPrivateFieldInitSpec(this, _stale, {
       writable: true,
       value: true
     });
 
-    _classPrivateFieldInitSpec(this, _staleTimeoutID, {
+    _classPrivateFieldInitSpec(this, _data, {
       writable: true,
-      value: null
+      value: void 0
     });
 
-    _classPrivateFieldInitSpec(this, _staleAfterTime, {
+    _classPrivateFieldInitSpec(this, _id, {
       writable: true,
-      value: null
+      value: void 0
     });
 
-    _classPrivateFieldInitSpec(this, _startStaleTimerOnLastFetchResolve, {
+    _classPrivateFieldInitSpec(this, _fetch, {
       writable: true,
-      value: false
+      value: void 0
     });
 
-    _classPrivateFieldInitSpec(this, _dependencies, {
+    _classPrivateFieldInitSpec(this, _fetchPromise, {
       writable: true,
-      value: []
+      value: void 0
     });
 
-    // Force the fetching function to be asynchronous for consistency
-    _classPrivateFieldSet(this, _fetchFn, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+    _classPrivateFieldInitSpec(this, _staleAfter, {
+      writable: true,
+      value: void 0
+    });
+
+    _classPrivateFieldInitSpec(this, _cancelStaleSetter, {
+      writable: true,
+      value: void 0
+    });
+
+    _classPrivateFieldSet(this, _id, id); // We want to make sure this fetch function is async so we can treat all potential fetch operations identically
+
+
+    _classPrivateFieldSet(this, _fetch, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _context.next = 2;
-              return fetchFn();
+              return _context.abrupt("return", fetch());
 
-            case 2:
-              return _context.abrupt("return", _context.sent);
-
-            case 3:
+            case 1:
             case "end":
               return _context.stop();
           }
@@ -237,157 +195,196 @@ var FluxCache = /*#__PURE__*/function () {
       }, _callee);
     })));
 
-    _classPrivateFieldSet(this, _staleAfterTime, staleAfter || null);
-
-    _classPrivateFieldSet(this, _startStaleTimerOnLastFetchResolve, startStaleTimerOnLastFetchResolve);
-
-    _classPrivateFieldSet(this, _dependencies, dependencies);
-
-    if (fetchOnInit) {
-      this.fetch();
-    }
+    _classPrivateFieldSet(this, _staleAfter, staleAfter);
   } //#endregion
   //#region Public Functions
 
   /**
-   * Gets the data for the `FluxCache`. If the data in the cache is not marked as stale, the data from the cache will be used.
-   * Otherwise, the data will be fetched with the `fetchFn` from the constructor, stored in the cache, and returned.
+   * Retrieves the appropriate data from the cache, if it is available and non-stale, or externally via
+   * the Flux cache's `fetch` function if the data is not available or is stale in the cache.
    * @public
    *
    * @example
-   * async () => {
-   *      // Create the friends FluxCache
-   *      const friendsCache = new FluxCache(
-   *          () => {
-   *              return [
-   *                  { name: 'John' },
-   *                  { name: 'Roni' },
-   *              ];
-   *          }
-   *      );
+   * // Create a FluxCache object
+   * const profileCache = createFluxCache({
+   *      id: 'profileCache',
+   *      fetch: async () => {
+   *          await delay(5000);
+   *          return { name: 'John' };
+   *      }
+   * });
    *
-   *      // Get the friends data from the friends FluxCache (will call the fetch function, since it hasn't been fetched yet
-   *      // and is thus currently stale)
-   *      let friends = await friendsCache.get();
+   * // Read the value from the FluxCache for the first time (runs the fetch function passed to the cache; promise should take ~5s)
+   * const profile = await profileCache.get(); // { name: 'John' }
    *
-   *      // Get the friends data from the friends FluxCache (will use local cache, since it has been fetched in the line above,
-   *      // and it has not been marked as stale yet)
-   *      friends = await friendsCache.get();
-   * }
+   * // Read the value from the FluxCache for the second time (retrieves the stored data from the cache; promise should only take a few milliseconds)
+   * const cachedProfile = await profileCache.get();
    *
-   * @returns {Promise<*>} Resolves with the data from either the cache if it wasn't stale, or from the result of the fetching function,
-   * if the cache was stale
+   * @returns {Promise<*>} Resolves with the data from either the cache or from the external fetch function
    */
 
 
   _createClass(FluxCache, [{
     key: "get",
-    value: function get() {
-      // If the data is not marked as stale, use whatever is in the cache
-      if (!_classPrivateFieldGet(this, _stale)) {
-        return _classPrivateMethodGet(this, _getCopyOfDataFromCache, _getCopyOfDataFromCache2).call(this);
-      } // If there is an active loading promise waiting to be resolved, just wait for it to resolve and return the result
+    value: function () {
+      var _get = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var _this = this;
+
+        var result;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!(_classPrivateFieldGet(this, _data) && !_classPrivateFieldGet(this, _stale))) {
+                  _context2.next = 4;
+                  break;
+                }
+
+                return _context2.abrupt("return", (0, _cloneDeep["default"])(_classPrivateFieldGet(this, _data)));
+
+              case 4:
+                if (!_classPrivateFieldGet(this, _fetchPromise)) {
+                  _context2.next = 8;
+                  break;
+                }
+
+                return _context2.abrupt("return", _classPrivateFieldGet(this, _fetchPromise).call(this));
+
+              case 8:
+                _classPrivateFieldSet(this, _fetchPromise, _classPrivateFieldGet(this, _fetch).call(this)); // Clear out the fetch promise once it resolves
 
 
-      if (!_classPrivateFieldGet(this, _currentLoadingPromiseResolved)) {
-        return _classPrivateFieldGet(this, _loadingPromise);
-      } // Otherwise, perform an external fetching operation and return the result
+                _classPrivateFieldGet(this, _fetchPromise).then(function () {
+                  _classPrivateFieldSet(_this, _fetchPromise, null);
+                }); // Get the result from the fetch promise, cache the data, and return the result
 
 
-      return _classPrivateMethodGet(this, _performExternalFetch, _performExternalFetch2).call(this);
-    }
+                _context2.next = 12;
+                return _classPrivateFieldGet(this, _fetchPromise);
+
+              case 12:
+                result = _context2.sent;
+
+                _classPrivateMethodGet(this, _cacheData, _cacheData2).call(this, result);
+
+                return _context2.abrupt("return", result);
+
+              case 15:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function get() {
+        return _get.apply(this, arguments);
+      }
+
+      return get;
+    }()
     /**
-     * Sets the stale state manually. If the stale state would transition from !stale -> stale and a stale timer callback was active,
-     * then the stale timer callback will be canceled to prevent errors. If the stale state would transition from stale -> !stale
-     * and cache has been configured to automatically be marked as stale after a set amount of time, then a new stale timer callback
-     * will start running.
+     * Getter for the `stale` flag on the cache.
      * @public
      *
      * @example
-     * async () => {
-     *      // Create the friends FluxCache
-     *      const friendsCache = new FluxCache(
-     *          () => {
-     *              return [
-     *                  { name: 'John' },
-     *                  { name: 'Roni' },
-     *              ];
-     *          }
-     *      );
+     * // Create a FluxCache object
+     * const profileCache = createFluxCache({
+     *      id: 'profileCache',
+     *      fetch: async () => {
+     *          return { name: 'John' };
+     *      },
+     *      staleAfter: 5000, // Data will be marked as stale 5s after it is cached
+     * });
      *
-     *      // Manually set the friends cache to not be stale
-     *      friendsCache.setStale(false);
+     * // The cache is always stale when first initialized
+     * let isStale = profileCache.getStale(); // true
      *
-     *      // Manually set the friends cache to be stale
-     *      friendsCache.setStale(true);
-     * }
+     * // Fetch the profile to remove the stale state
+     * profileCache.get();
      *
-     * @param {boolean} isStale Flag indicating whether the cache should be marked as stale or not
-     */
-
-  }, {
-    key: "setStale",
-    value: function setStale(isStale) {
-      // If transitioning from !stale -> stale
-      if (!_classPrivateFieldGet(this, _stale) && isStale) {
-        // If there is an active stale timer, cancel it
-        if (_classPrivateFieldGet(this, _staleTimeoutID)) {
-          _classPrivateMethodGet(this, _cancelStaleTimer, _cancelStaleTimer2).call(this);
-        }
-      } // If transitioning from stale -> !stale
-
-
-      if (_classPrivateFieldGet(this, _stale) && !isStale) {
-        // If the `staleAfterTime` value is set, start the stale timer
-        if (_classPrivateFieldGet(this, _staleAfterTime)) {
-          _classPrivateMethodGet(this, _startStaleTimer, _startStaleTimer2).call(this);
-        }
-      } // Set the stale state
-
-
-      _classPrivateFieldSet(this, _stale, isStale);
-    }
-    /**
-     * Gets the flag indicating whether the cache is stale or not.
-     * @public
+     * // The cache will no longer be stale, since the profile was just fetched
+     * isStale = profileCache.getStale(); // false
      *
-     * @example
-     * async () => {
-     *      // Create the friends FluxCache
-     *      const friendsCache = new FluxCache(
-     *          () => {
-     *              return [
-     *                  { name: 'John' },
-     *                  { name: 'Roni' },
-     *              ];
-     *          }
-     *      );
+     * // If we wait 5 seconds, the data will become stale since we set `staleAfter` to `5000`
+     * await delay(5000);
+     * isStale = profileCache.getStale(); // true
      *
-     *      // Determine whether the cache is stale
-     *      let isStale = friendsCache.getStale(); // true, since no data has been fetched yet
-     *
-     *      // Fetch the data
-     *      let friends = await friendsCache.get();
-     *
-     *      // Determine whether the cache is stale
-     *      isStale = friendsCache.getStale(); // false, since the data has been fetched and there is no stale timer set
-     * }
-     *
-     * @returns {boolean} The flag indicating whether the cache is stale or not
+     * @returns {boolean} The flag indicating whether the data in the cache is currently stale or not
      */
 
   }, {
     key: "getStale",
     value: function getStale() {
       return _classPrivateFieldGet(this, _stale);
+    }
+    /**
+     * Updates the function this cache uses to externally fetch the data it stores. Calling this function will automatically
+     * mark the cache as stale.
+     * @public
+     *
+     * @example
+     * // Create a FluxCache object
+     * const profileCache = createFluxCache({
+     *      id: 'profileCache',
+     *      fetch: async () => {
+     *          return { name: 'John' };
+     *      }
+     * });
+     *
+     * // Fetch the initial profile; the cache will not be marked as stale anymore
+     * profileCache.get();
+     *
+     * // Update the fetch function to retrieve a different user's profile; the cache will immediately be marked as stale
+     * profileCache.updateFetch(async () => {
+     *      return { name: 'Roni' };
+     * });
+     *
+     * @param {function} fetch The new function to call to fetch data to store in this cache
+     */
+
+  }, {
+    key: "updateFetch",
+    value: function updateFetch(fetch) {
+      // We want to make sure this fetch function is async so we can treat all potential fetch operations identically
+      _classPrivateFieldSet(this, _fetch, /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                return _context3.abrupt("return", fetch());
+
+              case 1:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      })));
+
+      _classPrivateMethodGet(this, _markStale, _markStale2).call(this);
+    } //#endregion
+    //#region Protected Functions
+
+    /**
+     * Get the Flux object's ID.
+     * @protected
+     *
+     * @return {string} The Flux object's ID
+     */
+
+  }, {
+    key: "getID",
+    value: function getID() {
+      return _classPrivateFieldGet(this, _id);
     } //#endregion
     //#region Private Functions
 
     /**
-     * Performs an external fetching operation using the `fetchFn` from the constructor.
+     * Caches the given data, and handles any stale timer logic, if needed.
      * @private
      *
-     * @returns {Promise<*>} Resolves with the result from the `fetchFn` call
+     * @param {*} data The data to store in the cache
      */
     //#endregion
 
@@ -395,88 +392,81 @@ var FluxCache = /*#__PURE__*/function () {
 
   return FluxCache;
 }(); //#endregion
-//#region
+//#region Public Functions
+
+/**
+ * Creates a new `FluxCache` with the given ID. If the ID is already taken by another
+ * @public
+ * @memberof module:@psionic/flux
+ * @alias module:@psionic/flux.createFluxCache
+ *
+ * @param {Object} config The configuration object
+ * @param {string} config.id The ID to use for the FluxCache; should be unique among all other active Flux objects
+ * @param {function} config.fetch The function to call to asynchronously fetch the data to store in the cache, if non-stale
+ * data does not already exist in the cache
+ * @param {Array<FluxCache, FluxState, FluxEngine>} config.dependsOn The array of Flux objects this cache depends on; if any of the
+ * Flux objects' values change or become marked as stale, then this cache will also become marked as stale
+ * @param {Number} config.staleAfter The amount of time to wait before declaring the data in the cache as stale; if this value is not passed, the
+ * data in the cache will never be automatically marked as stale (other than before the first fetch operation occurs)
+ */
 
 
-exports.FluxCache = FluxCache;
+function _cacheData2(data) {
+  _classPrivateFieldSet(this, _data, data);
 
-function _performExternalFetch2() {
-  var _this = this;
-
-  // If a stale timer exists, cancel it
-  if (_classPrivateFieldGet(this, _staleTimeoutID)) {
-    _classPrivateMethodGet(this, _cancelStaleTimer, _cancelStaleTimer2).call(this);
-  } // Start the fetch and store the promise in the private loading promise tracker
-
-
-  _classPrivateFieldSet(this, _loadingPromise, _classPrivateFieldGet(this, _fetchFn).call(this));
-
-  _classPrivateFieldSet(this, _currentLoadingPromiseResolved, false); // When the fetching operation resolves, store the result in the cache
-
-
-  _classPrivateFieldGet(this, _loadingPromise).then(function (result) {
-    _classPrivateFieldSet(_this, _data, result);
-
-    _classPrivateFieldSet(_this, _currentLoadingPromiseResolved, true);
-
-    _classPrivateFieldSet(_this, _stale, false);
-  }); // Start the stale timer if/when appropriate
-
-
-  _classPrivateMethodGet(this, _handleStaleTimerStart, _handleStaleTimerStart2).call(this, _classPrivateFieldGet(this, _loadingPromise)); // Return the loading promise
-
-
-  return _classPrivateFieldGet(this, _loadingPromise);
+  _classPrivateMethodGet(this, _unmarkStale, _unmarkStale2).call(this);
 }
 
-function _getCopyOfDataFromCache2() {
-  return (0, _cloneDeep["default"])(_classPrivateFieldGet(this, _data));
+function _markStale2() {
+  _classPrivateFieldSet(this, _stale, true); // If there is an active timeout function, cancel it
+
+
+  if (_classPrivateFieldGet(this, _cancelStaleSetter)) {
+    _classPrivateFieldGet(this, _cancelStaleSetter).call(this);
+  }
 }
 
-function _handleStaleTimerStart2(loadingPromise) {
-  // If the staleAfterTime value is not defined, don't do anything
-  if (!_classPrivateFieldGet(this, _staleAfterTime)) return; // If the `startStaleTimerOnLastFetchResolve` flag is set to true, then start the timer after the loading promise resolves
-
-  if (_classPrivateFieldGet(this, _startStaleTimerOnLastFetchResolve)) {
-    loadingPromise.then(_classPrivateMethodGet(this, _startStaleTimer, _startStaleTimer2));
-    return;
-  } // Otherwise, start the timer immediately
-
-
-  _classPrivateMethodGet(this, _startStaleTimer, _startStaleTimer2).call(this);
-}
-
-function _startStaleTimer2() {
+function _unmarkStale2() {
   var _this2 = this;
 
-  if (!_classPrivateFieldGet(this, _staleAfterTime)) {
-    throw {
-      message: "Tried to start a stale timer, but the `staleAfterTime` value was set to ".concat(_classPrivateFieldGet(this, _staleAfterTime), "."),
-      code: 'INVALID_STALE_AFTER_TIME_VALUE_DURING_START'
-    };
-  }
+  _classPrivateFieldSet(this, _stale, false); // If a `staleAfter` timer has been provided, perform the necessary stale timer logic
 
-  if (_classPrivateFieldGet(this, _staleTimeoutID)) {
-    throw {
-      message: "Tried to start a stale timer, but a stale timeout function already exists.",
-      code: 'TRIED_TO_CREATE_DUPLICATE_STALE_TIMER'
-    };
-  }
 
-  _classPrivateFieldSet(this, _staleTimeoutID, setTimeout(function () {
-    return _this2.setStale(true);
-  }, _classPrivateFieldGet(this, _staleAfterTime)));
+  if (_classPrivateFieldGet(this, _staleAfter)) {
+    // Cancel any active timeout functions
+    if (_classPrivateFieldGet(this, _cancelStaleSetter)) {
+      _classPrivateFieldGet(this, _cancelStaleSetter).call(this);
+    } // Create the timeout function and the function to cancel it
+
+
+    var staleTimeout = setTimeout(function () {
+      _classPrivateFieldSet(_this2, _stale, true);
+
+      _classPrivateFieldSet(_this2, _cancelStaleSetter, null);
+    }, _classPrivateFieldGet(this, _staleAfter));
+
+    _classPrivateFieldSet(this, _cancelStaleSetter, function () {
+      return clearTimeout(staleTimeout);
+    });
+  }
 }
 
-function _cancelStaleTimer2() {
-  if (!_classPrivateFieldGet(this, _staleTimeoutID)) {
-    throw {
-      message: "Tried to cancel a stale timer, but no stale timeout function exists.",
-      code: 'TRIED_TO_CANCEL_NON_EXISTENT_STALE_TIMER'
-    };
-  }
-
-  clearTimeout(_classPrivateFieldGet(this, _staleTimeoutID));
-
-  _classPrivateFieldSet(this, _staleTimeoutID, null);
+function createFluxCache(_ref4) {
+  var id = _ref4.id,
+      fetch = _ref4.fetch,
+      dependsOn = _ref4.dependsOn,
+      staleAfter = _ref4.staleAfter;
+  return _fluxManager.FluxManager.getOrCreateFluxObject(new FluxCache({
+    id: id,
+    fetch: fetch,
+    dependsOn: dependsOn,
+    staleAfter: staleAfter
+  }));
 } //#endregion
+//#region Exports
+
+
+module.exports = {
+  createFluxCache: createFluxCache,
+  FluxCache: FluxCache
+}; //#endregion

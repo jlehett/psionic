@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import delay from 'delay';
-import { createFluxCache, _UNSAFE_nukeFluxManager } from '../lib';
+import { createFluxCache } from '../lib';
+import { _UNSAFE_nukeFluxManager } from '../lib/flux-manager/flux-manager';
 
 const delayTime = 50;
 
@@ -51,11 +52,11 @@ describe('FluxCache', () => {
             fetch: async () => ({ name: 'John' }),
             staleAfter: delayTime,
         });
-        const firstStaleQuery = profileCache.stale;
+        const firstStaleQuery = profileCache.getStale();
         await profileCache.get();
-        const secondStaleQuery = profileCache.stale;
+        const secondStaleQuery = profileCache.getStale();
         await delay(delayTime);
-        const thirdStaleQuery = profileCache.stale;
+        const thirdStaleQuery = profileCache.getStale();
 
         // Expect the first stale query to read true, since no data has been fetched yet
         expect(firstStaleQuery).to.equal(true) &&
@@ -63,6 +64,33 @@ describe('FluxCache', () => {
         expect(secondStaleQuery).to.equal(false) &&
         // Expect the third stale query to read true, since the stale timer has elapsed
         expect(thirdStaleQuery).to.equal(true);
+    });
+
+    it('is able to update the provided `fetch` operation, while marking the cache as stale', async () => {
+        const profileCache = createFluxCache({
+            id: 'profileCache',
+            fetch: async () => ({ name: 'John' }),
+        });
+        const firstStaleQuery = profileCache.getStale();
+        const firstProfile = await profileCache.get();
+        const secondStaleQuery = profileCache.getStale();
+        profileCache.updateFetch(async () => ({ name: 'Roni' }));
+        const thirdStaleQuery = profileCache.getStale();
+        const secondProfile = await profileCache.get();
+        const fourthStaleQuery = profileCache.getStale();
+
+        // Expect the first stale query to read true, since no data has been fetched yet
+        expect(firstStaleQuery).to.equal(true) &&
+        // Expect the second stale query to read false, since the data has just been fetched
+        expect(secondStaleQuery).to.equal(false) &&
+        // Expect the first profile to equal John's profile
+        expect(firstProfile).to.deep.equal({ name: 'John' }) &&
+        // Expect the third stale query to read true, since the new data has not been fetched yet
+        expect(thirdStaleQuery).to.equal(true) &&
+        // Expect the second profile to equal Roni's profile
+        expect(secondProfile).to.deep.equal({ name: 'Roni' }) &&
+        // Expect the fourth stale query to read false, since the new data has just been fetched
+        expect(fourthStaleQuery).to.equal(false);
     });
 
 });
