@@ -31,7 +31,7 @@ describe('Integration Tests', () => {
         expect(profileFromState).to.deep.equal({ name: 'John' });
     });
 
-    it('is able to handle Flux object dependencies for FluxCaches', async () => {
+    it('marks FluxCaches as stale when their dependencies become stale across multiple layers', async () => {
         const profileIDState = createFluxState({
             id: 'profileIDState',
             value: 'John',
@@ -120,6 +120,88 @@ describe('Integration Tests', () => {
         expect(friendsReadings).to.deep.equal([
             ['Roni'],
             ['John']
+        ]);
+    });
+
+    it('ensures that FluxCache dependencies with stale data are refreshed across multiple layers whenever the cache\'s data is requested, if that data is requested in the `fetch` function itself', async () => {
+        const selectedUserIDState = createFluxState({
+            id: 'selectedUserIDState',
+            value: null,
+        });
+        const profileCache = createFluxCache({
+            id: 'profileCache',
+            fetch: async () => {
+                const selectedUserID = await selectedUserIDState.get();
+                return selectedUserID ? 'John' : null;
+            },
+            dependsOn: [selectedUserIDState],
+        });
+        const friendIDsCache = createFluxCache({
+            id: 'friendIDsCache',
+            fetch: async () => {
+                const profile = await profileCache.get();
+                return profile ? 'user1' : null;
+            },
+            dependsOn: [profileCache],
+        });
+        const friendsCache = createFluxCache({
+            id: 'friendsCache',
+            fetch: async () => {
+                const friendIDs = await friendIDsCache.get();
+                return friendIDs ? 'Roni' : null;
+            },
+            dependsOn: [friendIDsCache],
+        });
+
+        const profileCacheStaleQueries = [];
+        const friendIDsCacheStaleQueries = [];
+        const friendsCacheStaleQueries = [];
+
+        const friendsCacheReadings = [];
+
+        profileCacheStaleQueries.push(profileCache.getStale());
+        friendIDsCacheStaleQueries.push(friendIDsCache.getStale());
+        friendsCacheStaleQueries.push(friendsCache.getStale());
+
+        friendsCacheReadings.push(await friendsCache.get());
+
+        profileCacheStaleQueries.push(profileCache.getStale());
+        friendIDsCacheStaleQueries.push(friendIDsCache.getStale());
+        friendsCacheStaleQueries.push(friendsCache.getStale());
+
+        selectedUserIDState.set('Something');
+
+        profileCacheStaleQueries.push(profileCache.getStale());
+        friendIDsCacheStaleQueries.push(friendIDsCache.getStale());
+        friendsCacheStaleQueries.push(friendsCache.getStale());
+
+        friendsCacheReadings.push(await friendsCache.get());
+
+        profileCacheStaleQueries.push(profileCache.getStale());
+        friendIDsCacheStaleQueries.push(friendIDsCache.getStale());
+        friendsCacheStaleQueries.push(friendsCache.getStale());
+
+        expect(profileCacheStaleQueries).to.deep.equal([
+            true,
+            false,
+            true,
+            false
+        ]) &&
+        expect(friendIDsCacheStaleQueries).to.deep.equal([
+            true,
+            false,
+            true,
+            false
+        ]) &&
+        expect(friendsCacheStaleQueries).to.deep.equal([
+            true,
+            false,
+            true,
+            false
+        ]) &&
+        expect(friendsCacheReadings).to.deep.equal([
+            null,
+            'Roni',
         ]);
     });
 

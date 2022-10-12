@@ -137,6 +137,29 @@ class FluxState {
  * @memberof module:@psionic/flux
  * @alias module:@psionic/flux.createFluxState
  *
+ * @example
+ * // Create a new Flux State representing a user ID
+ * const userIDState = createFluxState({
+ *      id: 'userIDState',
+ *      value: 'test-user',
+ * });
+ *
+ * @example
+ * // If you attempt to create another Flux object with the same ID, the existing Flux object with that ID will be returned instead of
+ * // a new one being created:
+ * const userIDState = createFluxState({
+ *      id: 'userIDState',
+ *      value: 'original',
+ * });
+ *
+ * const newUserIDState = createFluxState({
+ *      id: 'userIDState',
+ *      value: 'new',
+ * });
+ *
+ * await userIDState.get(); // 'original'
+ * await newUserIDState.get(); // 'original' as well, because the `createFluxState` call simply returned the existing object with ID `userIDState`
+ *
  * @param {Object} config The configuration object
  * @param {string} config.id The ID to use for the FluxState; should be unique among all other active Flux objects
  * @param {*} config.value The initial value to set as data; this will be recursively cloned so that any changes to

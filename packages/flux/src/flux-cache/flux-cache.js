@@ -325,6 +325,57 @@ class FluxCache {
  * @memberof module:@psionic/flux
  * @alias module:@psionic/flux.createFluxCache
  *
+ * @example
+ * // Create a new Flux Cache representing a profile
+ * const profileCache = createFluxCache({
+ *      id: 'profileCache',
+ *      fetch: async () => {
+ *          return { name: 'John' };
+ *      }
+ * });
+ *
+ * @example
+ * // If you attempt to create another Flux object with the same ID, the existing Flux object with that ID will be returned instead of
+ * // a new one being created:
+ * const profileCache = createFluxCache({
+ *      id: 'profileCache',
+ *      fetch: async () => {
+ *          return { name: 'John' };
+ *      }
+ * });
+ *
+ * const newProfileCache = createFluxCache({
+ *      id: 'profileCache',
+ *      fetch: async () => {
+ *          return { name: 'Roni' };
+ *      }
+ * });
+ *
+ * await profileCache.get(); // { name: 'John' }
+ * await newProfileCache.get(); // { name: 'John' } as well, because the `createFluxCache` call simply returned the existing object with ID `profileCache`
+ *
+ * @example
+ * // Sometimes you may want to invalidate a cache based on 1+ dependencies becoming stale; you can use the `dependsOn` config value to specify this
+ * const userIDState = createFluxState({
+ *      id: 'userIDState',
+ *      value: 'original',
+ * });
+ *
+ * const profileCache = createFluxCache({
+ *      id: 'profileCache',
+ *      fetch: async () => {
+ *          const userID = await userIDState.get();
+ *          return fetchProfileByUserID(userID);
+ *      },
+ *      dependsOn: [userIDState],
+ * });
+ *
+ * profileCache.getStale(); // `true`, Caches start off stale
+ * await profileCache.get();
+ * profileCache.getStale(); // `false`, Data has now been cached
+ * userIDState.set('new');
+ * profileCache.getStale(); // `true`, One of the cache's dependencies has become stale
+ *
  * @param {Object} config The configuration object
  * @param {string} config.id The ID to use for the FluxCache; should be unique among all other active Flux objects
  * @param {function} config.fetch The function to call to asynchronously fetch the data to store in the cache, if non-stale
