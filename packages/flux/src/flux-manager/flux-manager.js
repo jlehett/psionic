@@ -37,11 +37,13 @@ class FluxManager {
      *
      * @param {FluxCache | FluxState | FluxEngine} fluxObj The Flux object to add if an existing Flux object with a matching
      * ID does not exist
+     * @param {Array<FluxCache | FluxState | FluxEngine>} [config.dependsOn=[]] The array of Flux objects this cache depends on; if any of the
+     * Flux objects' values change or become marked as stale, then this cache will also become marked as stale
      * @returns {FluxCache | FluxState | FluxEngine} The existing Flux object with the matching ID, if it exists; otherwise, returns
      * the Flux object that was added to the Flux Manager
      */
-    getOrCreateFluxObject(fluxObj) {
-        return this.getFluxObject(fluxObj.getID()) || this.addFluxObject(fluxObj);
+    getOrCreateFluxObject(fluxObj, dependsOn=[]) {
+        return this.getFluxObject(fluxObj.getID()) || this.addFluxObject(fluxObj, dependsOn);
     }
 
     /**
@@ -49,10 +51,12 @@ class FluxManager {
      * @public
      *
      * @param {FluxCache | FluxState | FluxEngine} fluxObj The Flux object to add to the manager
+     * @param {Array<FluxCache | FluxState | FluxEngine>} [config.dependsOn=[]] The array of Flux objects this cache depends on; if any of the
+     * Flux objects' values change or become marked as stale, then this cache will also become marked as stale
      * @returns {FluxCache | FluxState | FluxEngine} The added Flux object
      */
-    addFluxObject(fluxObj) {
-        // If the key is already in the active flux obejcts info map, then do nothing
+    addFluxObject(fluxObj, dependsOn=[]) {
+        // If the key is already in the active flux objects info map, then do nothing
         if (this.#activeFluxObjectsInfo.has(fluxObj.getID())) return;
 
         // Otherwise, add the object to the active flux objects info map
@@ -60,9 +64,19 @@ class FluxManager {
             fluxObj.getID(),
             {
                 fluxObj,
-                dependedBy: new Map(),
+                dependedBy: [],
             }
         );
+
+        // Handle any `dependsOn` values by adding them to the appropriate `dependedBy` arrays in the active flux object info map
+        for (const dependencyObj of (dependsOn || [])) {
+            const dependencyID = dependencyObj.getID();
+            const dependencyFluxObjectInfo = this.#activeFluxObjectsInfo.get(dependencyID);
+            // If the dependency flux object is found, add the new flux object to its `dependedBy` array
+            if (dependencyFluxObjectInfo) {
+                dependencyFluxObjectInfo.dependedBy.push(fluxObj);
+            }
+        }
 
         // Return the Flux object back
         return fluxObj;
@@ -82,6 +96,23 @@ class FluxManager {
     //#endregion
 
     //#region Protected Functions
+
+    /**
+     * Marks all Flux objects that depend on the given Flux object as stale.
+     * @protected
+     */
+    markAllObjectsRelyingOnObjAsStale(fluxObjID) {
+        // Get the active flux object from the manager
+        const activeFluxObjectInfo = this.#activeFluxObjectsInfo.get(fluxObjID);
+
+        // If the active flux object does not exist, do not do anything
+        if (!activeFluxObjectInfo) return;
+
+        // Iterate through all of the dependencies, marking them as stale
+        for (const dependency of activeFluxObjectInfo.dependedBy) {
+            dependency.setStale(true);
+        }
+    }
 
     /**
      * Nukes the Flux Manager's data. Useful for testing... not much else.

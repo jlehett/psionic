@@ -93,4 +93,50 @@ describe('FluxCache', () => {
         expect(fourthStaleQuery).to.equal(false);
     });
 
+    it('is able to properly handle manually setting the cache\'s stale state', async () => {
+        const profileCache = createFluxCache({
+            id: 'profileCache',
+            fetch: async () => ({ name: 'John' }),
+            staleAfter: delayTime,
+        });
+        const firstStaleQuery = profileCache.getStale();
+        profileCache.setStale(false);
+        const secondStaleQuery = profileCache.getStale();
+        await delay(delayTime);
+        const thirdStaleQuery = profileCache.getStale();
+        profileCache.setStale(false);
+        const fourthStaleQuery = profileCache.getStale();
+        profileCache.setStale(true);
+        const fifthStaleQuery = profileCache.getStale();
+        profileCache.setStale(false);
+        await delay(delayTime / 2);
+        const sixthStaleQuery = profileCache.getStale();
+        profileCache.setStale(true);
+        profileCache.setStale(false);
+        const seventhStaleQuery = profileCache.getStale();
+        await delay(delayTime / 2);
+        const eighthStaleQuery = profileCache.getStale();
+        await delay(delayTime / 2);
+        const ninthStaleQuery = profileCache.getStale();
+
+        // Expect the first stale query to read true, since no data has been fetched yet
+        expect(firstStaleQuery).to.equal(true) &&
+        // Expect the second stale query to read false, since the cache's stale state has manually been set to false
+        expect(secondStaleQuery).to.equal(false) &&
+        // Expect the third stale query to read true, since the cache's stale timer was triggered
+        expect(thirdStaleQuery).to.equal(true) &&
+        // Expect the fourth stale query to read false, since the cache's stale state has manually been set to false
+        expect(fourthStaleQuery).to.equal(false) &&
+        // Expect the fifth stale query to read true, since the cache's stale state has manually been set to true
+        expect(fifthStaleQuery).to.equal(true) &&
+        // Expect the sixth stale query to read false, since the cache's stale state has manually been set to false and the stale timer hasn't elapsed
+        expect(sixthStaleQuery).to.equal(false) &&
+        // Expect the seventh stale query to equal false, since the cache's stale state has manually been set to false
+        expect(seventhStaleQuery).to.equal(false) &&
+        // Expect the eighth stale query to equal false still, since the stale timer was reset
+        expect(eighthStaleQuery).to.equal(false) &&
+        // Expect the ninth stale query to equal true, since the new stale timer has elapsed
+        expect(ninthStaleQuery).to.equal(true);
+    })
+
 });

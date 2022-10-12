@@ -83,13 +83,10 @@ class FluxCache {
      * @param {string} config.id The ID to use for the FluxCache; should be unique among all other active Flux objects
      * @param {function} config.fetch The function to call to asynchronously fetch the data to store in the cache, if non-stale
      * data does not already exist in the cache
-     * @param {Array<FluxCache, FluxState, FluxEngine>} config.dependsOn The array of Flux objects this cache depends on; if any of the
-     * Flux objects' values change or become marked as stale, then this cache will also become marked as stale
      */
     constructor({
         id,
         fetch,
-        dependsOn,
         staleAfter,
     }) {
         this.#id = id;
@@ -217,6 +214,32 @@ class FluxCache {
         this.#markStale();
     }
 
+    /**
+     * Manually sets the stale state of the FluxCache. If setting the stale state to `false`, and the `staleAfter` value is set for the FluxCache,
+     * the stale timer will start immediately after setting the stale state to `false`.
+     * @public
+     *
+     * @example
+     * // Create a FluxCache object
+     * const profileCache = createFluxCache({
+     *      id: 'profileCache',
+     *      fetch: async () => {
+     *          return { name: 'John' };
+     *      }
+     * });
+     *
+     * // Set the stale state of the cache to `false`, manually
+     * profileCache.setStale(false);
+     *
+     * // Set the stale state of the cache to `true`, manually
+     * profileCache.setStale(true);
+     *
+     * @param {boolean} isStale Flag indicating whether the cache is stale or not
+     */
+    setStale(isStale) {
+        isStale ? this.#markStale() : this.#unmarkStale();
+    }
+
     //#endregion
 
     //#region Protected Functions
@@ -257,6 +280,9 @@ class FluxCache {
         if (this.#cancelStaleSetter) {
             this.#cancelStaleSetter();
         }
+
+        // Ask the manager to mark all Flux objects depending on this object as stale
+        FluxManager.markAllObjectsRelyingOnObjAsStale(this.#id);
     }
 
     /**
@@ -306,22 +332,22 @@ class FluxCache {
  * @param {Array<FluxCache | FluxState | FluxEngine>} [config.dependsOn=[]] The array of Flux objects this cache depends on; if any of the
  * Flux objects' values change or become marked as stale, then this cache will also become marked as stale
  * @param {Number} [config.staleAfter=null] The amount of time to wait before declaring the data in the cache as stale; if this value is
- * not passed, then the cache will not be marked stale in response to the age of the data in the cache
+ * not passed, then the cache will not be marked stale in response to the age of the data in the cachegit s
  * @returns {FluxState | FluxCache | FluxEngine} The created Flux object, or the old Flux object with the given ID
  */
 function createFluxCache({
     id,
     fetch,
-    dependsOn,
+    dependsOn=[],
     staleAfter,
 }) {
     return FluxManager.getOrCreateFluxObject(
         new FluxCache({
             id,
             fetch,
-            dependsOn,
             staleAfter,
-        })
+        }),
+        dependsOn,
     );
 }
 

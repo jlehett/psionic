@@ -100,6 +100,9 @@ class FluxState {
      */
     set(newValue) {
         this.#data = newValue;
+
+        // Ask the manager to mark all Flux objects depending on this object as stale
+        FluxManager.markAllObjectsRelyingOnObjAsStale(this.#id);
     }
 
     //#endregion

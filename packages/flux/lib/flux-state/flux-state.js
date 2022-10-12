@@ -140,7 +140,10 @@ var FluxState = /*#__PURE__*/function () {
   }, {
     key: "set",
     value: function set(newValue) {
-      _classPrivateFieldSet(this, _data, newValue);
+      _classPrivateFieldSet(this, _data, newValue); // Ask the manager to mark all Flux objects depending on this object as stale
+
+
+      _fluxManager.FluxManager.markAllObjectsRelyingOnObjAsStale(_classPrivateFieldGet(this, _id));
     } //#endregion
     //#region Protected Functions
 
@@ -166,7 +169,8 @@ var FluxState = /*#__PURE__*/function () {
 //#region Public Functions
 
 /**
- * Creates a new `FluxState` with the given ID. If the ID is already taken by another Flux object, then nothing will occur.
+ * Creates a new `FluxState` with the given ID. If the ID is already taken by another Flux object, that object will be returned instead of
+ * a new Flux object being created.
  * @public
  * @memberof module:@psionic/flux
  * @alias module:@psionic/flux.createFluxState
@@ -175,6 +179,7 @@ var FluxState = /*#__PURE__*/function () {
  * @param {string} config.id The ID to use for the FluxState; should be unique among all other active Flux objects
  * @param {*} config.value The initial value to set as data; this will be recursively cloned so that any changes to
  * this value (if it is an object) will not affect the `FluxState` instance's value
+ * @returns {FluxState | FluxCache | FluxEngine} The created Flux object, or the old Flux object with the given ID
  */
 
 

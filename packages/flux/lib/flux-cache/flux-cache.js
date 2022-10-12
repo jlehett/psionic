@@ -125,13 +125,10 @@ var FluxCache = /*#__PURE__*/function () {
    * @param {string} config.id The ID to use for the FluxCache; should be unique among all other active Flux objects
    * @param {function} config.fetch The function to call to asynchronously fetch the data to store in the cache, if non-stale
    * data does not already exist in the cache
-   * @param {Array<FluxCache, FluxState, FluxEngine>} config.dependsOn The array of Flux objects this cache depends on; if any of the
-   * Flux objects' values change or become marked as stale, then this cache will also become marked as stale
    */
   function FluxCache(_ref) {
     var id = _ref.id,
         fetch = _ref.fetch,
-        dependsOn = _ref.dependsOn,
         staleAfter = _ref.staleAfter;
 
     _classCallCheck(this, FluxCache);
@@ -363,6 +360,34 @@ var FluxCache = /*#__PURE__*/function () {
       })));
 
       _classPrivateMethodGet(this, _markStale, _markStale2).call(this);
+    }
+    /**
+     * Manually sets the stale state of the FluxCache. If setting the stale state to `false`, and the `staleAfter` value is set for the FluxCache,
+     * the stale timer will start immediately after setting the stale state to `false`.
+     * @public
+     *
+     * @example
+     * // Create a FluxCache object
+     * const profileCache = createFluxCache({
+     *      id: 'profileCache',
+     *      fetch: async () => {
+     *          return { name: 'John' };
+     *      }
+     * });
+     *
+     * // Set the stale state of the cache to `false`, manually
+     * profileCache.setStale(false);
+     *
+     * // Set the stale state of the cache to `true`, manually
+     * profileCache.setStale(true);
+     *
+     * @param {boolean} isStale Flag indicating whether the cache is stale or not
+     */
+
+  }, {
+    key: "setStale",
+    value: function setStale(isStale) {
+      isStale ? _classPrivateMethodGet(this, _markStale, _markStale2).call(this) : _classPrivateMethodGet(this, _unmarkStale, _unmarkStale2).call(this);
     } //#endregion
     //#region Protected Functions
 
@@ -395,7 +420,8 @@ var FluxCache = /*#__PURE__*/function () {
 //#region Public Functions
 
 /**
- * Creates a new `FluxCache` with the given ID. If the ID is already taken by another
+ * Creates a new `FluxCache` with the given ID. If the ID is already taken by another flux object, that object will be returned instead of
+ * a new Flux object being created.
  * @public
  * @memberof module:@psionic/flux
  * @alias module:@psionic/flux.createFluxCache
@@ -404,10 +430,11 @@ var FluxCache = /*#__PURE__*/function () {
  * @param {string} config.id The ID to use for the FluxCache; should be unique among all other active Flux objects
  * @param {function} config.fetch The function to call to asynchronously fetch the data to store in the cache, if non-stale
  * data does not already exist in the cache
- * @param {Array<FluxCache, FluxState, FluxEngine>} config.dependsOn The array of Flux objects this cache depends on; if any of the
+ * @param {Array<FluxCache | FluxState | FluxEngine>} [config.dependsOn=[]] The array of Flux objects this cache depends on; if any of the
  * Flux objects' values change or become marked as stale, then this cache will also become marked as stale
- * @param {Number} config.staleAfter The amount of time to wait before declaring the data in the cache as stale; if this value is not passed, the
- * data in the cache will never be automatically marked as stale (other than before the first fetch operation occurs)
+ * @param {Number} [config.staleAfter=null] The amount of time to wait before declaring the data in the cache as stale; if this value is
+ * not passed, then the cache will not be marked stale in response to the age of the data in the cachegit s
+ * @returns {FluxState | FluxCache | FluxEngine} The created Flux object, or the old Flux object with the given ID
  */
 
 
@@ -423,7 +450,10 @@ function _markStale2() {
 
   if (_classPrivateFieldGet(this, _cancelStaleSetter)) {
     _classPrivateFieldGet(this, _cancelStaleSetter).call(this);
-  }
+  } // Ask the manager to mark all Flux objects depending on this object as stale
+
+
+  _fluxManager.FluxManager.markAllObjectsRelyingOnObjAsStale(_classPrivateFieldGet(this, _id));
 }
 
 function _unmarkStale2() {
@@ -454,14 +484,14 @@ function _unmarkStale2() {
 function createFluxCache(_ref4) {
   var id = _ref4.id,
       fetch = _ref4.fetch,
-      dependsOn = _ref4.dependsOn,
+      _ref4$dependsOn = _ref4.dependsOn,
+      dependsOn = _ref4$dependsOn === void 0 ? [] : _ref4$dependsOn,
       staleAfter = _ref4.staleAfter;
   return _fluxManager.FluxManager.getOrCreateFluxObject(new FluxCache({
     id: id,
     fetch: fetch,
-    dependsOn: dependsOn,
     staleAfter: staleAfter
-  }));
+  }), dependsOn);
 } //#endregion
 //#region Exports
 
