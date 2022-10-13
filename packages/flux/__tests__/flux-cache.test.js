@@ -137,6 +137,50 @@ describe('FluxCache', () => {
         expect(eighthStaleQuery).to.equal(false) &&
         // Expect the ninth stale query to equal true, since the new stale timer has elapsed
         expect(ninthStaleQuery).to.equal(true);
-    })
+    });
+
+    it('is able to provide the last successfully cached data, even if the data is stale', async () => {
+        const profileCache = createFluxCache({
+            id: 'profileCache',
+            fetch: async () => ({ name: 'John' }),
+            staleAfter: delayTime,
+        });
+
+        const firstReading = profileCache.getCachedData();
+        await profileCache.get();
+        const secondReading = profileCache.getCachedData();
+        await delay(delayTime);
+        const staleQuery = profileCache.getStale();
+        const thirdReading = profileCache.getCachedData();
+
+        expect(firstReading).to.equal(undefined) &&
+        expect(secondReading).to.deep.equal({ name: 'John' }) &&
+        expect(staleQuery).to.equal(true) &&
+        expect(thirdReading).to.deep.equal({ name: 'John' });
+    });
+
+    it('is able to provide the last successfully cached data, even if a new fetch operation is running', async () => {
+        let i = 0;
+
+        const profileCache = createFluxCache({
+            id: 'profileCache',
+            fetch: async () => {
+                await delay(delayTime);
+                return i++ == 0 ? { name: 'John' } : { name: 'Roni' };
+            }
+        });
+
+        await profileCache.get();
+        profileCache.setStale(true);
+        profileCache.get();
+        const firstReading = profileCache.getCachedData();
+        await delay(delayTime);
+        const staleQuery = profileCache.getStale();
+        const secondReading = profileCache.getCachedData();
+
+        expect(firstReading).to.deep.equal({ name: 'John' }) &&
+        expect(staleQuery).to.equal(false) &&
+        expect(secondReading).to.deep.equal({ name: 'Roni' });
+    });
 
 });

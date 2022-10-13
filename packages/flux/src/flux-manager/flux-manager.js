@@ -7,7 +7,7 @@
 /**
  * Class representing the manager responsible for handling all of the Flux caches, states, engines, etc.
  *
- * @protected
+ * @private
  * @memberof module:@psionic/flux
  * @alias module:@psionic/flux.FluxManager
  */

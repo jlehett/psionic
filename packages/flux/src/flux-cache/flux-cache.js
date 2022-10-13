@@ -12,7 +12,11 @@ import { FluxManager } from '../flux-manager/flux-manager';
  * fetch the data asynchronously. After the data has been fetched, it will be cached. The next time the
  * data needs to be fetched, it will be taken from the cache, unless it was marked as stale.
  *
- * @protected
+ * New `FluxCache`s should be created with the `createFluxCache` function -- NOT with a `new FluxCache()`
+ * constructor. Otherwise, the Flux object will not be instantiated in the general FluxManager singleton, and
+ * functionality may break.
+ *
+ * @public
  * @memberof module:@psionic/flux
  * @alias module:@psionic/flux.FluxCache
  */
@@ -79,10 +83,14 @@ class FluxCache {
 
     /**
      * @constructor
+     * @private
+     *
      * @param {Object} config The configuration object
      * @param {string} config.id The ID to use for the FluxCache; should be unique among all other active Flux objects
      * @param {function} config.fetch The function to call to asynchronously fetch the data to store in the cache, if non-stale
      * data does not already exist in the cache
+     * @param {Number} [config.staleAfter] The amount of time to wait before declaring the data in the cache as stale; if this value is
+     * not passed, then the cache will not be marked stale in response to the age of the data in the cache
      */
     constructor({
         id,
@@ -240,13 +248,75 @@ class FluxCache {
         isStale ? this.#markStale() : this.#unmarkStale();
     }
 
-    //#endregion
+    /**
+     * Manually clears the data from the cache. Usually not needed unless a large amount of data is being stored in the cache and you wish to free
+     * up memory usage. Calling this function will automatically mark the cache as stale.
+     * @public
+     *
+     * @example
+     * // Create a FluxCache object
+     * const profileCache = createFluxCache({
+     *      id: 'profileCache',
+     *      fetch: async () => getLargeAmountOfData(),
+     * });
+     *
+     * // Fetch the data for the cache
+     * await profileCache.get();
+     *
+     * // If the data is no longer needed, it can be manually cleared from the cache to free up memory
+     * profileCache.clear();
+     */
+    clear() {
+        this.#data = undefined;
+        this.#markStale();
+    }
 
-    //#region Protected Functions
+    /**
+     * Returns whatever data is currently stored in the cache, regardless of whether that data is stale or not. To note, unless manually cleared,
+     * the data from the last successful `get` call will remain stored in the cache until another `get` call resolves and updates the cache. This
+     * means it is possible to use this function while another `get` operation is running to retrieve the results from the last successfuly `get`
+     * operation.
+     * @public
+     *
+     * @example
+     * // Create a FluxState object
+     * const userIDState = createFluxState({
+     *      id: 'userIDState',
+     *      value: 'John',
+     * });
+     *
+     * // Create a FluxCache object
+     * const profileCache = createFluxCache({
+     *      id: 'profileCache',
+     *      fetch: async () => {
+     *          // Mock a 5s delay before the data is resolved and stored in the cache
+     *          await delay(5000);
+     *          const userID = await userIDState.get();
+     *          return { name: userID };
+     *      },
+     * });
+     *
+     * // Fetch the first reading and store it in the cache
+     * await profileCache.get(); // { name: 'John' }
+     *
+     * // Update the `userIDState` to trigger a stale profile cache
+     * userIDState.set('Roni');
+     *
+     * // Start a new `get` operation to store the new data in the cache (but don't `await` the result)
+     * profileCache.get(); // Will resolve to { name: 'Roni' } after 5 seconds
+     *
+     * // Retrieve the data currently in the cache before the new data resolves and updates the cache
+     * profileCache.getCachedData(); // { name: 'John' }
+     *
+     * @returns {*} The data currently stored in the cache, whether it is stale or not
+     */
+    getCachedData() {
+        return cloneDeep(this.#data);
+    }
 
     /**
      * Get the Flux object's ID.
-     * @protected
+     * @public
      *
      * @return {string} The Flux object's ID
      */
@@ -382,8 +452,8 @@ class FluxCache {
  * data does not already exist in the cache
  * @param {Array<FluxCache | FluxState>} [config.dependsOn=[]] The array of Flux objects this cache depends on; if any of the
  * Flux objects' values change or become marked as stale, then this cache will also become marked as stale
- * @param {Number} [config.staleAfter=null] The amount of time to wait before declaring the data in the cache as stale; if this value is
- * not passed, then the cache will not be marked stale in response to the age of the data in the cachegit s
+ * @param {Number} [config.staleAfter] The amount of time to wait before declaring the data in the cache as stale; if this value is
+ * not passed, then the cache will not be marked stale in response to the age of the data in the cache
  * @returns {FluxState | FluxCache} The created Flux object, or the old Flux object with the given ID
  */
 function createFluxCache({

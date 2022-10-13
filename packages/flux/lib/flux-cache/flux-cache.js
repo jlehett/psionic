@@ -388,6 +388,77 @@ var FluxCache = /*#__PURE__*/function () {
     key: "setStale",
     value: function setStale(isStale) {
       isStale ? _classPrivateMethodGet(this, _markStale, _markStale2).call(this) : _classPrivateMethodGet(this, _unmarkStale, _unmarkStale2).call(this);
+    }
+    /**
+     * Manually clears the data from the cache. Usually not needed unless a large amount of data is being stored in the cache and you wish to free
+     * up memory usage. Calling this function will automatically mark the cache as stale.
+     * @public
+     *
+     * @example
+     * // Create a FluxCache object
+     * const profileCache = createFluxCache({
+     *      id: 'profileCache',
+     *      fetch: async () => getLargeAmountOfData(),
+     * });
+     *
+     * // Fetch the data for the cache
+     * await profileCache.get();
+     *
+     * // If the data is no longer needed, it can be manually cleared from the cache to free up memory
+     * profileCache.clear();
+     */
+
+  }, {
+    key: "clear",
+    value: function clear() {
+      _classPrivateFieldSet(this, _data, undefined);
+
+      _classPrivateMethodGet(this, _markStale, _markStale2).call(this);
+    }
+    /**
+     * Returns whatever data is currently stored in the cache, regardless of whether that data is stale or not. To note, unless manually cleared,
+     * the data from the last successful `get` call will remain stored in the cache until another `get` call resolves and updates the cache. This
+     * means it is possible to use this function while another `get` operation is running to retrieve the results from the last successfuly `get`
+     * operation.
+     * @public
+     *
+     * @example
+     * // Create a FluxState object
+     * const userIDState = createFluxState({
+     *      id: 'userIDState',
+     *      value: 'John',
+     * });
+     *
+     * // Create a FluxCache object
+     * const profileCache = createFluxCache({
+     *      id: 'profileCache',
+     *      fetch: async () => {
+     *          // Mock a 5s delay before the data is resolved and stored in the cache
+     *          await delay(5000);
+     *          const userID = await userIDState.get();
+     *          return { name: userID };
+     *      },
+     * });
+     *
+     * // Fetch the first reading and store it in the cache
+     * await profileCache.get(); // { name: 'John' }
+     *
+     * // Update the `userIDState` to trigger a stale profile cache
+     * userIDState.set('Roni');
+     *
+     * // Start a new `get` operation to store the new data in the cache (but don't `await` the result)
+     * profileCache.get(); // Will resolve to { name: 'Roni' } after 5 seconds
+     *
+     * // Retrieve the data currently in the cache before the new data resolves and updates the cache
+     * profileCache.getCachedData(); // { name: 'John' }
+     *
+     * @returns {*} The data currently stored in the cache, whether it is stale or not
+     */
+
+  }, {
+    key: "getCachedData",
+    value: function getCachedData() {
+      return (0, _cloneDeep["default"])(_classPrivateFieldGet(this, _data));
     } //#endregion
     //#region Protected Functions
 

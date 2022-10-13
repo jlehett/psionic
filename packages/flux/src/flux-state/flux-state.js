@@ -10,7 +10,11 @@ import { FluxManager } from '../flux-manager/flux-manager';
 /**
  * Class representing a state whose value can be set, read, and used as a dependency within the Flux framework.
  *
- * @protected
+ * New `FluxState`s should be created with the `createFluxState` function -- NOT with a `new FluxState()`
+ * constructor. Otherwise, the Flux object will not be instantiated in the general FluxManager singleton, and
+ * functionality may break.
+ *
+ * @public
  * @memberof module:@psionic/flux
  * @alias module:@psionic/flux.FluxState
  */
@@ -42,6 +46,8 @@ class FluxState {
 
     /**
      * @constructor
+     * @private
+     *
      * @param {Object} config The configuration object
      * @param {string} config.id The ID to use for the FluxState; should be unique among all other active Flux objects
      * @param {*} config.value The initial value to set as data; this will be recursively cloned so that any changes to
@@ -105,13 +111,9 @@ class FluxState {
         FluxManager.markAllObjectsRelyingOnObjAsStale(this.#id);
     }
 
-    //#endregion
-
-    //#region Protected Functions
-
     /**
      * Get the Flux object's ID.
-     * @protected
+     * @public
      *
      * @return {string} The Flux object's ID
      */
@@ -119,7 +121,7 @@ class FluxState {
         return this.#id;
     }
 
-    //#region
+    //#endregion
 
     //#region Private Functions
 
