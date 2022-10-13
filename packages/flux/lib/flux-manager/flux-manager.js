@@ -59,11 +59,11 @@ var FluxManager = /*#__PURE__*/function () {
      * and returns it if an existing Flux object did not exist for that ID.
      * @public
      *
-     * @param {FluxCache | FluxState | FluxEngine} fluxObj The Flux object to add if an existing Flux object with a matching
+     * @param {FluxCache | FluxState} fluxObj The Flux object to add if an existing Flux object with a matching
      * ID does not exist
-     * @param {Array<FluxCache | FluxState | FluxEngine>} [config.dependsOn=[]] The array of Flux objects this cache depends on; if any of the
+     * @param {Array<FluxCache | FluxState>} [config.dependsOn=[]] The array of Flux objects this cache depends on; if any of the
      * Flux objects' values change or become marked as stale, then this cache will also become marked as stale
-     * @returns {FluxCache | FluxState | FluxEngine} The existing Flux object with the matching ID, if it exists; otherwise, returns
+     * @returns {FluxCache | FluxState} The existing Flux object with the matching ID, if it exists; otherwise, returns
      * the Flux object that was added to the Flux Manager
      */
     function getOrCreateFluxObject(fluxObj) {
@@ -74,10 +74,10 @@ var FluxManager = /*#__PURE__*/function () {
      * Adds the given Flux object to be managed by the Flux Manager.
      * @public
      *
-     * @param {FluxCache | FluxState | FluxEngine} fluxObj The Flux object to add to the manager
-     * @param {Array<FluxCache | FluxState | FluxEngine>} [config.dependsOn=[]] The array of Flux objects this cache depends on; if any of the
+     * @param {FluxCache | FluxState} fluxObj The Flux object to add to the manager
+     * @param {Array<FluxCache | FluxState>} [config.dependsOn=[]] The array of Flux objects this cache depends on; if any of the
      * Flux objects' values change or become marked as stale, then this cache will also become marked as stale
-     * @returns {FluxCache | FluxState | FluxEngine} The added Flux object
+     * @returns {FluxCache | FluxState} The added Flux object
      */
 
   }, {
@@ -122,7 +122,7 @@ var FluxManager = /*#__PURE__*/function () {
      * @public
      *
      * @param {string} id The ID of the existing Flux object to fetch
-     * @returns {FluxCache | FluxState | FluxEngine} The existing Flux object for the given ID
+     * @returns {FluxCache | FluxState} The existing Flux object for the given ID
      */
 
   }, {

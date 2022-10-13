@@ -164,7 +164,7 @@ class FluxState {
  * @param {string} config.id The ID to use for the FluxState; should be unique among all other active Flux objects
  * @param {*} config.value The initial value to set as data; this will be recursively cloned so that any changes to
  * this value (if it is an object) will not affect the `FluxState` instance's value
- * @returns {FluxState | FluxCache | FluxEngine} The created Flux object, or the old Flux object with the given ID
+ * @returns {FluxState | FluxCache} The created Flux object, or the old Flux object with the given ID
  */
 function createFluxState({
     id,

@@ -380,11 +380,11 @@ class FluxCache {
  * @param {string} config.id The ID to use for the FluxCache; should be unique among all other active Flux objects
  * @param {function} config.fetch The function to call to asynchronously fetch the data to store in the cache, if non-stale
  * data does not already exist in the cache
- * @param {Array<FluxCache | FluxState | FluxEngine>} [config.dependsOn=[]] The array of Flux objects this cache depends on; if any of the
+ * @param {Array<FluxCache | FluxState>} [config.dependsOn=[]] The array of Flux objects this cache depends on; if any of the
  * Flux objects' values change or become marked as stale, then this cache will also become marked as stale
  * @param {Number} [config.staleAfter=null] The amount of time to wait before declaring the data in the cache as stale; if this value is
  * not passed, then the cache will not be marked stale in response to the age of the data in the cachegit s
- * @returns {FluxState | FluxCache | FluxEngine} The created Flux object, or the old Flux object with the given ID
+ * @returns {FluxState | FluxCache} The created Flux object, or the old Flux object with the given ID
  */
 function createFluxCache({
     id,
