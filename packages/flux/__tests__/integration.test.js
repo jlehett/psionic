@@ -1,12 +1,9 @@
 import { expect } from 'chai';
-import delay from 'delay';
 import {
     createFluxCache,
     createFluxState,
 } from '../lib';
 import { _UNSAFE_nukeFluxManager } from '../lib/flux-manager/flux-manager';
-
-const delayTime = 50;
 
 describe('Integration Tests', () => {
 
