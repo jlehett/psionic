@@ -1,4 +1,4 @@
-# `@psionic/emit`
+# `@psionic/emit-react`
 
 #### <b>A collection of React hooks for integration with the `@psionic/emit` library.</b>
 
