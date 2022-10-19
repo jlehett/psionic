@@ -1,6 +1,6 @@
 {
     "name": "@psionic/emit-react",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "A collection of React hooks for integration with the @psionic/emit library.",
     "main": "lib/index.js",
     "directories": {
