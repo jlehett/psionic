@@ -1,6 +1,7 @@
 //#region Imports
 
 import cloneDeep from 'lodash/cloneDeep';
+import { emit } from '@psionic/emit';
 import { FluxManager } from '../flux-manager/flux-manager';
 
 //#endregion
@@ -109,6 +110,9 @@ class FluxState {
 
         // Ask the manager to mark all Flux objects depending on this object as stale
         FluxManager.markAllObjectsRelyingOnObjAsStale(this.#id);
+
+        // Emit the updated event
+        this.#emitUpdatedEvent();
     }
 
     /**
@@ -124,6 +128,14 @@ class FluxState {
     //#endregion
 
     //#region Private Functions
+
+    /**
+     * Emits the "flux object updated" event.
+     * @private
+     */
+    #emitUpdatedEvent() {
+        emit(`_FLUX_${this.#id}-updated`);
+    }
 
     //#endregion
 }

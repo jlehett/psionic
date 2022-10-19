@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { onEmit } from '@psionic/emit';
 import { createFluxState } from '../lib';
 import { _UNSAFE_nukeFluxManager } from '../lib/flux-manager/flux-manager';
 
@@ -86,6 +87,28 @@ describe('FluxState', () => {
         expect(user).to.deep.equal({ displayName: 'John' }) &&
         // Expect the third `createFluxState` call to create a new flux state since a new ID was given
         expect(newUser).to.deep.equal({ displayName: 'Rob' });
+    });
+
+    it('emits a `_FLUX_${fluxObjID}-updated` event whenever the state updates for any reason', async () => {
+        let emitCounts = 0;
+
+        const profileState = createFluxState({
+            id: 'profileState',
+            value: null,
+        });
+
+        const listener = onEmit('_FLUX_profileState-updated', () => emitCounts++);
+
+        await profileState.get();
+        await profileState.get();
+        profileState.set({ name: 'John' });
+        await profileState.get();
+        await profileState.get();
+        profileState.set({ name: 'Roni' });
+
+        listener.cancel();
+
+        expect(emitCounts).to.equal(2);
     });
 
 });

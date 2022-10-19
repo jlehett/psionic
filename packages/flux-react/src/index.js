@@ -4,3 +4,5 @@
  * @public
  * @module @psionic/flux-react
  */
+
+export * from './use-flux-reader/use-flux-reader';

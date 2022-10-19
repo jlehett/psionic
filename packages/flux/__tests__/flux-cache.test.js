@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import delay from 'delay';
+import { onEmit } from '@psionic/emit';
 import { createFluxCache } from '../lib';
 import { _UNSAFE_nukeFluxManager } from '../lib/flux-manager/flux-manager';
 
@@ -181,6 +182,33 @@ describe('FluxCache', () => {
         expect(firstReading).to.deep.equal({ name: 'John' }) &&
         expect(staleQuery).to.equal(false) &&
         expect(secondReading).to.deep.equal({ name: 'Roni' });
+    });
+
+    it('emits a `_FLUX_${fluxObjID}-updated` event whenever the cache updates for any reason', async () => {
+        let i = 0;
+        let emitCounts = 0;
+
+        const profileCache = createFluxCache({
+            id: 'profileCache',
+            fetch: async () => {
+                await delay(delayTime);
+                return i++ == 0 ? { name: 'John' } : { name: 'Roni' };
+            },
+            staleAfter: delayTime,
+        });
+
+        const listener = onEmit('_FLUX_profileCache-updated', () => emitCounts++);
+
+        await profileCache.get();
+        await profileCache.get();
+        await delay(delayTime);
+        await profileCache.get();
+        await profileCache.get();
+        profileCache.setStale(true);
+
+        listener.cancel();
+
+        expect(emitCounts).to.equal(4);
     });
 
 });

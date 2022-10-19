@@ -1,6 +1,7 @@
 //#region Imports
 
 import cloneDeep from 'lodash/cloneDeep';
+import { emit } from '@psionic/emit';
 import { FluxManager } from '../flux-manager/flux-manager';
 
 //#endregion
@@ -329,6 +330,14 @@ class FluxCache {
     //#region Private Functions
 
     /**
+     * Emits the "flux object updated" event.
+     * @private
+     */
+    #emitUpdatedEvent() {
+        emit(`_FLUX_${this.#id}-updated`);
+    }
+
+    /**
      * Caches the given data, and handles any stale timer logic, if needed.
      * @private
      *
@@ -349,10 +358,14 @@ class FluxCache {
         // If there is an active timeout function, cancel it
         if (this.#cancelStaleSetter) {
             this.#cancelStaleSetter();
+            this.#cancelStaleSetter = null;
         }
 
         // Ask the manager to mark all Flux objects depending on this object as stale
         FluxManager.markAllObjectsRelyingOnObjAsStale(this.#id);
+
+        // Emit the updated event
+        this.#emitUpdatedEvent();
     }
 
     /**
@@ -373,12 +386,14 @@ class FluxCache {
 
             // Create the timeout function and the function to cancel it
             const staleTimeout = setTimeout(() => {
-                this.#stale = true;
-                this.#cancelStaleSetter = null;
+                this.#markStale();
             }, this.#staleAfter);
             this.#cancelStaleSetter = () => clearTimeout(staleTimeout);
 
         }
+
+        // Emit the updated event
+        this.#emitUpdatedEvent();
     }
 
     //#endregion
