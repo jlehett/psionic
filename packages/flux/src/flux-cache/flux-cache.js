@@ -140,11 +140,12 @@ class FluxCache {
         }
         // If there is a fetch operation already in progress, simply return that promise
         else if (this.#fetchPromise) {
-            return this.#fetchPromise();
+            return this.#fetchPromise;
         }
         // Otherwise, initiate a new external fetch operation, and store the results in the cache
         else {
             this.#fetchPromise = this.#fetch();
+            this.#emitUpdatedEvent();
 
             // Clear out the fetch promise once it resolves
             this.#fetchPromise.then(() => {
@@ -189,6 +190,42 @@ class FluxCache {
      */
     getStale() {
         return this.#stale;
+    }
+
+    /**
+     * Get a flag indicating whether the cache is currently loading data or not.
+     * @public
+     *
+     * @example
+     * // Create a FluxCache object
+     * const profileCache = createFluxCache({
+     *      id: 'profileCache',
+     *      fetch: async () => {
+     *          // Add an artifical 500ms delay before the data loads
+     *          await delay(500);
+     *          return { name: 'John' };
+     *      },
+     * });
+     *
+     * // The cache is not loading data in the beginning
+     * let isStale = profileCache.getIsLoading(); // false
+     *
+     * // Initiate the load of the data
+     * profileCache.get();
+     *
+     * // The cache is now loading data
+     * isStale = profileCache.getIsLoading(); // true
+     *
+     * // Wait for 500ms for the data to fully load
+     * await delay(500);
+     *
+     * // The cache is no longer loading data
+     * isStale = profileCache.getIsLoading(); // false
+     *
+     * @returns {boolean} Flag indicating whether the cache is actively loading data or not
+     */
+    getIsLoading() {
+        return Boolean(this.#fetchPromise);
     }
 
     /**

@@ -1,5 +1,18 @@
 # @psionic/flux
 
+## 0.0.4
+
+<i>Oct 19, 2022</i>
+
+* 📨 Add additional emit events to track when the `FluxCache` transitions to "loading". This is to support the upcoming `@psionic/flux-react` package.
+* 🛠️ Fix issue that could occur when calling multiple `FluxCache.get` operations at once before waiting for the previous `FluxCache.get` operation to resolve.
+
+## 0.0.3
+
+<i>Oct 19, 2022</i>
+
+* 🔄 Add `getIsLoading` function to `FluxCache` class in order to fetch a flag indicating whether the cache is actively loading data or not. This is to support the upcoming `@psionic/flux-react` package.
+
 ## 0.0.2
 
 <i>Oct 19, 2022</i>

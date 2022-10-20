@@ -208,7 +208,66 @@ describe('FluxCache', () => {
 
         listener.cancel();
 
-        expect(emitCounts).to.equal(4);
+        expect(emitCounts).to.equal(6);
+    });
+
+    it('provides accurate flags indicating whether the cache is actively loading data or not', async () => {
+        let loadingReadings = [];
+
+        const profileCache = createFluxCache({
+            id: 'profileCache',
+            fetch: async () => {
+                await delay(delayTime);
+                return { name: 'John' };
+            },
+        });
+
+        loadingReadings.push(profileCache.getIsLoading());
+        profileCache.get();
+        loadingReadings.push(profileCache.getIsLoading());
+        await delay(delayTime);
+        loadingReadings.push(profileCache.getIsLoading());
+
+        expect(loadingReadings).to.deep.equal([false, true, false]);
+    });
+
+    it('is able to handle multiple async `get` calls at once', async () => {
+        let i = 0;
+        const readings = [];
+
+        const iCache = createFluxCache({
+            id: 'iCache',
+            fetch: async () => {
+                await delay(delayTime);
+                return ++i;
+            }
+        });
+
+        iCache.get();
+        iCache.get();
+        iCache.get();
+        await delay(delayTime / 2);
+        iCache.get();
+        iCache.get();
+        readings.push(iCache.getCachedData());
+        await delay(delayTime / 2);
+        readings.push(iCache.getCachedData());
+        iCache.get();
+        readings.push(iCache.getCachedData());
+        iCache.setStale(true);
+        iCache.get();
+        iCache.get();
+        iCache.get();
+        readings.push(iCache.getCachedData());
+        await delay(delayTime / 2);
+        iCache.get();
+        iCache.get();
+        iCache.get();
+        readings.push(iCache.getCachedData());
+        await delay(delayTime / 2);
+        readings.push(iCache.getCachedData());
+
+        expect(readings).to.deep.equal([undefined, 1, 1, 1, 1, 2]);
     });
 
 });

@@ -1,6 +1,6 @@
 {
   "name": "@psionic/flux",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "A data fetching and caching framework.",
   "main": "lib/index.js",
   "directories": {
