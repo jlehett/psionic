@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
 import '@testing-library/jest-dom';
 import {
     createFluxState,
@@ -15,53 +16,51 @@ beforeEach(() => {
     _UNSAFE_nukeFluxManager();
 });
 
-// test('is able to respond to updates of FluxStates', async () => {
-//     const profileState = createFluxState({
-//         id: 'profileState',
-//         value: null,
-//     });
+test('is able to respond to updates of FluxStates', async () => {
+    const profileState = createFluxState({
+        id: 'profileState',
+        value: null,
+    });
 
-//     const ComponentRelyingOnState = () => {
-//         const [
-//             profile,
-//             profileIsStale,
-//             profileLoading
-//         ] = useFluxReader(profileState);
+    const ComponentRelyingOnState = () => {
+        const [
+            profile,
+            profileIsStale,
+            profileLoading
+        ] = useFluxReader(profileState);
 
-//         return (
-//             <>
-//                 <p data-testid="profileName">
-//                     {profile?.name || 'No Content'}
-//                 </p>
-//                 <button onClick={() => profileState.set({ name: 'John' })}>
-//                     Set to John
-//                 </button>
-//                 <button onClick={() => profileState.set({ name: 'Roni' })}>
-//                     Set to Roni
-//                 </button>
-//             </>
-//         );
-//     };
+        return (
+            <>
+                <p data-testid="profileName">
+                    {profile?.name || 'No Content'}
+                </p>
+                <button onClick={() => profileState.set({ name: 'John' })}>
+                    Set to John
+                </button>
+                <button onClick={() => profileState.set({ name: 'Roni' })}>
+                    Set to Roni
+                </button>
+            </>
+        );
+    };
 
-//     render(<ComponentRelyingOnState/>);
+    render(<ComponentRelyingOnState/>);
 
-//     const setToJohnButton = screen.getByText('Set to John');
-//     const setToRoniButton = screen.getByText('Set to Roni');
+    const setToJohnButton = screen.getByText('Set to John');
+    const setToRoniButton = screen.getByText('Set to Roni');
 
-//     const resultText = screen.getByTestId('profileName');
+    const resultText = screen.getByTestId('profileName');
 
-//     expect(resultText).toHaveTextContent('No Content');
+    expect(resultText).toHaveTextContent('No Content');
 
-//     fireEvent.click(setToJohnButton);
-//     expect(resultText).toHaveTextContent('John');
+    fireEvent.click(setToJohnButton);
+    expect(resultText).toHaveTextContent('John');
 
-//     fireEvent.click(setToRoniButton);
-//     expect(resultText).toHaveTextContent('Roni');
-// });
+    fireEvent.click(setToRoniButton);
+    expect(resultText).toHaveTextContent('Roni');
+});
 
 test('is able to respond to updates of FluxCaches', async () => {
-    let renders = 0;
-
     const profileCache = createFluxCache({
         id: 'profileCache',
         fetch: async () => {
@@ -71,106 +70,137 @@ test('is able to respond to updates of FluxCaches', async () => {
         staleAfter: delayTime,
     });
 
-    console.log(profileCache);
-    profileCache.get().catch(() => {});
-    profileCache.get().catch((err) => console.log(err));
+    let renders = 0;
+    const ComponentRelyingOnCache = () => {
+        const [
+            profile,
+            profileIsStale,
+            profileLoading
+        ] = useFluxReader(profileCache);
 
-    // const ComponentRelyingOnCache = () => {
-    //     const [
-    //         profile,
-    //         profileIsStale,
-    //         profileLoading
-    //     ] = useFluxReader(profileCache);
+        renders++;
 
-    //     renders++;
+        return (
+            <>
+                <p data-testid="profileName">
+                    {profile?.name || 'No Content'}
+                </p>
+                <p data-testid="profileIsStale">
+                    {profileIsStale ? 'True' : 'False'}
+                </p>
+                <p data-testid="profileIsLoading">
+                    {profileLoading ? 'True' : 'False'}
+                </p>
+                <button onClick={() => { profileCache.get() }}>
+                    Fetch Profile
+                </button>
+            </>
+        );
+    };
 
-    //     return (
-    //         <>
-    //             <p data-testid="profileName">
-    //                 {profile?.name || 'No Content'}
-    //             </p>
-    //             <p data-testid="profileIsStale">
-    //                 {profileIsStale ? 'True' : 'False'}
-    //             </p>
-    //             <p data-testid="profileIsLoading">
-    //                 {profileLoading ? 'True' : 'False'}
-    //             </p>
-    //             <button onClick={() => { console.log(profileCache.get); profileCache.get() }}>
-    //                 Fetch Profile
-    //             </button>
-    //         </>
-    //     );
-    // };
+    act(() => {
+        render(<ComponentRelyingOnCache/>)
+    });
 
-    // render(<ComponentRelyingOnCache/>);
+    const fetchButton = screen.getByRole('button');
+    const profileName = screen.getByTestId('profileName');
+    const profileIsStale = screen.getByTestId('profileIsStale');
+    const profileIsLoading = screen.getByTestId('profileIsLoading');
 
-    // const fetchButton = screen.getByRole('button');
-    // const profileName = screen.getByTestId('profileName');
-    // const profileIsStale = screen.getByTestId('profileIsStale');
-    // const profileIsLoading = screen.getByTestId('profileIsLoading');
+    expect(profileName).toHaveTextContent('No Content');
+    expect(profileIsStale).toHaveTextContent('True');
+    expect(profileIsLoading).toHaveTextContent('False');
 
-    // expect(renders).toEqual(1);
-    // expect(profileName).toHaveTextContent('No Content');
-    // expect(profileIsStale).toHaveTextContent('True');
-    // expect(profileIsLoading).toHaveTextContent('False');
+    act(() => {
+        fireEvent.click(fetchButton);
+        fireEvent.click(fetchButton);
+    });
 
-    // fireEvent.click(fetchButton);
-    // fireEvent.click(fetchButton);
+    expect(profileName).toHaveTextContent('No Content');
+    expect(profileIsStale).toHaveTextContent('True');
+    expect(profileIsLoading).toHaveTextContent('True');
 
-    // await delay(delayTime);
+    await act(async () => {
+        await delay(delayTime);
+    });
 
-    // expect(renders).toEqual(2);
-    // expect(profileName).toHaveTextContent('No Content');
-    // expect(profileIsStale).toHaveTextContent('True');
-    // expect(profileIsLoading).toHaveTextContent('False');
+    expect(profileName).toHaveTextContent('John');
+    expect(profileIsStale).toHaveTextContent('False');
+    expect(profileIsLoading).toHaveTextContent('False');
 
-    // await delay(delayTime);
+    await act(async () => {
+        await delay(delayTime);
+    });
 
-    // expect(renders).toEqual(3);
-    // expect(profileName).toHaveTextContent('John');
-    // expect(profileIsStale).toHaveTextContent('False');
-    // expect(profileIsLoading).toHaveTextContent('False');
+    expect(profileName).toHaveTextContent('John');
+    expect(profileIsStale).toHaveTextContent('True');
+    expect(profileIsLoading).toHaveTextContent('False');
 
-    // await delay(delayTime);
+    act(() => {
+        fireEvent.click(fetchButton);
+        fireEvent.click(fetchButton);
+    });
 
-    // expect(renders).toEqual(4);
-    // expect(profileName).toHaveTextContent('John');
-    // expect(profileIsStale).toHaveTextContent('True');
-    // expect(profileIsLoading).toHaveTextContent('False');
+    expect(profileName).toHaveTextContent('John');
+    expect(profileIsStale).toHaveTextContent('True');
+    expect(profileIsLoading).toHaveTextContent('True');
 
-    // fireEvent.click(fetchButton);
-    // fireEvent.click(fetchButton);
+    await act(async () => {
+        await delay(delayTime);
+    });
 
-    // expect(renders).toEqual(5);
-    // expect(profileName).toHaveTextContent('John');
-    // expect(profileIsStale).toHaveTextContent('False');
-    // expect(profileIsLoading).toHaveTextContent('True');
+    expect(profileName).toHaveTextContent('John');
+    expect(profileIsStale).toHaveTextContent('False');
+    expect(profileIsLoading).toHaveTextContent('False');
 
-    // await delay(delayTime);
+    act(() => {
+        profileCache.setStale(true);
+    });
 
-    // expect(renders).toEqual(6);
-    // expect(profileName).toHaveTextContent('John');
-    // expect(profileIsStale).toHaveTextContent('False');
-    // expect(profileIsLoading).toHaveTextContent('False');
+    expect(profileName).toHaveTextContent('John');
+    expect(profileIsStale).toHaveTextContent('True');
+    expect(profileIsLoading).toHaveTextContent('False');
 
-    // profileCache.setStale(true);
+    act(() => {
+        profileCache.setStale(false);
+    });
 
-    // expect(renders).toEqual(7);
-    // expect(profileName).toHaveTextContent('John');
-    // expect(profileIsStale).toHaveTextContent('True');
-    // expect(profileIsLoading).toHaveTextContent('False');
+    expect(profileName).toHaveTextContent('John');
+    expect(profileIsStale).toHaveTextContent('False');
+    expect(profileIsLoading).toHaveTextContent('False');
 
-    // profileCache.setStale(false);
+    act(() => {
+        profileCache.setStale(true);
+    });
 
-    // expect(renders).toEqual(8);
-    // expect(profileName).toHaveTextContent('John');
-    // expect(profileIsStale).toHaveTextContent('False');
-    // expect(profileIsLoading).toHaveTextContent('False');
+    expect(profileName).toHaveTextContent('John');
+    expect(profileIsStale).toHaveTextContent('True');
+    expect(profileIsLoading).toHaveTextContent('False');
 
-    // profileCache.setStale(true);
+    await act(async () => {
+        profileCache.updateFetch(async () => {
+            await delay(delayTime);
+            return { name: 'Roni' };
+        });
+    });
 
-    // expect(renders).toEqual(9);
-    // expect(profileName).toHaveTextContent('John');
-    // expect(profileIsStale).toHaveTextContent('False');
-    // expect(profileIsLoading).toHaveTextContent('False');
+    expect(profileName).toHaveTextContent('John');
+    expect(profileIsStale).toHaveTextContent('True');
+    expect(profileIsLoading).toHaveTextContent('False');
+
+    act(() => {
+        profileCache.get();
+    });
+
+    expect(profileName).toHaveTextContent('John');
+    expect(profileIsStale).toHaveTextContent('True');
+    expect(profileIsLoading).toHaveTextContent('True');
+
+    await act(async () => {
+        await delay(delayTime);
+    });
+
+    expect(profileName).toHaveTextContent('Roni');
+    expect(profileIsStale).toHaveTextContent('False');
+    expect(profileIsLoading).toHaveTextContent('False');
 });
