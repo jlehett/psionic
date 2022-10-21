@@ -1,5 +1,11 @@
 # @psionic/flux
 
+## 0.0.5
+
+<i>Oct 20, 2022</i>
+
+* 🛠️ Fix issue causing old fetch operations to continue if the data was re-marked as stale while the fetch operation was occurring. Now, if a fetch operation is currently in progress when the cache gets marked as stale, the fetch operation will restart to ensure the latest data is fetched.
+
 ## 0.0.4
 
 <i>Oct 19, 2022</i>

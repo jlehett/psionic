@@ -1,7 +1,10 @@
 import { expect } from 'chai';
 import delay from 'delay';
 import { onEmit } from '@psionic/emit';
-import { createFluxCache } from '../lib';
+import {
+    createFluxCache,
+    createFluxState,
+} from '../lib';
 import { _UNSAFE_nukeFluxManager } from '../lib/flux-manager/flux-manager';
 
 const delayTime = 50;
@@ -268,6 +271,33 @@ describe('FluxCache', () => {
         readings.push(iCache.getCachedData());
 
         expect(readings).to.deep.equal([undefined, 1, 1, 1, 1, 2]);
+    });
+
+    it('restarts the fetch operation if the cache would get marked as stale while it is fetching data', async () => {
+        const readings = [];
+
+        const userIDState = createFluxState({
+            id: 'userIDState',
+            value: 'John',
+        });
+
+        const userCache = createFluxCache({
+            id: 'userCache',
+            fetch: async () => {
+                const userID = userIDState.get();
+                await delay(delayTime);
+                return { name: userID };
+            },
+            dependsOn: [userIDState],
+        });
+
+        userCache.get().then((result) => readings.push(result));
+        userCache.get().then((result) => readings.push(result));
+        userIDState.set('Roni');
+
+        await delay(delayTime+1);
+
+        expect(readings).to.deep.equal([{ name: 'Roni' }, { name: 'Roni' }]);
     });
 
 });

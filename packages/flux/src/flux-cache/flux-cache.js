@@ -1,7 +1,7 @@
 //#region Imports
 
 import cloneDeep from 'lodash/cloneDeep';
-import { emit } from '@psionic/emit';
+import { emit, onEmit } from '@psionic/emit';
 import { FluxManager } from '../flux-manager/flux-manager';
 
 //#endregion
@@ -58,7 +58,7 @@ class FluxCache {
     #fetch;
 
     /**
-     * The promise tracking the most recent external `fetch` call.
+     * The promise tracking the currently running "fetch" promise.
      * @private
      * @type {Promise<*>}
      */
@@ -113,6 +113,9 @@ class FluxCache {
     /**
      * Retrieves the appropriate data from the cache, if it is available and non-stale, or externally via
      * the Flux cache's `fetch` function if the data is not available or is stale in the cache.
+     *
+     * If the cache is re-marked as stale while the Flux cache is running a `fetch` operation, the existing fetch operation
+     * will be restarted from scratch in order to ensure the most up-to-date data is used. See example 2.
      * @public
      *
      * @example
@@ -131,6 +134,34 @@ class FluxCache {
      * // Read the value from the FluxCache for the second time (retrieves the stored data from the cache; promise should only take a few milliseconds)
      * const cachedProfile = await profileCache.get();
      *
+     * @example
+     * // Create a FluxState object
+     * const userIDState = createFluxState({
+     *      id: 'userIDState',
+     *      value: 'John',
+     * });
+     *
+     * // Create a FluxCache object that relies on the userIDState Flux object
+     * const userCache = createFluxCache({
+     *      id: 'userCache',
+     *      fetch: async () => {
+     *          const userID = userIDState.get();
+     *          // Mock an asynchronous data fetching delay
+     *          await delay(delayTime)
+     *          return { name: userID };
+     *      },
+     *      dependsOn: [userIDState],
+     * });
+     *
+     * // Initiate a `get` request for the cache
+     * const getPromise = userCache.get();
+     *
+     * // Before the `get` request resolves, change the userIDState value; this will cause the above `get` operation to restart w/ the new data
+     * userIDState.set('Roni');
+     *
+     * // Wait for the `getPromise` to resolve and retrieve the result
+     * const result = await getPromise; // { name: 'Roni' } since the userIDState changed before the `get` operation resolved
+     *
      * @returns {Promise<*>} Resolves with the data from either the cache or from the external fetch function
      */
     async get() {
@@ -144,17 +175,57 @@ class FluxCache {
         }
         // Otherwise, initiate a new external fetch operation, and store the results in the cache
         else {
-            this.#fetchPromise = this.#fetch();
+            // The data could become marked as stale again while a fetch operation is occurring. For this reason, we want to keep trying the
+            // fetch operation until it either resolves, or it rejects w/o the "Stale Data" error.
+            this.#fetchPromise = (async () => {
+
+                // Function that creates a promise race between the fetch operation and a stale data listener
+                const fetchVsStaleDataRace = async () => {
+                    let listener;
+
+                    // Result should hold the result of a promise race between the fetch operation and the stale data listener
+                    const result = await Promise.race([
+                        this.#fetch(),
+                        new Promise((_, reject) => {
+                            listener = onEmit(`_FLUX_${this.#id}-markedStale`, () => {
+                                reject('_FLUX_ Stale Data');
+                            });
+                        }),
+                    ]);
+
+                    // Cancel the stale data listener once the promise race resolves, regardless of who won
+                    listener?.cancel?.();
+
+                    // Return the result
+                    return result;
+                }
+
+                // Keep attempting the fetch vs stale data promise race until the fetch operation is the one to win (in resolution or rejection)
+                while (true) {
+                    try {
+                        return await fetchVsStaleDataRace();
+                    } catch (err) {
+                        // Throw the error if the `fetch` function itself was what failed
+                        if (err !== '_FLUX_ Stale Data') {
+                            throw err;
+                        }
+                    }
+                }
+            })();
+
+            // Wait for the fetch promise to resolve
+            const result = await this.#fetchPromise;
+
+            // Clear out the fetch promise
+            this.#fetchPromise = null;
+
+            // Emit the updated event
             this.#emitUpdatedEvent();
 
-            // Clear out the fetch promise once it resolves
-            this.#fetchPromise.then(() => {
-                this.#fetchPromise = null;
-            });
-
-            // Get the result from the fetch promise, cache the data, and return the result
-            const result = await this.#fetchPromise;
+            // Cache the result of the fetch promise
             this.#cacheData(result);
+
+            // Return the result of the fetch promise
             return result;
         }
     }
@@ -403,6 +474,9 @@ class FluxCache {
 
         // Emit the updated event
         this.#emitUpdatedEvent();
+
+        // Emit the stale data event
+        emit(`_FLUX_${this.#id}-markedStale`);
     }
 
     /**
