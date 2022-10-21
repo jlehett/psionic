@@ -37,33 +37,10 @@ import { useOnEmit } from '@psionic/emit-react';
 //#region Public Hooks
 
 /**
- * React Hook that creates state values to interact with `@psionic/flux` objects for the lifetime of the
+ * React Hook that creates state values to interact with `@psionic/flux` `FluxCache` objects for the lifetime of the
  * React component the hook is used in.
  * @public
  * @memberof module:@psionic/flux-react
- *
- * @example
- * // Create a FluxState object
- * const profileState = createFluxState({
- *      id: 'profileState',
- *      value: null,
- * });
- *
- * // In a React component, use the `useFluxReader` hook to respond to changes to this Flux object
- * const [
- *      profile,
- *      profileIsStale,
- *      profileIsLoading,
- * ] = useFluxReader(profileState);
- *
- * // The `profile` from the `useFluxReader` will contain `null` since that is the current value in the profile state
- * console.log(profile); // null
- *
- * // Update the profile state from anywhere in your codebase
- * profileState.set({ name: 'John' });
- *
- * // The `profile` from the `useFluxReader` will contain the new value
- * console.log(profile); // { name: 'John' };
  *
  * @example
  * // Create a FluxCache object
@@ -76,14 +53,14 @@ import { useOnEmit } from '@psionic/emit-react';
  *      },
  * });
  *
- * // In a React component, use the `useFluxReader` hook to respond to changes to this Flux object
+ * // In a React component, use the `useCacheReader` hook to respond to changes to this FluxCache
  * const [
  *      profile,
  *      profileIsStale,
  *      profileIsLoading,
- * ] = useFluxReader(profileCache);
+ * ] = useCacheReader(profileCache);
  *
- * // The `profile` from the `useFluxReader` will contain `undefined` since that is the current value in the profile state
+ * // The `profile` from the `useCacheReader` will contain `undefined` since that is the current value in the profile state
  * console.log(profile); // undefined
  *
  * // The `profileIsStale` value will be set to `true` since no data has been fetched yet
@@ -116,37 +93,20 @@ import { useOnEmit } from '@psionic/emit-react';
  * // The `profileIsLoading` value will be set to `false` since the data has finished loading
  * console.log(profileIsLoading); // false
  *
- * @param {module:@psionic/flux.FluxState | module:@psionic/flux.FluxCache} fluxObj The flux object to read data from as it changes
- * @returns {Array<CachedValue, IsStaleFlag, IsLoadingFlag>} Hook API for reading the Flux object's data as React state
+ * @param {module:@psionic/flux.FluxCache} fluxCache The `FluxCache` object to read data from as it changes
+ * @returns {Array<CachedValue, IsStaleFlag, IsLoadingFlag>} Hook API for reading the FluxCache's data as React state
  */
-function useFluxReader(fluxObj) {
-    // Define a function to get the synchronous data from the flux object
-    const getSynchronousData = () => {
-        if (fluxObj?.getCachedData) return fluxObj.getCachedData();
-        if (fluxObj?.get) return fluxObj.get();
-        return undefined;
-    };
-    // Define a function to get whether the flux object is stale or not
-    const getStale = () => {
-        if (fluxObj?.getStale) return fluxObj.getStale();
-        return false;
-    }
-    // Define a function to get whether the flux object is actively loading data or not
-    const getIsLoading = () => {
-        if (fluxObj?.getIsLoading) return fluxObj.getIsLoading();
-        return false;
-    }
-
-    // Track some flux object info in state
-    const [cachedValue, setCachedValue] = useState(getSynchronousData());
-    const [isStale, setIsStale] = useState(getStale());
-    const [isLoading, setIsLoading] = useState(getIsLoading());
+function useCacheReader(fluxCache) {
+    // Track some flux cache info in state
+    const [cachedValue, setCachedValue] = useState(fluxCache.getCachedData());
+    const [isStale, setIsStale] = useState(fluxCache.getStale());
+    const [isLoading, setIsLoading] = useState(fluxCache.getIsLoading());
 
     // Use the `useOnEmit` hook to listen to updates for
-    useOnEmit(`_FLUX_${fluxObj.getID()}-updated`, () => {
-        setCachedValue(getSynchronousData());
-        setIsStale(getStale());
-        setIsLoading(getIsLoading());
+    useOnEmit(`_FLUX_${fluxCache.getID()}-updated`, () => {
+        setCachedValue(fluxCache.getCachedData());
+        setIsStale(fluxCache.getStale());
+        setIsLoading(fluxCache.getIsLoading());
     });
 
     return [
@@ -161,7 +121,7 @@ function useFluxReader(fluxObj) {
 //#region Exports
 
 module.exports = {
-    useFluxReader,
+    useCacheReader,
 };
 
 //#endregion

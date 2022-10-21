@@ -5,4 +5,5 @@
  * @module @psionic/flux-react
  */
 
-export * from './use-flux-reader/use-flux-reader';
+export * from './use-cache-reader/use-cache-reader';
+export * from './use-state-reader/use-state-reader';

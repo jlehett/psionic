@@ -1,5 +1,11 @@
 # @psionic/flux-react
 
+## 0.0.2
+
+<i>Oct 21, 2022</i>
+
+* 🛠️ Split the `useFluxReader` hook into a `useCacheReader` hook and a `useStateReader` hook to better represent the differences between `FluxCache` objects and `FluxState` objects.
+
 ## 0.0.1
 
 <i>Oct 19, 2022</i>

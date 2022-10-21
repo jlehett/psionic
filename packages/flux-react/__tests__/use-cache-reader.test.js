@@ -1,63 +1,16 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import '@testing-library/jest-dom';
-import {
-    createFluxState,
-    createFluxCache,
-} from '@psionic/flux';
+import { createFluxCache } from '@psionic/flux';
 import delay from 'delay';
 import { _UNSAFE_nukeFluxManager } from '@psionic/flux/lib/flux-manager/flux-manager';
-import { useFluxReader } from '../lib';
+import { useCacheReader } from '../lib';
 
 // Define some delay time to use whenever mocking async delays
 const delayTime = 50;
 
 beforeEach(() => {
     _UNSAFE_nukeFluxManager();
-});
-
-test('is able to respond to updates of FluxStates', async () => {
-    const profileState = createFluxState({
-        id: 'profileState',
-        value: null,
-    });
-
-    const ComponentRelyingOnState = () => {
-        const [
-            profile,
-            profileIsStale,
-            profileLoading
-        ] = useFluxReader(profileState);
-
-        return (
-            <>
-                <p data-testid="profileName">
-                    {profile?.name || 'No Content'}
-                </p>
-                <button onClick={() => profileState.set({ name: 'John' })}>
-                    Set to John
-                </button>
-                <button onClick={() => profileState.set({ name: 'Roni' })}>
-                    Set to Roni
-                </button>
-            </>
-        );
-    };
-
-    render(<ComponentRelyingOnState/>);
-
-    const setToJohnButton = screen.getByText('Set to John');
-    const setToRoniButton = screen.getByText('Set to Roni');
-
-    const resultText = screen.getByTestId('profileName');
-
-    expect(resultText).toHaveTextContent('No Content');
-
-    fireEvent.click(setToJohnButton);
-    expect(resultText).toHaveTextContent('John');
-
-    fireEvent.click(setToRoniButton);
-    expect(resultText).toHaveTextContent('Roni');
 });
 
 test('is able to respond to updates of FluxCaches', async () => {
@@ -76,7 +29,7 @@ test('is able to respond to updates of FluxCaches', async () => {
             profile,
             profileIsStale,
             profileLoading
-        ] = useFluxReader(profileCache);
+        ] = useCacheReader(profileCache);
 
         renders++;
 
