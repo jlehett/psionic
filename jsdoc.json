@@ -2,7 +2,7 @@
     "source": {
         "include": ["packages", "package.json", "README.md"],
         "includePattern": ".js$",
-        "excludePattern": "(node_modules/|docs|lib/)"
+        "excludePattern": "(node_modules/|docs|lib/|packages/ui/)"
     },
     "plugins": [
         "plugins/markdown",
