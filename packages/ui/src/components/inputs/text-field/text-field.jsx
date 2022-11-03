@@ -116,7 +116,7 @@ const TextField = ({
      * Main render.
      */
     return (
-        <div
+        <motion.div
             data-display-error={!currentValidity && unmodifiedSinceLastSubmission}
             data-is-focused={isFocused}
             {...passThruProps}
@@ -124,6 +124,8 @@ const TextField = ({
                 ${passThruProps?.className}
                 ${localStyles.textField}
             `}
+            animate={{ x: !currentValidity && unmodifiedSinceLastSubmission ? [0, 10, -10, 10, 0] : 0 }}
+            transition={{ duration: 0.4 }}
         >
             <motion.div
                 initial={{ top: currentValue ? '0px' : '37x' }}
@@ -162,7 +164,7 @@ const TextField = ({
             <p className={localStyles.helperMessage}>
                 {currentHelperMessage}
             </p>
-        </div>
+        </motion.div>
     );
 
     //#endregion
