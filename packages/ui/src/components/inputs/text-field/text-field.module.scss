@@ -1,2 +1,125 @@
 @import "@styles/colors.scss";
+@import "@styles/main.scss";
+@import "@styles/common-mixins.scss";
 
+@layer psionic {
+
+    .textField {
+
+        position: relative;
+        padding: 24px 0 0 0;
+
+        .labelWrapper {
+            position: absolute;
+            left: 12px;
+            pointer-events: none;
+
+            label {
+                font-size: 16px;
+                color: $mediumEmphasisTransparent;
+            }
+        }
+
+        .inputWrapper {
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+            background: white;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            input {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 12px;
+                outline: none;
+                border: none;
+                font-size: 16px;
+                background: none;
+                box-sizing: border-box;
+            }
+
+            button {
+                cursor: pointer;
+                outline: none;
+                border: none;
+                background: none;
+                padding: 4px;
+                margin-right: 4px;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                @include hoverIfSupported {
+                    background: rgba(0, 0, 0, 0.1);
+                }
+
+                &:active {
+                    background: rgba(0, 0, 0, 0.2);
+                }
+
+                svg {
+                    width: 24px;
+                    height: 24px;
+                    fill: $mediumEmphasis;
+                }
+            }
+        }
+
+        .helperMessage {
+            font-size: 13px;
+            color: $error;
+            margin: 8px 0 0 12px;
+
+            &:empty {
+                height: 15px;
+            }
+        }
+
+        @include hoverIfSupported {
+
+            .inputWrapper {
+                box-shadow: 0 0 0 1px black;
+            }
+        }
+
+        &[data-display-error="true"] {
+
+            .inputWrapper {
+                box-shadow: 0 0 0 1px $error;
+            }
+
+            .labelWrapper {
+
+                label {
+                    color: $error;
+                }
+            }
+
+            &[data-is-focused="true"] {
+
+                .inputWrapper {
+                    box-shadow: 0 0 0 2px $error;
+                }
+            }
+        }
+
+        &[data-is-focused="true"][data-display-error="false"] {
+
+            .inputWrapper {
+                box-shadow: 0 0 0 2px $focus;
+            }
+
+            .labelWrapper {
+
+                label {
+                    color: $focus;
+                }
+            }
+        }
+    }
+}

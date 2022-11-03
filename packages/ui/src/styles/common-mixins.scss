@@ -1,0 +1,17 @@
+
+@mixin hideScrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+@mixin hoverIfSupported {
+    @media (hover: hover) {
+        &:hover {
+            @content;
+        }
+    }
+}

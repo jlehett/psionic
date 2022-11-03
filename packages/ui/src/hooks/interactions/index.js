@@ -1,0 +1,1 @@
+export { default as useMousePos } from './use-mouse-pos/use-mouse-pos';

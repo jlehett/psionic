@@ -1,0 +1,1 @@
+export { default as StickyTooltip } from './sticky-tooltip/sticky-tooltip';

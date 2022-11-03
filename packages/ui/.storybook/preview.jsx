@@ -1,4 +1,5 @@
 import '@storybook/addon-console';
+import './storybook.scss';
 import { BrowserRouter } from 'react-router-dom';
 
 export const decorators = [

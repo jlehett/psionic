@@ -5,6 +5,9 @@ import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    define: {
+        global: {},
+    },
     resolve: {
         alias: {
             '@assets': resolve(__dirname, './src/assets'),
