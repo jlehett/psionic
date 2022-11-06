@@ -1,0 +1,36 @@
+@import "@styles/colors.scss";
+
+@layer psionic {
+
+    $animationTime: 1s;
+
+    .quarterSpinner {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 0.5em solid rgba(0, 0, 0, 0.25);
+        border-top: 0.5em solid rgba(0, 0, 0, 1.0);
+        animation-name: rotate;
+        animation-duration: $animationTime;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+
+        @keyframes rotate {
+            0% {
+                rotate: 0deg;
+            }
+            25% {
+                rotate: 90deg;
+            }
+            50% {
+                rotate: 180deg;
+            }
+            75% {
+                rotate: 270deg;
+            }
+            100% {
+                rotate: 360deg;
+            }
+        }
+    }
+}
