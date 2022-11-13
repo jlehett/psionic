@@ -150,7 +150,6 @@ export default {
 };
 
 const Template = (args) => {
-
     return (
         <Form
             onSubmit={() => {}}

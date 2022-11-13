@@ -10,6 +10,7 @@ import {
     Subtitle,
     Title,
 } from '@storybook/addon-docs';
+import { Form } from '@components/inputs';
 import { Code } from '../../../../.storybook/misc';
 import Input from './input';
 
@@ -107,9 +108,24 @@ export default {
 
 const Template = (args) => {
     return (
-        <div style={{ margin: '40px' }}>
-            <Input {...args}/>
-        </div>
+        <Form
+            onSubmit={() => {}}
+            style={{ margin: '40px' }}
+        >
+            <Input
+                fieldKey="testKey"
+                style={{ marginBottom: '20px' }}
+                {...args}
+            />
+            <div style={{ display: 'flex', flexDirection: 'row', gap: '16px' }}>
+                <button type="submit" style={{ width: '100px', height: '50px' }}>
+                    Submit
+                </button>
+                <button type="reset" style={{ width: '100px', height: '50px' }}>
+                    Reset
+                </button>
+            </div>
+        </Form>
     );
 };
 

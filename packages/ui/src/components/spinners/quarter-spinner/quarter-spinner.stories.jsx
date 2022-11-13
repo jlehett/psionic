@@ -40,7 +40,7 @@ Basic.args = {
 // Colored Demo
 export const Colored = Template.bind({});
 Colored.args = {
-    color: '#0000ff',
+    color: '#00aaff',
 };
 
 // Size Override Demo
