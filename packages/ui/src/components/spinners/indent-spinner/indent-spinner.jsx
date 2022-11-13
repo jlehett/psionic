@@ -9,6 +9,7 @@ const IndentSpinner = ({
     backgroundColor,
     coloredIndent,
     size,
+    speed,
     // Pass-thru Props
     ...passThruProps
 }) => {
@@ -58,7 +59,10 @@ const IndentSpinner = ({
                     background: backgroundColor,
                 }}
             />
-            <div className={localStyles.rotator}>
+            <div
+                className={localStyles.rotator}
+                style={{ animationDuration: `${speed}s` }}
+            >
                 <div
                     className={localStyles.spinner}
                     style={{ background: color }}
@@ -89,6 +93,10 @@ IndentSpinner.propTypes = {
      */
     size: PropTypes.number,
     /**
+     * The speed at which the spinner makes a full rotation in seconds.
+     */
+    speed: PropTypes.number,
+    /**
      * Any additional props to pass through to the internal div wrapping the entire
      * spinner.
      *
@@ -106,6 +114,7 @@ IndentSpinner.defaultProps = {
     color: '#878787',
     coloredIndent: false,
     size: 60,
+    speed: 1,
 };
 
 export default IndentSpinner;

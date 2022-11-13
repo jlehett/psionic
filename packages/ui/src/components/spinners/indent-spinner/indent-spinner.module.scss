@@ -2,8 +2,6 @@
 
 @layer psionic {
 
-    $animationTime: 1s;
-
     .outerCircle {
         position: relative;
         border-radius: 50%;
@@ -17,7 +15,6 @@
         width: 100%;
         height: 100%;
         animation-name: rotate;
-        animation-duration: $animationTime;
         animation-iteration-count: infinite;
         animation-timing-function: linear;
 

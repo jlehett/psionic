@@ -2,16 +2,10 @@
 
 @layer psionic {
 
-    $animationTime: 1s;
-
     .quarterSpinner {
-        width: 60px;
-        height: 60px;
+        box-sizing: border-box;
         border-radius: 50%;
-        border: 0.5em solid rgba(0, 0, 0, 0.25);
-        border-top: 0.5em solid rgba(0, 0, 0, 1.0);
         animation-name: rotate;
-        animation-duration: $animationTime;
         animation-iteration-count: infinite;
         animation-timing-function: linear;
 

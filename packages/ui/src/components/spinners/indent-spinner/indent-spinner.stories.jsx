@@ -11,6 +11,7 @@ setAsCategory(argTypes, 'UI', [
     'backgroundColor',
     'coloredIndent',
     'size',
+    'speed',
 ]);
 setAsCategory(argTypes, 'Pass Thru Props', [
     '...passThruProps',
@@ -24,7 +25,6 @@ export default {
 };
 
 const Template = (args) => {
-
     return (
         <div style={{ margin: '40px', padding: '20px', background: args.backgroundColor, borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 'fit-content' }}>
             <IndentSpinner {...args}/>
