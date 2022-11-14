@@ -1,6 +1,7 @@
 import {
     setAsCategory,
     setAsDisabled,
+    mockDelay,
 } from '@unifire-js/storybook-utils';
 import Button from './button';
 
@@ -15,7 +16,14 @@ export default {
 };
 
 const Template = (args) => {
-    return <Button {...args}/>;
+    return (
+        <div style={{ margin: '40px' }}>
+            <Button
+                onClick={() => mockDelay(3000)}
+                {...args}
+            />
+        </div>
+    );
 };
 
 // Basic Demo

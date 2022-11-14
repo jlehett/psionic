@@ -1,21 +1,58 @@
 @import "@styles/colors.scss";
 @import "@styles/main.scss";
+@import "@styles/common-mixins.scss";
 
 @layer psionic {
 
     .button {
+        position: relative;
         text-transform: uppercase;
         min-height: 36px;
         padding: 5px 15px;
         font-size: 14px;
         border-radius: 4px;
         outline: none;
-        border: 1px solid $focus;
-        color: $focus;
+        border-width: 1px;
+        border-style: solid;
         background: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-        &:not(:disabled) {
+        &[data-disabled="false"] {
             cursor: pointer;
+        }
+
+        &[data-disabled="true"] {
+            cursor: default;
+        }
+
+        &[data-running="false"] {
+
+            .running {
+                opacity: 0;
+            }
+        }
+
+        &[data-running="true"] {
+
+            .ready {
+                opacity: 0;
+            }
+        }
+
+        .running {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .ready {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
     }
 }
