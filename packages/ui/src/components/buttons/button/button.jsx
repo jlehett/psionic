@@ -13,6 +13,7 @@ const Button = ({
     children,
     allowMultipleClicks,
     color,
+    variant,
     // Pass-thru Props
     ...passThruProps
 }) => {
@@ -68,6 +69,22 @@ const Button = ({
         return onClickRunning || disabled ? '#888888' : color;
     }, [onClickRunning, disabled, color]);
 
+    /**
+     * Memoized SCSS class to use, based on the `variant` of the button.
+     */
+    const classNameToUse = useMemo(() => {
+        switch (variant) {
+            case 'text':
+                return localStyles.textButton;
+            case 'contained':
+                return localStyles.containedButton;
+            case 'outlined':
+                return localStyles.outlinedButton;
+            default:
+                throw new Error(`Button variant, ${variant}, is unsupported.`);
+        }
+    }, [variant]);
+
     //#endregion
 
     //#region Effects
@@ -118,7 +135,7 @@ const Button = ({
             onMouseLeave={() => setIsHovered(false)}
             {...passThruProps}
             className={`
-                ${localStyles.button}
+                ${classNameToUse}
                 ${passThruProps?.className}
             `}
             style={{
@@ -157,12 +174,18 @@ const Button = ({
 
 Button.propTypes = {
     color: PropTypes.string,
+    variant: PropTypes.oneOf([
+        'outlined',
+        'contained',
+        'text',
+    ]),
 };
 
 Button.defaultProps = {
     color: '#0072E5',
     disabled: false,
     allowMultipleClicks: false,
+    variant: 'outlined',
 };
 
 export default Button;
