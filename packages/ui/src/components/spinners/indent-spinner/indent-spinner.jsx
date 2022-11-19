@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import Color from 'color';
 import localStyles from './indent-spinner.module.scss';
 
 /**
@@ -15,6 +16,16 @@ const IndentSpinner = ({
 }) => {
 
     //#region Constants
+
+    /**
+     * Various colors for the indent spinner
+     */
+    const baseColor = Color(color);
+    const baseColorOpacity60 = baseColor.fade(0.6);
+    const baseColorOpacity70 = baseColor.fade(0.7);
+    const baseColorOpacity80 = baseColor.fade(0.9);
+
+    const baseBackgroundColor = Color(backgroundColor);
 
     //#endregion
 
@@ -43,8 +54,8 @@ const IndentSpinner = ({
                 ${localStyles.outerCircle}
             `}
             style={{
-                background: `linear-gradient(145deg, ${coloredIndent ? `${color}4C` : '#00000010'}, ${coloredIndent ? `${color}1A` : '#00000005'})`,
-                boxShadow: `inset 2px 2px 4px 0px ${coloredIndent ? `${color}55` : '#00000015'}`,
+                background: `linear-gradient(145deg, ${coloredIndent ? baseColorOpacity70.string() : '#00000020'}, ${coloredIndent ? baseColorOpacity80.string() : '#00000010'})`,
+                boxShadow: `inset 2px 2px 4px 0px ${coloredIndent ? baseColorOpacity60.string() : '#00000030'}`,
                 width: `${size}px`,
                 height: `${size}px`,
                 ...(passThruProps?.style || {})
@@ -54,9 +65,9 @@ const IndentSpinner = ({
                 className={localStyles.innerCircle}
                 style={{
                     boxShadow: coloredIndent
-                        ? `${color}55 2px 2px 4px 0`
+                        ? `${baseColorOpacity60.string()} 2px 2px 4px 0`
                         : `rgba(0, 0, 0, 0.145) 2px 2px 4px 0px`,
-                    background: backgroundColor,
+                    background: baseBackgroundColor.string(),
                 }}
             />
             <div
@@ -65,7 +76,7 @@ const IndentSpinner = ({
             >
                 <div
                     className={localStyles.spinner}
-                    style={{ background: color }}
+                    style={{ background: baseColor.string() }}
                 />
             </div>
         </div>
@@ -76,11 +87,12 @@ const IndentSpinner = ({
 
 IndentSpinner.propTypes = {
     /**
-     * The color of the spinner. Should be in 6 character hexadecimal format.
+     * The color of the spinner. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
      */
     color: PropTypes.string,
     /**
-     * The background color of the element this spinner will be displayed on. Should be in 6 character hexadecimal format.
+     * The background color of the element this spinner will be displayed on.
+     * Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
      */
     backgroundColor: PropTypes.string,
     /**
@@ -97,7 +109,7 @@ IndentSpinner.propTypes = {
      */
     speed: PropTypes.number,
     /**
-     * Any additional props to pass through to the internal div wrapping the entire
+     * Any additional props to pass through to the internal `div` wrapping the entire
      * spinner.
      *
      * This is not a prop of `passThruProps` -- this is simply a representation of any
@@ -106,7 +118,7 @@ IndentSpinner.propTypes = {
      * To change the size of the spinner, you can pass a `className` or `style` prop which
      * changes both the `width` and `height` of the component.
      */
-    "...passThruProps": PropTypes.object,
+    "...passThruProps": PropTypes.any,
 };
 
 IndentSpinner.defaultProps = {

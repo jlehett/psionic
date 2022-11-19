@@ -47,4 +47,5 @@ Colored.args = {
 export const SizeOverride = Template.bind({});
 SizeOverride.args = {
     size: 20,
+    innerWidthRatio: 0.4,
 };

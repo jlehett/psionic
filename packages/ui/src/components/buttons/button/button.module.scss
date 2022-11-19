@@ -4,20 +4,16 @@
 
 @layer psionic {
 
-    .outlinedButton {
+    .button {
         position: relative;
         text-transform: uppercase;
         min-height: 36px;
         padding: 5px 15px;
         font-size: 14px;
-        border-radius: 4px;
-        outline: none;
-        border-width: 1px;
-        border-style: solid;
-        background: none;
         display: flex;
         align-items: center;
         justify-content: center;
+        font-weight: 500;
 
         &[data-disabled="false"] {
             cursor: pointer;
@@ -41,13 +37,7 @@
             }
         }
 
-        .running {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
+        .running,
         .ready {
             position: absolute;
             top: 50%;

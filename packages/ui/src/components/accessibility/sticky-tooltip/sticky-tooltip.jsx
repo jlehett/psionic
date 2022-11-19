@@ -231,7 +231,7 @@ StickyTooltip.propTypes = {
      * This is not a prop of `passThruProps` -- this is simply a representation of any
      * additional props passed to the `StickyTooltip` component that aren't covered above.
      */
-    "...passThruProps": PropTypes.object,
+    "...passThruProps": PropTypes.any,
 };
 
 StickyTooltip.defaultProps = {

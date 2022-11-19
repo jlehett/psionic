@@ -214,10 +214,10 @@ TextField.propTypes = {
      * The remaining props to spread to the internal `div` HTML element that acts as the
      * root container of the component.
      *
-     * this is not a prop of `passThruProps` -- this is simply a representation of any
+     * This is not a prop of `passThruProps` -- this is simply a representation of any
      * additional props passed to the `Form` component that aren't covered above.
      */
-    "...passThruProps": PropTypes.object,
+    "...passThruProps": PropTypes.any,
 };
 
 TextField.defaultProps = {

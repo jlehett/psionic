@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import Color from 'color';
 import localStyles from './quarter-spinner.module.scss';
 
 /**
@@ -15,6 +16,12 @@ const QuarterSpinner = ({
 }) => {
 
     //#region Constants
+
+    /**
+     * Various colors for the quarter spinner.
+     */
+    const baseColor = Color(color);
+    const baseColorOpacity80 = baseColor.fade(0.80);
 
     //#endregion
 
@@ -45,8 +52,8 @@ const QuarterSpinner = ({
             style={{
                 width: size,
                 height: size,
-                border: `${innerWidthRatio / 2 * size}px solid ${color}40`,
-                borderTop: `${innerWidthRatio / 2 * size}px solid ${color}FF`,
+                border: `${innerWidthRatio / 2 * size}px solid ${baseColorOpacity80.string()}`,
+                borderTop: `${innerWidthRatio / 2 * size}px solid ${baseColor.string()}`,
                 animationDuration: `${speed}s`,
                 ...(passThruProps?.style || {})
             }}
@@ -66,7 +73,7 @@ QuarterSpinner.propTypes = {
      */
     innerWidthRatio: PropTypes.number,
     /**
-     * The color of the spinner. Should be in 6 character hexadecimal format.
+     * The color of the spinner. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
      */
     color: PropTypes.string,
     /**
@@ -74,7 +81,7 @@ QuarterSpinner.propTypes = {
      */
     speed: PropTypes.number,
     /**
-     * Any additional props to pass through to the internal div wrapping the entire
+     * Any additional props to pass through to the internal `div` wrapping the entire
      * spinner.
      *
      * This is not a prop of `passThruProps` -- this is simply a representation of any
@@ -83,7 +90,7 @@ QuarterSpinner.propTypes = {
      * To change the size of the spinner, you can pass a `className` or `style` prop which
      * changes both the `width` and `height` of the component.
      */
-    "...passThruProps": PropTypes.object,
+    "...passThruProps": PropTypes.any,
 };
 
 QuarterSpinner.defaultProps = {

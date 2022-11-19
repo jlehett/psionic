@@ -7,6 +7,26 @@ import Button from './button';
 
 // Construct the argTypes object
 const argTypes = {};
+setAsCategory(argTypes, 'UI', [
+    'children',
+    'color',
+    'variant',
+    'rounded',
+    'width',
+    'height',
+]);
+setAsCategory(argTypes, 'Controls', [
+    'type',
+    'onClick',
+    'disabled',
+    'allowMultipleClicks',
+]);
+setAsCategory(argTypes, 'Pass Thru Props', [
+    '...passThruProps',
+]);
+setAsDisabled(argTypes, [
+    'style',
+])
 
 // Storybook default export
 export default {
@@ -17,7 +37,7 @@ export default {
 
 const Template = (args) => {
     return (
-        <div style={{ margin: '40px' }}>
+        <div style={{ margin: '40px', padding: '20px', background: '#fff', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 'fit-content' }}>
             <Button
                 onClick={() => mockDelay(3000)}
                 {...args}
@@ -26,8 +46,35 @@ const Template = (args) => {
     );
 };
 
-// Basic Demo
-export const Basic = Template.bind({});
-Basic.args = {
+// Outlined Demo
+export const Outlined = Template.bind({});
+Outlined.args = {
     children: 'Submit',
+    variant: 'outlined',
 };
+
+// Contained Demo
+export const Contained = Template.bind({});
+Contained.args = {
+    children: 'Submit',
+    variant: 'contained',
+};
+
+// Text Demo
+export const Text = Template.bind({});
+Text.args = {
+    children: 'Submit',
+    variant: 'text',
+};
+
+// Set Height and Width Demo
+export const SetDimensions = Template.bind({});
+SetDimensions.args = {
+    children: 'Submit',
+    variant: 'contained',
+    width: '400px',
+    height: '80px',
+    style: {
+        fontSize: '32px',
+    }
+}

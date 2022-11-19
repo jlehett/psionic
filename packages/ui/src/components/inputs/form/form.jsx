@@ -179,7 +179,7 @@ Form.propTypes = {
      * This is not a prop of `passThruProps` -- this is simply a representation of any
      * additional props passed to the `Form` component that aren't covered above.
      */
-    "...passThruProps": PropTypes.object,
+    "...passThruProps": PropTypes.any,
 };
 
 Form.defaultProps = {
