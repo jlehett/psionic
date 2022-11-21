@@ -11,6 +11,7 @@ import {
     Title,
 } from '@storybook/addon-docs';
 import { Form } from '@components/inputs';
+import { Button } from '@components/buttons';
 import { Code } from '../../../../.storybook/misc';
 import TextField from './text-field';
 
@@ -161,12 +162,20 @@ const Template = (args) => {
                 {...args}
             />
             <div style={{ display: 'flex', flexDirection: 'row', gap: '16px' }}>
-                <button type="submit" style={{ width: '100px', height: '50px' }}>
+                <Button
+                    variant="contained"
+                    type="submit"
+                    allowMultipleClicks
+                >
                     Submit
-                </button>
-                <button type="reset" style={{ width: '100px', height: '50px' }}>
+                </Button>
+                <Button
+                    variant="contained"
+                    type="reset"
+                    allowMultipleClicks
+                >
                     Reset
-                </button>
+                </Button>
             </div>
         </Form>
     );

@@ -253,7 +253,7 @@ const Button = ({
                 ...(passThruProps?.style || {})
             }}
             data-running={onClickRunning}
-            data-disabled={onClickRunning || disabled}
+            disabled={onClickRunning || disabled}
         >
             {/* RUNNING STATE */}
             <div

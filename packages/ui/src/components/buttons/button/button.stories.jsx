@@ -39,7 +39,10 @@ const Template = (args) => {
     return (
         <div style={{ margin: '40px', padding: '20px', background: '#fff', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 'fit-content' }}>
             <Button
-                onClick={() => mockDelay(3000)}
+                onClick={async () => {
+                    console.log('Button clicked!');
+                    await mockDelay(3000);
+                }}
                 {...args}
             />
         </div>

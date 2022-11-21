@@ -14,12 +14,13 @@
         align-items: center;
         justify-content: center;
         font-weight: 500;
+        white-space: nowrap;
 
-        &[data-disabled="false"] {
+        &:not(:disabled) {
             cursor: pointer;
         }
 
-        &[data-disabled="true"] {
+        &:disabled {
             cursor: default;
         }
 

@@ -25,24 +25,13 @@ export default defineConfig({
         }),
     ],
     build: {
-        manifest: true,
-        minify: true,
-        reportCompressedSize: true,
         lib: {
-            entry: [
-                resolve(__dirname, './src/components/inputs/index.js'),
-            ],
+            entry: './src/index.js',
             formats: ["es", "cjs"],
             fileName: 'index',
             name: 'index',
         },
         rollupOptions: {
-            input: [
-                resolve(__dirname, './src/components/inputs/index.js'),
-            ],
-            output: {
-                preserveModules: false,
-            },
             external: ["react", "react-dom"],
         }
     },

@@ -10,6 +10,7 @@ import {
     setAsCategory
 } from '@unifire-js/storybook-utils';
 import { TextField } from '@components/inputs';
+import { Button } from '@components/buttons';
 import { Code, CodeBlock } from '../../../../.storybook/misc';
 import Form, { Form as docs } from './form';
 
@@ -176,7 +177,7 @@ const Template = (args) => {
             style={{ margin: '40px', display: 'flex', flexDirection: 'column', gap: '16px' }}
             {...args}
         >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0px' }}>
                 <TextField required label="Name" fieldKey="name"/>
                 <TextField
                     required
@@ -192,18 +193,20 @@ const Template = (args) => {
                 />
             </div>
             <div style={{ display: 'flex', flexDirection: 'row', gap: '16px' }}>
-                <button
-                    style={{ width: 'fit-content', height: '36px' }}
+                <Button
+                    variant="contained"
                     type="submit"
+                    allowMultipleClicks
                 >
                     Submit Form
-                </button>
-                <button
-                    style={{ width: 'fit-content', height: '36px' }}
+                </Button>
+                <Button
+                    variant="contained"
                     type="reset"
+                    allowMultipleClicks
                 >
                     Reset Form
-                </button>
+                </Button>
             </div>
         </Form>
     );

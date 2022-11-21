@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import delay from 'delay';
 import { TextField, Form } from '../dist';
 
 test('is able to handle the "submit" button event', async () => {
