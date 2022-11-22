@@ -9,7 +9,10 @@ import {
 import {
     setAsCategory
 } from '@unifire-js/storybook-utils';
-import { TextField } from '@components/inputs';
+import {
+    TextField,
+    Checkbox,
+} from '@components/inputs';
 import { Button } from '@components/buttons';
 import { Code, CodeBlock } from '../../../../.storybook/misc';
 import Form, { Form as docs } from './form';
@@ -190,6 +193,11 @@ const Template = (args) => {
                         }
                         return null;
                     }}
+                />
+                <Checkbox
+                    initialValue={false}
+                    label="I agree with the terms of service"
+                    fieldKey="termsOfServiceAccepted"
                 />
             </div>
             <div style={{ display: 'flex', flexDirection: 'row', gap: '16px' }}>

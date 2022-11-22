@@ -218,7 +218,7 @@ const Button = ({
      */
     const augmentedOnClick = async () => {
         setOnClickRunning(true);
-        await onClick();
+        await onClick?.();
         setOnClickRunning(false);
     };
 
@@ -303,7 +303,7 @@ Button.propTypes = {
     /**
      * The callback to run when the button is clicked.
      */
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func,
     /**
      * Flag indicating whether the button is in a disabled state. Will prevent `onClick` events
      * from being fired.
@@ -351,6 +351,7 @@ Button.defaultProps = {
     allowMultipleClicks: false,
     variant: 'outlined',
     rounded: false,
+    onClick: () => {},
 };
 
 export default Button;
