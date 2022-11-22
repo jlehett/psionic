@@ -122,14 +122,12 @@ const Template = (args) => {
                 <Button
                     variant="contained"
                     type="submit"
-                    allowMultipleClicks
                 >
                     Submit
                 </Button>
                 <Button
                     variant="contained"
                     type="reset"
-                    allowMultipleClicks
                 >
                     Reset
                 </Button>

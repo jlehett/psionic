@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
+import { getContrastingBWColor } from '@utils/colors';
 import { QuarterSpinner } from '@components/spinners';
 import localStyles from './button.module.scss';
 
@@ -32,11 +33,7 @@ const Button = ({
     const baseColorDarker = baseColor.darken(0.25);
     const baseColorOpacity80 = baseColor.fade(0.8);
     const baseColorOpacity90 = baseColor.fade(0.9);
-    const textColor = (() => {
-        const blackContrast = baseColor.contrast(Color('black'));
-        const whiteContrast = baseColor.contrast(Color('white'));
-        return whiteContrast < 3 && blackContrast > whiteContrast ? Color('black') : Color('white');
-    })();
+    const textColor = getContrastingBWColor(baseColor);
 
     //#endregion
 

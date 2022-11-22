@@ -79,9 +79,6 @@ const Input = ({
             case 'url':
                 setFieldValue(event.target.value);
                 return;
-            case 'checkbox':
-                setFieldValue(event.target.checked);
-                return;
             default:
                 throw new Error(`Unsupported input of type, ${type}`);
         }
@@ -118,7 +115,6 @@ const Input = ({
                 case 'password':
                 case 'text':
                 case 'url':
-                case 'checkbox':
                     return {
                         type,
                         required: Boolean(required),

@@ -198,20 +198,20 @@ const Template = (args) => {
                     initialValue={false}
                     label="I agree with the terms of service"
                     fieldKey="termsOfServiceAccepted"
+                    required
+                    style={{ marginTop: '16px' }}
                 />
             </div>
             <div style={{ display: 'flex', flexDirection: 'row', gap: '16px' }}>
                 <Button
                     variant="contained"
                     type="submit"
-                    allowMultipleClicks
                 >
                     Submit Form
                 </Button>
                 <Button
                     variant="contained"
                     type="reset"
-                    allowMultipleClicks
                 >
                     Reset Form
                 </Button>

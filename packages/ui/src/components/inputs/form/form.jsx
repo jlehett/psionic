@@ -113,13 +113,16 @@ export const Form = ({
                     case 'url':
                         fieldInfo.value = '';
                         break;
+                    case 'checkbox':
+                        fieldInfo.checked = false;
+                        break;
                     default:
                         throw new Error(`Unsupported form field type of ${fieldInfo?.type} found!`);
                 }
 
                 // General updates
                 if (fieldInfo.required) {
-                    fieldInfo.message = 'This field is required';
+                    fieldInfo.message = fieldInfo._requiredMessage || 'This field is required';
                     fieldInfo.valid = false;
                 }
                 fieldInfo.unmodifiedSinceLastSubmission = false;

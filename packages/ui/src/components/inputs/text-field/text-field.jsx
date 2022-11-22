@@ -133,7 +133,8 @@ const TextField = ({
                 className={localStyles.labelWrapper}
             >
                 <label {...LabelProps}>
-                    {label}{required ? ' *' : null}</label>
+                    {label}{required ? ' *' : null}
+                </label>
             </motion.div>
             <div className={localStyles.inputWrapper}>
                 <Input
@@ -215,7 +216,7 @@ TextField.propTypes = {
      * root container of the component.
      *
      * This is not a prop of `passThruProps` -- this is simply a representation of any
-     * additional props passed to the `Form` component that aren't covered above.
+     * additional props passed to the `div` component that aren't covered above.
      */
     "...passThruProps": PropTypes.any,
 };
