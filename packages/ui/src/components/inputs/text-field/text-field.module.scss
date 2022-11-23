@@ -121,5 +121,24 @@
                 }
             }
         }
+
+        &[data-disabled="true"] {
+
+            .inputWrapper {
+                border: 1px solid rbga(0, 0, 0, 0.1);
+                box-shadow: none;
+                background: #ebebeb;
+
+                input {
+                    color: rgba(0, 0, 0, 0.4);
+                }
+            }
+
+            .labelWrapper {
+                label {
+                    color: rgba(0, 0, 0, 0.4);
+                }
+            }
+        }
     }
 }

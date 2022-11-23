@@ -92,5 +92,22 @@
                 }
             }
         }
+
+        &[data-disabled="true"] {
+
+            .upperWrapper {
+                color: rgba(0, 0, 0, 0.4);
+                cursor: default;
+
+                label {
+                    cursor: default;
+                }
+
+                .customCheckbox {
+                    border: 1px solid rgba(0, 0, 0, 0.1);
+                    background: #ebebeb;
+                }
+            }
+        }
     }
 }

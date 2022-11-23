@@ -12,6 +12,7 @@ const Input = ({
     type,
     required,
     validator,
+    disabled,
     // Pass Thru Props
     ...passThruProps
 }) => {
@@ -51,6 +52,13 @@ const Input = ({
         // Before Unmount
         return () => deleteField();
     }, []);
+
+    /**
+     * Whenever the `disabled` prop changes, we want to update that flag in the form data.
+     */
+    useEffect(() => {
+        setFieldDisabled(disabled);
+    }, [disabled]);
 
     //#endregion
 
@@ -119,9 +127,10 @@ const Input = ({
                         type,
                         required: Boolean(required),
                         value: newValue,
-                        message,
-                        valid: !Boolean(message),
+                        message: disabled ? null : message,
+                        valid: disabled ? true : !Boolean(message),
                         unmodifiedSinceLastSubmission: false,
+                        disabled,
                     };
                 default:
                     throw new Error(`Unsupported input of type, ${type}`);
@@ -131,6 +140,21 @@ const Input = ({
         setFormData((prev) => ({
             ...prev,
             [fieldKey]: fieldInfo,
+        }));
+    };
+
+    /**
+     * Sets the field's `disabled` flag in the form's data to the specified value.
+     *
+     * @param {boolean} disabledValue The new value for the field's `disabled` flag
+     */
+    const setFieldDisabled = (disabledValue) => {
+        setFormData((prev) => ({
+            ...prev,
+            [fieldKey]: {
+                ...(prev[fieldKey] || {}),
+                disabled: disabledValue,
+            },
         }));
     };
 
@@ -156,6 +180,7 @@ const Input = ({
             type={type}
             value={currentValue}
             onChange={onChange}
+            disabled={disabled}
             {...passThruProps}
         />
     );
@@ -211,6 +236,10 @@ Input.propTypes = {
      */
     validator: PropTypes.func,
     /**
+     * Flag indicating whether the input is disabled.
+     */
+    disabled: PropTypes.bool,
+    /**
      * The remaining props to spread to the internal `input` HTML element.
      *
      * This is not a prop of `passThruProps` -- this is simply a representation of any
@@ -221,6 +250,7 @@ Input.propTypes = {
 
 Input.defaultProps = {
     required: false,
+    disabled: false,
 };
 
 export default Input;

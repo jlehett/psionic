@@ -66,6 +66,7 @@ test('is able to handle the "submit" button event', async () => {
             valid: true,
             message: null,
             required: false,
+            disabled: false,
         },
         email: {
             type: 'text',
@@ -73,6 +74,7 @@ test('is able to handle the "submit" button event', async () => {
             valid: true,
             message: null,
             required: false,
+            disabled: false,
         }
     });
 });
@@ -140,6 +142,7 @@ test('is able to handle the "reset" button event', async () => {
             valid: true,
             message: null,
             required: false,
+            disabled: false,
         },
         email: {
             type: 'text',
@@ -147,6 +150,7 @@ test('is able to handle the "reset" button event', async () => {
             valid: true,
             message: null,
             required: false,
+            disabled: false,
         }
     });
 
@@ -163,6 +167,7 @@ test('is able to handle the "reset" button event', async () => {
             valid: true,
             message: null,
             required: false,
+            disabled: false,
         },
         email: {
             type: 'text',
@@ -170,6 +175,7 @@ test('is able to handle the "reset" button event', async () => {
             valid: true,
             message: null,
             required: false,
+            disabled: false,
         }
     });
 });
@@ -258,6 +264,7 @@ test('is able to handle the "submit" button w/ invalid data', async () => {
             valid: true,
             message: null,
             required: true,
+            disabled: false,
         },
         password: {
             type: 'password',
@@ -265,6 +272,7 @@ test('is able to handle the "submit" button w/ invalid data', async () => {
             valid: true,
             message: null,
             required: true,
+            disabled: false,
         },
     });
 });
@@ -327,127 +335,336 @@ test('is able to respond to the form data changing from outside of a submission'
     const submitButton = screen.getByText('Submit');
     const resetButton = screen.getByText('Reset');
 
+    delete data.name.unmodifiedSinceLastSubmission;
+    delete data.password.unmodifiedSinceLastSubmission;
+
     expect(data).toEqual({
         name: {
             message: null,
             required: true,
             type: 'text',
-            unmodifiedSinceLastSubmission: false,
             valid: true,
             value: 'John',
+            disabled: false,
         },
         password: {
             message: 'This field is required',
             required: true,
             type: 'password',
-            unmodifiedSinceLastSubmission: false,
             valid: false,
             value: '',
+            disabled: false,
         },
     });
 
     fireEvent.click(submitButton);
 
+    delete data.name.unmodifiedSinceLastSubmission;
+    delete data.password.unmodifiedSinceLastSubmission;
+
     expect(data).toEqual({
         name: {
             message: null,
             required: true,
             type: 'text',
-            unmodifiedSinceLastSubmission: true,
             valid: true,
             value: 'John',
+            disabled: false,
         },
         password: {
             message: 'This field is required',
             required: true,
             type: 'password',
-            unmodifiedSinceLastSubmission: true,
             valid: false,
             value: '',
+            disabled: false,
         },
     });
 
     fireEvent.change(nameInput, { target: { value: 'Tanner' } });
 
+    delete data.name.unmodifiedSinceLastSubmission;
+    delete data.password.unmodifiedSinceLastSubmission;
+
     expect(data).toEqual({
         name: {
             message: null,
             required: true,
             type: 'text',
-            unmodifiedSinceLastSubmission: false,
             valid: true,
             value: 'Tanner',
+            disabled: false,
         },
         password: {
             message: 'This field is required',
             required: true,
             type: 'password',
-            unmodifiedSinceLastSubmission: true,
             valid: false,
             value: '',
+            disabled: false,
         },
     });
 
     fireEvent.change(passwordInput, { target: { value: '1234' } });
 
+    delete data.name.unmodifiedSinceLastSubmission;
+    delete data.password.unmodifiedSinceLastSubmission;
+
     expect(data).toEqual({
         name: {
             message: null,
             required: true,
             type: 'text',
-            unmodifiedSinceLastSubmission: false,
             valid: true,
             value: 'Tanner',
+            disabled: false,
         },
         password: {
             message: 'Password must be at least 8 characters',
             required: true,
             type: 'password',
-            unmodifiedSinceLastSubmission: false,
             valid: false,
             value: '1234',
+            disabled: false,
         },
     });
 
     fireEvent.change(passwordInput, { target: { value: '12341234' } });
 
+    delete data.name.unmodifiedSinceLastSubmission;
+    delete data.password.unmodifiedSinceLastSubmission;
+
     expect(data).toEqual({
         name: {
             message: null,
             required: true,
             type: 'text',
-            unmodifiedSinceLastSubmission: false,
             valid: true,
             value: 'Tanner',
+            disabled: false,
         },
         password: {
             message: null,
             required: true,
             type: 'password',
-            unmodifiedSinceLastSubmission: false,
             valid: true,
             value: '12341234',
+            disabled: false,
         },
     });
 
     fireEvent.click(resetButton);
 
+    delete data.name.unmodifiedSinceLastSubmission;
+    delete data.password.unmodifiedSinceLastSubmission;
+
     expect(data).toEqual({
         name: {
             message: 'This field is required',
             required: true,
             type: 'text',
-            unmodifiedSinceLastSubmission: false,
             valid: false,
             value: '',
+            disabled: false,
         },
         password: {
             message: 'This field is required',
             required: true,
             type: 'password',
-            unmodifiedSinceLastSubmission: false,
             valid: false,
             value: '',
+            disabled: false,
+        },
+    });
+});
+
+test('ignores the validation of disabled fields in the form', async () => {
+    let data = null;
+
+    const FormComponent = () => {
+
+        const handleSubmit = (formData) => {
+            data = formData;
+        };
+
+        return (
+            <Form onSubmit={handleSubmit}>
+                <TextField
+                    fieldKey="name"
+                    label="Name"
+                    initialValue="John"
+                    required
+                    InputProps={{
+                        "data-testid": 'name'
+                    }}
+                />
+                <TextField
+                    fieldKey="password"
+                    label="Password"
+                    type="password"
+                    disabled
+                    required
+                    validator={(value) => {
+                        if (value.length < 8) {
+                            return 'Password must be at least 8 characters.';
+                        }
+                        return null;
+                    }}
+                    InputProps={{
+                        "data-testid": 'password',
+                    }}
+                />
+                <button type="submit">
+                    Submit
+                </button>
+            </Form>
+        );
+    };
+
+    render(<FormComponent/>);
+
+    const nameInput = screen.getByTestId('name');
+    const passwordInput = screen.getByTestId('password');
+    const submitButton = screen.getByText('Submit');
+
+    expect(data).toBeNull();
+    expect(nameInput.value).toBe('John');
+    expect(passwordInput.value).toBe('');
+
+    fireEvent.click(submitButton);
+
+    delete data.name.unmodifiedSinceLastSubmission;
+    delete data.password.unmodifiedSinceLastSubmission;
+
+    expect(data).toEqual({
+        name: {
+            type: 'text',
+            value: 'John',
+            valid: true,
+            message: null,
+            required: true,
+            disabled: false,
+        },
+        password: {
+            type: 'password',
+            value: '',
+            valid: true,
+            message: null,
+            required: true,
+            disabled: true,
+        },
+    });
+});
+
+test('only resets non-disabled fields when a reset event occurs', async () => {
+    let data = null;
+
+    const FormComponent = () => {
+
+        const handleSubmit = (formData) => {
+            data = formData;
+        };
+
+        return (
+            <Form onSubmit={handleSubmit}>
+                <TextField
+                    fieldKey="name"
+                    label="Name"
+                    initialValue="John"
+                    required
+                    InputProps={{
+                        "data-testid": 'name'
+                    }}
+                />
+                <TextField
+                    fieldKey="password"
+                    label="Password"
+                    type="password"
+                    initialValue="12341234"
+                    disabled
+                    required
+                    validator={(value) => {
+                        if (value.length < 8) {
+                            return 'Password must be at least 8 characters.';
+                        }
+                        return null;
+                    }}
+                    InputProps={{
+                        "data-testid": 'password',
+                    }}
+                />
+                <button type="submit">
+                    Submit
+                </button>
+                <button type="reset">
+                    Reset
+                </button>
+            </Form>
+        );
+    };
+
+    render(<FormComponent/>);
+
+    const nameInput = screen.getByTestId('name');
+    const passwordInput = screen.getByTestId('password');
+    const submitButton = screen.getByText('Submit');
+    const resetButton = screen.getByText('Reset');
+
+    expect(data).toBeNull();
+    expect(nameInput.value).toBe('John');
+    expect(passwordInput.value).toBe('12341234');
+
+    fireEvent.click(submitButton);
+
+    delete data.name.unmodifiedSinceLastSubmission;
+    delete data.password.unmodifiedSinceLastSubmission;
+
+    expect(data).toEqual({
+        name: {
+            type: 'text',
+            value: 'John',
+            valid: true,
+            message: null,
+            required: true,
+            disabled: false,
+        },
+        password: {
+            type: 'password',
+            value: '12341234',
+            valid: true,
+            message: null,
+            required: true,
+            disabled: true,
+        },
+    });
+
+    fireEvent.click(resetButton);
+    fireEvent.change(nameInput, { target: { value: 'Tanner' } });
+
+    expect(nameInput.value).toBe('Tanner');
+    expect(passwordInput.value).toBe('12341234');
+
+    fireEvent.click(submitButton);
+
+    delete data.name.unmodifiedSinceLastSubmission;
+    delete data.password.unmodifiedSinceLastSubmission;
+
+    expect(data).toEqual({
+        name: {
+            type: 'text',
+            value: 'Tanner',
+            valid: true,
+            message: null,
+            required: true,
+            disabled: false,
+        },
+        password: {
+            type: 'password',
+            value: '12341234',
+            valid: true,
+            message: null,
+            required: true,
+            disabled: true,
         },
     });
 });

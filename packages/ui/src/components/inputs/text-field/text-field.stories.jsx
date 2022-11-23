@@ -26,6 +26,7 @@ setAsCategory(argTypes, 'Controls', [
     'type',
     'required',
     'validator',
+    'disabled',
 ]);
 setAsCategory(argTypes, 'Pass Thru Props', [
     'InputProps',
@@ -134,6 +135,17 @@ export default {
                                         regarding when error states and messages should be displayed.
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                        disabled
+                                    </td>
+                                    <td>
+                                        <Code>boolean</Code>
+                                    </td>
+                                    <td>
+                                        Flag indicating whether this input is disabled.
+                                    </td>
+                                </tr>
                             </table>
                         </p>
                         <p>
@@ -219,3 +231,10 @@ Validator.args = {
         return null;
     }
 };
+
+// Disabled Demo
+export const Disabled = Template.bind({});
+Disabled.args = {
+    label: 'Email',
+    disabled: true,
+}

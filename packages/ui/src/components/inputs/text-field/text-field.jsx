@@ -19,6 +19,7 @@ const TextField = ({
     type,
     required,
     validator,
+    disabled,
     // Specific Component Props
     InputProps,
     LabelProps,
@@ -119,6 +120,7 @@ const TextField = ({
         <motion.div
             data-display-error={!currentValidity && unmodifiedSinceLastSubmission}
             data-is-focused={isFocused}
+            data-disabled={disabled}
             {...passThruProps}
             className={`
                 ${passThruProps?.className}
@@ -128,7 +130,7 @@ const TextField = ({
             transition={{ duration: 0.4 }}
         >
             <motion.div
-                initial={{ top: currentValue ? '0px' : '37x' }}
+                initial={{ top: initialValue ? '0px' : '37x' }}
                 animate={{ top: currentValue ? '0px' : '37px' }}
                 className={localStyles.labelWrapper}
             >
@@ -145,6 +147,7 @@ const TextField = ({
                     validator={validator}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
+                    disabled={disabled}
                     {...InputProps}
                 />
                 {
@@ -204,6 +207,10 @@ TextField.propTypes = {
      */
     validator: PropTypes.func,
     /**
+     * Flag indicating whether the text field is disabled.
+     */
+    disabled: PropTypes.bool,
+    /**
      * Any props to pass to the internal `input` HTML element.
      */
     InputProps: PropTypes.object,
@@ -225,6 +232,7 @@ TextField.defaultProps = {
     initialValue: '',
     type: 'text',
     required: false,
+    disabled: false,
 };
 
 export default TextField;

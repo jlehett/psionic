@@ -23,6 +23,7 @@ setAsCategory(argTypes, 'Controls', [
     'initialValue',
     'required',
     'validator',
+    'disabled',
 ]);
 setAsCategory(argTypes, 'Pass Thru Props', [
     '...passThruProps',

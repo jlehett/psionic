@@ -80,9 +80,9 @@ export const Form = ({
             return newData;
         });
 
-        // If any of the fields in the form are marked as invalid, don't continue with the submission
+        // If any of the fields in the form are marked as invalid (and are not disabled) don't continue with the submission
         for (const [fieldKey, fieldInfo] of Object.entries(formData)) {
-            if (!fieldInfo.valid) return;
+            if (!fieldInfo.valid && !fieldInfo.disabled) return;
         }
 
         // Call the passed-in `onSubmit` callback while passing through the form's data from context.
@@ -104,6 +104,8 @@ export const Form = ({
             const newData = cloneDeep(prev);
 
             for (const [fieldKey, fieldInfo] of Object.entries(newData)) {
+                // If the field is disabled, skip this
+                if (fieldInfo.disabled) continue;
 
                 // Type-specific updates
                 switch (fieldInfo.type) {

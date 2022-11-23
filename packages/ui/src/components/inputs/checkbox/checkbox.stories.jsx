@@ -26,6 +26,7 @@ setAsCategory(argTypes, 'Controls', [
     'initialValue',
     'fieldKey',
     'required',
+    'disabled',
 ]);
 setAsCategory(argTypes, 'Pass Thru Props', [
     'InputProps',
@@ -201,4 +202,11 @@ RequiredMessage.args = {
     label: 'I agree to the Terms of Service',
     required: true,
     requiredMessage: 'You must agree to the Terms of Service to continue',
+};
+
+// Disabled Demo
+export const Disabled = Template.bind({});
+Disabled.args = {
+    label: 'I agree to the Terms of Service',
+    disabled: true,
 }

@@ -17,6 +17,7 @@ const Checkbox = ({
     required,
     requiredMessage,
     color,
+    disabled,
     // Specific Component Props
     InputProps,
     LabelProps,
@@ -66,6 +67,13 @@ const Checkbox = ({
         return () => deleteField();
     }, []);
 
+    /**
+     * Whenever the `disabled` prop changes, we want to update that flag in the form data.
+     */
+    useEffect(() => {
+        setFieldDisabled(disabled);
+    }, [disabled]);
+
     //#endregion
 
     //#region Memoized Values
@@ -111,6 +119,9 @@ const Checkbox = ({
      * On Change handler.
      */
     const onChange = () => {
+        // If the checkbox is disabled, do nothing
+        if (disabled) return;
+
         setFieldValue(!currentValue);
     };
 
@@ -126,15 +137,31 @@ const Checkbox = ({
             type: 'checkbox',
             required: Boolean(required),
             checked: newValue,
-            message,
-            valid: !Boolean(message),
+            message: disabled ? null : message,
+            valid: disabled ? true : !Boolean(message),
             unmodifiedSinceLastSubmission: false,
+            disabled,
             _requiredMessage: requiredMessage,
         };
 
         setFormData((prev) => ({
             ...prev,
             [fieldKey]: fieldInfo,
+        }));
+    };
+
+    /**
+     * Sets the field's `disabled` flag in the form's data to the specified value.
+     *
+     * @param {boolean} disabledValue The new value for the field's `disabled` flag
+     */
+    const setFieldDisabled = (disabledValue) => {
+        setFormData((prev) => ({
+            ...prev,
+            [fieldKey]: {
+                ...(prev[fieldKey] || {}),
+                disabled: disabledValue,
+            },
         }));
     };
 
@@ -158,6 +185,7 @@ const Checkbox = ({
     return (
         <motion.div
             data-display-error={!currentValidity && unmodifiedSinceLastSubmission}
+            data-disabled={disabled}
             {...passThruProps}
             className={`
                 ${passThruProps?.className}
@@ -178,10 +206,11 @@ const Checkbox = ({
                     type="checkbox"
                     checked={currentValue}
                     onChange={onChange}
+                    disabled={disabled}
                     {...InputProps}
                 />
                 <div className={localStyles.customCheckbox}>
-                    <div style={{ background: baseColor }}>
+                    <div style={{ background: disabled ? '#bbb' : baseColor }}>
                         <Check style={{ fill: iconColor }}/>
                     </div>
                 </div>
@@ -222,6 +251,10 @@ Checkbox.propTypes = {
      */
     color: PropTypes.string,
     /**
+     * Flag indicating whether the checkbox is disabled.
+     */
+    disabled: PropTypes.bool,
+    /**
      * Any props to pass to the internal `input` HTML element.
      */
     InputProps: PropTypes.object,
@@ -244,6 +277,7 @@ Checkbox.defaultProps = {
     required: false,
     requiredMessage: 'This field is required',
     color: '#0072E5',
+    disabled: false,
 };
 
 export default Checkbox;
