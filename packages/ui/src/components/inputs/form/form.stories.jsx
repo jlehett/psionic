@@ -9,9 +9,11 @@ import {
 import {
     setAsCategory
 } from '@unifire-js/storybook-utils';
+import Favorite from '@assets/favorite.svg';
 import {
     TextField,
     Checkbox,
+    IconCheckbox,
 } from '@components/inputs';
 import { Button } from '@components/buttons';
 import { Code, CodeBlock } from '../../../../.storybook/misc';
@@ -200,6 +202,13 @@ const Template = (args) => {
                     fieldKey="termsOfServiceAccepted"
                     required
                     style={{ marginTop: '16px' }}
+                />
+                <IconCheckbox
+                    SvgIcon={Favorite}
+                    label="Favorite App"
+                    fieldKey="favoritedApp"
+                    color="#f50a6c"
+                    style={{ marginBottom: '8px' }}
                 />
             </div>
             <div style={{ display: 'flex', flexDirection: 'row', gap: '16px' }}>

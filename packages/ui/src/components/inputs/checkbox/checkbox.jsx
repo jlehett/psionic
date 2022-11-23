@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
 import { motion } from 'framer-motion';
@@ -6,7 +6,6 @@ import Check from '@assets/check.svg';
 import { FormData, SetFormData } from '@contexts';
 import { getContrastingBWColor } from '@utils/colors';
 import localStyles from './checkbox.module.scss';
-import { useEffect } from 'react';
 
 /**
  * Replace this with a comment describing the component.
@@ -28,7 +27,7 @@ const Checkbox = ({
     //#region Constants
 
     /**
-     * Various colors for the button.
+     * Various colors for the checkbox.
      */
     const baseColor = Color(color);
     const iconColor = getContrastingBWColor(baseColor);
@@ -72,8 +71,8 @@ const Checkbox = ({
     //#region Memoized Values
 
     /**
-     * Memoized valued that is currently stored in the input.
-     * @type {string}
+     * Memoized value that is currently stored in the input.
+     * @type {boolean}
      */
     const currentValue = useMemo(() => {
         return formData[fieldKey]?.checked || false;
@@ -219,11 +218,11 @@ Checkbox.propTypes = {
      */
     requiredMessage: PropTypes.string,
     /**
-     * The color to use for the checkbox.
+     * The color to use for the checkbox. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
      */
     color: PropTypes.string,
     /**
-     * Any props to pass to the interanl `input` HTML element.
+     * Any props to pass to the internal `input` HTML element.
      */
     InputProps: PropTypes.object,
     /**

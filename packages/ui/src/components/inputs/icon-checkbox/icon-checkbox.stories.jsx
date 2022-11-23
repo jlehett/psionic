@@ -10,33 +10,35 @@ import {
     Subtitle,
     Title,
 } from '@storybook/addon-docs';
+import Favorite from '@assets/favorite.svg';
+import Aid from '@assets/aid.svg';
 import { Form } from '@components/inputs';
 import { Button } from '@components/buttons';
 import { Code } from '../../../../.storybook/misc';
-import Checkbox from './checkbox';
+import IconCheckbox from './icon-checkbox';
 
 // Construct the argTypes object
 const argTypes = {};
 setAsCategory(argTypes, 'UI', [
-    'label',
-    'requiredMessage',
+    'SvgIcon',
     'color',
+    'size',
+    'label',
 ]);
 setAsCategory(argTypes, 'Controls', [
     'initialValue',
     'fieldKey',
-    'required',
 ]);
 setAsCategory(argTypes, 'Pass Thru Props', [
     'InputProps',
     'LabelProps',
-    '...passThruProps'
+    '...passThruProps',
 ]);
 
 // Storybook default export
 export default {
-    title: 'inputs/Checkbox',
-    component: Checkbox,
+    title: 'inputs/IconCheckbox',
+    component: IconCheckbox,
     argTypes,
     parameters: {
         docs: {
@@ -46,8 +48,8 @@ export default {
                         <Title/>
                         <Subtitle/>
                         <p>
-                            The <Code>Checkbox</Code> component provides a general purpose checkbox
-                            input plus label that can be used in the <Code>@psionic/ui</Code> <Code>Form</Code> flow.
+                            The <Code>IconCheckbox</Code> component provides a general purpose icon checkbox input
+                            plus optional label that can be used in the <Code>@psionic/ui</Code> <Code>Form</Code> flow.
                         </p>
                         <h2>
                             Form Field Information
@@ -69,19 +71,7 @@ export default {
                                         <Code>string</Code>
                                     </td>
                                     <td>
-                                        The type of the input. Always <Code>"checkbox"</Code>.
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        required
-                                    </td>
-                                    <td>
-                                        <Code>boolean</Code>
-                                    </td>
-                                    <td>
-                                        Flag indicating whether the <Code>Checkbox</Code> was marked
-                                        as <Code>required</Code> or not in its props.
+                                        The type of the input. Always <Code>"icon-checkbox"</Code>
                                     </td>
                                 </tr>
                                 <tr>
@@ -92,20 +82,8 @@ export default {
                                         <Code>boolean</Code>
                                     </td>
                                     <td>
-                                        Flag indicating whether the checkbox was checked at the time
-                                        the form was submitted.
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        message
-                                    </td>
-                                    <td>
-                                        <Code>string</Code> <Code>null</Code>
-                                    </td>
-                                    <td>
-                                        The message associated with the checkbox's current state at
-                                        the time the form was submitted.
+                                        Flag indicating whether the icon checkbox was checked at the time the form was
+                                        submitted.
                                     </td>
                                 </tr>
                                 <tr>
@@ -116,23 +94,9 @@ export default {
                                         <Code>boolean</Code>
                                     </td>
                                     <td>
-                                        Flag indicating whether the checkbox was valid at the time
-                                        the form was submitted. The checkbox would only ever be
-                                        invalid if it was marked as required, and the checkbox was
-                                        unchecked at the time the form was submitted.
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        unmodifiedSinceLastSubmission
-                                    </td>
-                                    <td>
-                                        <Code>boolean</Code>
-                                    </td>
-                                    <td>
-                                        Flag indicating whether the checkbox has remained unmodified since
-                                        the form was last submitted. Used primarily for internal purposes,
-                                        regarding when error states and messages should be displayed.
+                                        Flag indicating whether the icon checkbox was valid at the time the form
+                                        was submitted. This will always be `true` for icon checkboxes, and is mostly
+                                        used for internal purposes in the <Code>Form</Code> logic.
                                     </td>
                                 </tr>
                             </table>
@@ -157,9 +121,9 @@ const Template = (args) => {
             onSubmit={() => {}}
             style={{ margin: '40px' }}
         >
-            <Checkbox
+            <IconCheckbox
                 fieldKey="testKey"
-                style={{ marginBottom: '16px' }}
+                style={{ marginBottom: '24px' }}
                 {...args}
             />
             <div style={{ display: 'flex', flexDirection: 'row', gap: '16px' }}>
@@ -177,28 +141,33 @@ const Template = (args) => {
                 </Button>
             </div>
         </Form>
-    )
-
-    return <Checkbox {...args}/>;
+    );
 };
 
 // Basic Demo
 export const Basic = Template.bind({});
 Basic.args = {
-    label: 'I agree to the Terms of Service'
+    SvgIcon: Favorite,
 };
 
-// Required Demo
-export const Required = Template.bind({});
-Required.args = {
-    label: 'I agree to the Terms of Service',
-    required: true,
+// Initial Value Demo
+export const InitialValue = Template.bind({});
+InitialValue.args = {
+    SvgIcon: Favorite,
+    initialValue: true,
 };
 
-// Custom Required Message Demo
-export const RequiredMessage = Template.bind({});
-RequiredMessage.args = {
-    label: 'I agree to the Terms of Service',
-    required: true,
-    requiredMessage: 'You must agree to the Terms of Service to continue',
-}
+// Labeled Demo
+export const Labeled = Template.bind({});
+Labeled.args = {
+    SvgIcon: Favorite,
+    label: 'Favorite',
+};
+
+// Customization Demo
+export const Customization = Template.bind({});
+Customization.args = {
+    SvgIcon: Aid,
+    color: '#f50a6c',
+    size: '60px',
+};
