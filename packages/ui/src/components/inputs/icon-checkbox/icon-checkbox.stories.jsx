@@ -28,6 +28,7 @@ setAsCategory(argTypes, 'UI', [
 setAsCategory(argTypes, 'Controls', [
     'initialValue',
     'fieldKey',
+    'disabled',
 ]);
 setAsCategory(argTypes, 'Pass Thru Props', [
     'InputProps',
@@ -97,6 +98,17 @@ export default {
                                         Flag indicating whether the icon checkbox was valid at the time the form
                                         was submitted. This will always be `true` for icon checkboxes, and is mostly
                                         used for internal purposes in the <Code>Form</Code> logic.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        disabled
+                                    </td>
+                                    <td>
+                                        <Code>disabled</Code>
+                                    </td>
+                                    <td>
+                                        Flag indicating whether this input is disabled.
                                     </td>
                                 </tr>
                             </table>
@@ -170,4 +182,12 @@ Customization.args = {
     SvgIcon: Aid,
     color: '#f50a6c',
     size: '60px',
+};
+
+// Disabled Demo
+export const Disabled = Template.bind({});
+Disabled.args = {
+    SvgIcon: Favorite,
+    disabled: true,
+    label: 'Favorite',
 };

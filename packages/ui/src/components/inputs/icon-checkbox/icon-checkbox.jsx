@@ -15,6 +15,7 @@ const IconCheckbox = ({
     fieldKey,
     color,
     size,
+    disabled,
     // Specific Component Props
     InputProps,
     LabelProps,
@@ -73,6 +74,13 @@ const IconCheckbox = ({
         return () => deleteField();
     }, []);
 
+    /**
+     * Whenever the `disabled` prop changes, we want to update that flag in the form data.
+     */
+    useEffect(() => {
+        setFieldDisabled(disabled);
+    }, [disabled]);
+
     //#endregion
 
     //#region Memoized Values
@@ -93,6 +101,9 @@ const IconCheckbox = ({
      * On Change handler.
      */
     const onChange = () => {
+        // If the checkbox is disabled, do nothing
+        if (disabled) return;
+
         setFieldValue(!currentValue);
     };
 
@@ -106,11 +117,27 @@ const IconCheckbox = ({
             type: 'icon-checkbox',
             checked: newValue,
             valid: true,
+            disabled,
         };
 
         setFormData((prev) => ({
             ...prev,
             [fieldKey]: fieldInfo,
+        }));
+    };
+
+    /**
+     * Sets the field's `disabled` flag in the form's data to the specified value.
+     *
+     * @param {boolean} disabledValue The new value for the field's `disabled` flag
+     */
+    const setFieldDisabled = (disabledValue) => {
+        setFormData((prev) => ({
+            ...prev,
+            [fieldKey]: {
+                ...(prev[fieldKey] || {}),
+                disabled: disabledValue,
+            },
         }));
     };
 
@@ -141,11 +168,13 @@ const IconCheckbox = ({
             onClick={onChange}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            data-disabled={disabled}
         >
             <input
                 type="checkbox"
                 checked={currentValue}
                 onChange={onChange}
+                disabled={disabled}
                 {...InputProps}
             />
             <label {...LabelProps}>
@@ -161,7 +190,7 @@ const IconCheckbox = ({
                 <div
                     className={localStyles.hoverCircle}
                     style={{
-                        background: isHovered ? baseColor.fade(0.9) : 'none'
+                        background: isHovered && !disabled ? baseColor.fade(0.9) : 'none'
                     }}
                 />
                 <motion.div
@@ -182,7 +211,11 @@ const IconCheckbox = ({
                 >
                     <SvgIcon
                         style={{
-                            stroke: currentValue ? baseColor : baseColor.fade(0.0),
+                            stroke: disabled
+                                ? 'rgba(0, 0, 0, 0.26)'
+                                : currentValue
+                                ? baseColor
+                                : baseColor.fade(0.0),
                             fill: 'transparent',
                         }}
                     />
@@ -202,8 +235,8 @@ const IconCheckbox = ({
                 >
                     <SvgIcon
                         style={{
-                            stroke: baseColor,
-                            fill: baseColor,
+                            stroke: disabled ? 'transparent' : baseColor,
+                            fill: disabled ? 'rgba(0, 0, 0, 0.26)' : baseColor,
                         }}
                     />
                 </motion.div>
@@ -244,6 +277,10 @@ IconCheckbox.propTypes = {
         PropTypes.number,
     ]),
     /**
+     * Flag indicating whether the icon checkbox is disabled.
+     */
+    disabled: PropTypes.bool,
+    /**
      * Any props to pass to the internal `input` HTML element.
      */
     InputProps: PropTypes.object,
@@ -264,6 +301,7 @@ IconCheckbox.defaultProps = {
     initialValue: false,
     color: '#0072E5',
     size: '28px',
+    disabled: false,
 };
 
 export default IconCheckbox;

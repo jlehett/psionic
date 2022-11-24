@@ -68,5 +68,18 @@
                 }
             }
         }
+
+        &[data-disabled="true"] {
+            cursor: default;
+
+            label {
+                color: rgba(0, 0, 0, 0.4);
+                cursor: default;
+            }
+
+            .customCheckbox {
+
+            }
+        }
     }
 }

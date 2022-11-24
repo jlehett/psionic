@@ -136,6 +136,17 @@ export default {
                                         regarding when error states and messages should be displayed.
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                        disabled
+                                    </td>
+                                    <td>
+                                        <Code>boolean</Code>
+                                    </td>
+                                    <td>
+                                        Flag indicating whether this input is disabled.
+                                    </td>
+                                </tr>
                             </table>
                         </p>
                         <p>
