@@ -1,0 +1,1 @@
+export { default as FloatingActionMenu } from './floating-action-menu/floating-action-menu';

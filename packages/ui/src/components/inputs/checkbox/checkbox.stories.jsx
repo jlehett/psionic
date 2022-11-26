@@ -189,9 +189,7 @@ const Template = (args) => {
                 </Button>
             </div>
         </Form>
-    )
-
-    return <Checkbox {...args}/>;
+    );
 };
 
 // Basic Demo
