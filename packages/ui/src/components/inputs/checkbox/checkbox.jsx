@@ -192,7 +192,7 @@ const Checkbox = ({
                 ${localStyles.checkbox}
             `}
             animate={{ x: !currentValidity && unmodifiedSinceLastSubmission ? [0, 10, -10, 10, 0] : 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.1 }}
         >
             <div
                 className={localStyles.upperWrapper}
