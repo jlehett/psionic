@@ -102,12 +102,12 @@ const FloatingActionMenu = ({
                 rotate: {
                     type: 'spring',
                     stiffness: 200,
-                    damping: 13,
+                    damping: 15,
                 },
                 scale: {
                     type: 'spring',
                     stiffness: 150,
-                    damping: 15,
+                    damping: 20,
                 }
             },
         };
