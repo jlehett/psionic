@@ -18,7 +18,7 @@ setAsCategory(argTypes, 'Pass Thru Props', [
 
 // Storybook default export
 export default {
-    title: 'spinners/QuarterSpinner',
+    title: 'loaders/QuarterSpinner',
     component: QuarterSpinner,
     argTypes,
 };

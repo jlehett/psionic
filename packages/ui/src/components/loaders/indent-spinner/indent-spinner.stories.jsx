@@ -19,7 +19,7 @@ setAsCategory(argTypes, 'Pass Thru Props', [
 
 // Storybook default export
 export default {
-    title: 'spinners/IndentSpinner',
+    title: 'loaders/IndentSpinner',
     component: IndentSpinner,
     argTypes,
 };
