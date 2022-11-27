@@ -1,0 +1,16 @@
+@import "@styles/colors.scss";
+
+@layer psionic {
+
+    .pulseLoader {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+        align-items: center;
+        justify-content: center;
+
+        span {
+            border-radius: 50%;
+        }
+    }
+}

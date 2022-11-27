@@ -2,7 +2,7 @@ import {
     setAsCategory,
     setAsDisabled,
 } from '@unifire-js/storybook-utils';
-import SyncLoader from './sync-loader';
+import PulseLoader from './pulse-loader';
 
 // Construct the argTypes object
 const argTypes = {};
@@ -14,15 +14,15 @@ setAsCategory(argTypes, 'UI', [
 
 // Storybook default export
 export default {
-    title: 'loaders/SyncLoader',
-    component: SyncLoader,
+    title: 'loaders/PulseLoader',
+    component: PulseLoader,
     argTypes,
 };
 
 const Template = (args) => {
     return (
         <div style={{ margin: '40px', background: 'white', borderRadius: '8px', width: 'fit-content', height: 'fit-content', padding: '80px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <SyncLoader {...args}/>
+            <PulseLoader {...args}/>
         </div>
     );
 };

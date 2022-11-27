@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
 import { getContrastingBWColor } from '@utils/colors';
-import { QuarterSpinner } from '@components/spinners';
+import { QuarterSpinner } from '@components/loaders';
 import localStyles from './button.module.scss';
 
 /**
