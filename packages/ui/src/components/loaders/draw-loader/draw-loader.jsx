@@ -12,6 +12,7 @@ const DrawLoader = ({
     speed,
     svg,
     paths,
+    progress,
 }) => {
 
     //#region Constants
@@ -55,13 +56,13 @@ const DrawLoader = ({
                     }}
                     animate={{
                         opacity: [0.15, 1],
-                        pathLength: [0, 1],
+                        pathLength: progress === undefined ? [0, 1] : progress,
                     }}
                     transition={{
                         duration: speed,
-                        repeat: Infinity,
+                        repeat: progress === undefined ? Infinity : 0,
                         repeatType: 'reverse',
-                        ease: 'easeInOut',
+                        ease: progress === undefined ? 'easeInOut' : 'linear',
                     }}
                 />
             );
@@ -110,6 +111,14 @@ DrawLoader.propTypes = {
      * An array containing the props to pass to each individual internal `path` element.
      */
     paths: PropTypes.arrayOf(PropTypes.object).isRequired,
+    /**
+     * If specified, this loader will display the given portion of the path. Can be used
+     * to make the `DrawLoader` act as a definite progress indicator instead of an indefinite progress
+     * indicator.
+     *
+     * Should be a number between 0-1.
+     */
+    progress: PropTypes.number,
 };
 
 DrawLoader.defaultProps = {

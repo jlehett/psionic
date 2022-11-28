@@ -15,6 +15,9 @@ setAsCategory(argTypes, 'UI', [
     'color',
     'speed',
 ]);
+setAsCategory(argTypes, 'Controls', [
+    'progress',
+]);
 
 // Storybook default export
 export default {
@@ -76,4 +79,22 @@ Complex.args = {
     size: 200,
     color: '#138A00',
     speed: 4,
+};
+
+// Progress Demo
+export const Progress = Template.bind({});
+Progress.args = {
+    svg: {
+        height: "24",
+        viewBox: "0 0 24 24",
+        width: "24",
+    },
+    paths: [
+        {
+            d: "M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z",
+            strokeWidth: "0.5",
+        },
+    ],
+    progress: 0.3,
+    speed: 0.5,
 };
