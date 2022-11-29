@@ -57,8 +57,8 @@ const CircularSpinner = ({
         >
             <motion.svg
                 style={{
-                    originX: 0.5,
-                    originY: 0.5,
+                    originX: `${size / 2}px`,
+                    originY: `${size / 2}px`,
                 }}
                 initial={{
                     rotate: 0,
