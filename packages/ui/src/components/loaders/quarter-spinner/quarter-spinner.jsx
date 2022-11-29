@@ -11,8 +11,6 @@ const QuarterSpinner = ({
     innerWidthRatio,
     color,
     speed,
-    // Pass-thru Props
-    ...passThruProps
 }) => {
 
     //#region Constants
@@ -44,18 +42,13 @@ const QuarterSpinner = ({
      */
     return (
         <div
-            {...passThruProps}
-            className={`
-                ${passThruProps?.className}
-                ${localStyles.quarterSpinner}
-            `}
+            className={localStyles.quarterSpinner}
             style={{
                 width: size,
                 height: size,
                 border: `${innerWidthRatio / 2 * size}px solid ${baseColorOpacity80.string()}`,
                 borderTop: `${innerWidthRatio / 2 * size}px solid ${baseColor.string()}`,
                 animationDuration: `${speed}s`,
-                ...(passThruProps?.style || {})
             }}
         />
     );
@@ -80,17 +73,6 @@ QuarterSpinner.propTypes = {
      * The speed at which the spinner makes a full rotation in seconds.
      */
     speed: PropTypes.number,
-    /**
-     * Any additional props to pass through to the internal `div` wrapping the entire
-     * spinner.
-     *
-     * This is not a prop of `passThruProps` -- this is simply a representation of any
-     * additional props passed to the `IndentSpinner` component that aren't covered above.
-     *
-     * To change the size of the spinner, you can pass a `className` or `style` prop which
-     * changes both the `width` and `height` of the component.
-     */
-    "...passThruProps": PropTypes.any,
 };
 
 QuarterSpinner.defaultProps = {

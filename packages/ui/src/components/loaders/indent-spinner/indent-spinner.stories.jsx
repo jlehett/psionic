@@ -13,9 +13,6 @@ setAsCategory(argTypes, 'UI', [
     'size',
     'speed',
 ]);
-setAsCategory(argTypes, 'Pass Thru Props', [
-    '...passThruProps',
-]);
 
 // Storybook default export
 export default {

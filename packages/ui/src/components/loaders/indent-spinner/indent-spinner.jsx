@@ -11,8 +11,6 @@ const IndentSpinner = ({
     coloredIndent,
     size,
     speed,
-    // Pass-thru Props
-    ...passThruProps
 }) => {
 
     //#region Constants
@@ -48,17 +46,12 @@ const IndentSpinner = ({
      */
     return (
         <div
-            {...passThruProps}
-            className={`
-                ${passThruProps?.className}
-                ${localStyles.outerCircle}
-            `}
+            className={localStyles.outerCircle}
             style={{
                 background: `linear-gradient(145deg, ${coloredIndent ? baseColorOpacity70.string() : '#00000020'}, ${coloredIndent ? baseColorOpacity80.string() : '#00000010'})`,
                 boxShadow: `inset 2px 2px 4px 0px ${coloredIndent ? baseColorOpacity60.string() : '#00000030'}`,
                 width: `${size}px`,
                 height: `${size}px`,
-                ...(passThruProps?.style || {})
             }}
         >
             <div
@@ -108,17 +101,6 @@ IndentSpinner.propTypes = {
      * The speed at which the spinner makes a full rotation in seconds.
      */
     speed: PropTypes.number,
-    /**
-     * Any additional props to pass through to the internal `div` wrapping the entire
-     * spinner.
-     *
-     * This is not a prop of `passThruProps` -- this is simply a representation of any
-     * additional props passed to the `IndentSpinner` component that aren't covered above.
-     *
-     * To change the size of the spinner, you can pass a `className` or `style` prop which
-     * changes both the `width` and `height` of the component.
-     */
-    "...passThruProps": PropTypes.any,
 };
 
 IndentSpinner.defaultProps = {
