@@ -1,1 +1,2 @@
 export { default as useMousePos } from './use-mouse-pos/use-mouse-pos';
+export { default as useVisibilitySensorWithResetDelay } from './use-visibility-sensor-with-reset-delay/use-visibility-sensor-with-reset-delay';

@@ -2,15 +2,16 @@ import {
     setAsCategory,
     setAsDisabled,
 } from '@unifire-js/storybook-utils';
-import TypingReveal from './typing-reveal';
+import LetterSpacingReveal from './letter-spacing-reveal';
 
 // Construct the argTypes object
 const argTypes = {};
 setAsCategory(argTypes, 'UI', [
-    'lines',
-    'typingSpeed',
-    'fadeSpeed',
+    'children',
+    'animationSpeed',
     'resetDelay',
+    'startLetterSpacing',
+    'endLetterSpacing',
 ]);
 setAsCategory(argTypes, 'Pass Thru Props', [
     '...passThruProps',
@@ -21,17 +22,17 @@ setAsDisabled(argTypes, [
 
 // Storybook default export
 export default {
-    title: 'text animations/TypingReveal',
-    component: TypingReveal,
+    title: 'text animations/LetterSpacingReveal',
+    component: LetterSpacingReveal,
     argTypes,
 };
 
 const Template = (args) => {
     return (
         <div style={{ width: 'fit-content', height: 'fit-content', padding: '20px', margin: '40px', borderRadius: '10px', background: 'white' }}>
-            <TypingReveal {...args}/>
+            <LetterSpacingReveal {...args}/>
             <div style={{ marginBottom: '1200px' }}>Scroll down to see more.</div>
-            <TypingReveal {...args}/>
+            <LetterSpacingReveal {...args}/>
         </div>
     );
 };
@@ -39,41 +40,50 @@ const Template = (args) => {
 // Basic Demo
 export const Basic = Template.bind({});
 Basic.args = {
-    lines: [
-        "'Why waste time say lot word",
-        "when few word do trick...'",
-    ],
+    children: 'Hello World',
 };
 
 // Style Override Demo
 export const StyleOverride = Template.bind({});
 StyleOverride.args = {
-    lines: [
-        "'Why waste time say lot word",
-        "when few word do trick...'",
-    ],
+    children: 'Hello World',
     style: {
         fontSize: '24px',
-        alignItems: 'center',
     },
 };
 
 // Reset Demo
 export const Reset = Template.bind({});
 Reset.args = {
-    lines: [
-        "'Why waste time say lot word",
-        "when few word do trick...'",
-    ],
+    children: 'Hello World',
     resetDelay: 2,
 };
 
 // No Reset Delay Demo
 export const NoResetDelay = Template.bind({});
 NoResetDelay.args = {
-    lines: [
-        "'Why waste time say lot word",
-        "when few word do trick...'",
-    ],
+    children: 'Hello World',
     resetDelay: 0,
+};
+
+// Complex Children Demo
+export const ComplexChildren = Template.bind({});
+ComplexChildren.args = {
+    children: (
+        <>
+            <h1>
+                <span style={{ color: 'red' }}>Hello</span>
+                <span style={{ color: 'blue' }}>World</span>
+            </h1>
+            <p>How are you today?</p>
+        </>
+    ),
+};
+
+// Invert Letter Spacing Animation Demo
+export const InvertLetterSpacingAnimation = Template.bind({});
+InvertLetterSpacingAnimation.args = {
+    children: 'Hello World',
+    endLetterSpacing: 1,
+    startLetterSpacing: 8,
 };
