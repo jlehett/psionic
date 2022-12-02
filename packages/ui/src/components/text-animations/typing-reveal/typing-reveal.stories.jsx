@@ -16,7 +16,9 @@ export default {
 
 const Template = (args) => {
     return (
-        <div style={{ width: '500px', height: 'fit-content', padding: '20px', margin: '40px', borderRadius: '10px', background: 'white' }}>
+        <div style={{ width: 'fit-content', height: 'fit-content', padding: '20px', margin: '40px', borderRadius: '10px', background: 'white' }}>
+            <TypingReveal {...args}/>
+            <div style={{ marginBottom: '1200px' }}>Scroll down to see more.</div>
             <TypingReveal {...args}/>
         </div>
     );
@@ -40,7 +42,16 @@ StyleOverride.args = {
     ],
     style: {
         fontSize: '24px',
-        alignText: 'center',
-        textAlign: 'center',
+        alignItems: 'center',
     },
-}
+};
+
+// No Reset Demo
+export const NoReset = Template.bind({});
+NoReset.args = {
+    lines: [
+        "'Why waste time say lot word",
+        "when few word do trick...'",
+    ],
+    resetWhenNotVisible: false,
+};

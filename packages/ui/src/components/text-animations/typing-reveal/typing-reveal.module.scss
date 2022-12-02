@@ -4,6 +4,11 @@
 @layer psionic {
 
     .typingReveal {
+        display: flex;
+        flex-direction: column;
 
+        & > div {
+            width: fit-content;
+        }
     }
 }

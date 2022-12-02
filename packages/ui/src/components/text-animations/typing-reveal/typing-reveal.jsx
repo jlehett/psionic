@@ -1,5 +1,6 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import VisibilitySensor from 'react-visibility-sensor';
 import { motion } from 'framer-motion';
 import localStyles from './typing-reveal.module.scss';
 
@@ -10,6 +11,7 @@ const TypingReveal = ({
     lines,
     typingSpeed,
     fadeSpeed,
+    resetWhenNotVisible,
     // Pass-thru props
     ...passThruProps
 }) => {
@@ -32,6 +34,11 @@ const TypingReveal = ({
     //#endregion
 
     //#region State
+
+    /**
+     * Track whether the text should be displayed or not.
+     */
+    const [textDisplayed, setTextDisplayed] = useState(false);
 
     //#endregion
 
@@ -80,10 +87,10 @@ const TypingReveal = ({
             ));
 
             return (
-                <>
+                <div key={`line-${lineIndex}`}>
                     {charSpans}
                     <br/>
-                </>
+                </div>
             );
         });
     }, [lines]);
@@ -91,6 +98,17 @@ const TypingReveal = ({
     //#endregion
 
     //#region Functions
+
+    /**
+     * Handle the visibility change of the component.
+     */
+    const onVisibilityChanged = (isVisible) => {
+        if (!textDisplayed && isVisible) {
+            setTextDisplayed(true);
+        } else if (textDisplayed && !isVisible && resetWhenNotVisible) {
+            setTextDisplayed(false);
+        }
+    };
 
     //#endregion
 
@@ -100,18 +118,20 @@ const TypingReveal = ({
      * Main render.
      */
     return (
-        <motion.span
-            {...passThruProps}
-            className={`
-                ${localStyles.typingReveal}
-                ${passThruProps?.className}
-            `}
-            variants={sentenceVariants}
-            initial="hidden"
-            animate="visible"
-        >
-            {lineSpans}
-        </motion.span>
+        <VisibilitySensor onChange={onVisibilityChanged}>
+            <motion.span
+                {...passThruProps}
+                className={`
+                    ${localStyles.typingReveal}
+                    ${passThruProps?.className}
+                `}
+                variants={sentenceVariants}
+                initial="hidden"
+                animate={textDisplayed ? "visible" : "hidden"}
+            >
+                {lineSpans}
+            </motion.span>
+        </VisibilitySensor>
     );
 
     //#endregion
@@ -124,6 +144,7 @@ TypingReveal.propTypes = {
 TypingReveal.defaultProps = {
     typingSpeed: 2.5,
     fadeSpeed: 0.5,
+    resetWhenNotVisible: true,
 };
 
 export default TypingReveal;
