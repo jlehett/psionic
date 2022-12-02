@@ -1,0 +1,17 @@
+@import "@styles/colors.scss";
+@import "@styles/main.scss";
+
+@layer psionic {
+
+    .bouncingText {
+        display: flex;
+        flex-direction: column;
+
+        & > div {
+
+            .nonSpaceChar {
+                display: inline-block;
+            }
+        }
+    }
+}
