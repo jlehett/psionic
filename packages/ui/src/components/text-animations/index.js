@@ -1,0 +1,1 @@
+export { default as TypingReveal } from './typing-reveal/typing-reveal';
