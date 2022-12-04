@@ -135,7 +135,8 @@ const TextField = ({
                 </label>
             </motion.div>
             <div className={localStyles.inputWrapper}>
-                <input
+                <textarea
+                    rows="1"
                     type={inputTypeToUse}
                     value={currentValue}
                     onChange={onChange}

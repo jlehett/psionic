@@ -30,7 +30,7 @@
             flex-direction: row;
             align-items: center;
 
-            input {
+            textarea {
                 width: 100%;
                 height: 100%;
                 margin: 0;
@@ -40,6 +40,7 @@
                 font-size: 16px;
                 background: none;
                 box-sizing: border-box;
+                resize: none;
             }
 
             button {
@@ -129,7 +130,7 @@
                 box-shadow: none;
                 background: #ebebeb;
 
-                input {
+                textarea {
                     color: rgba(0, 0, 0, 0.4);
                 }
             }
