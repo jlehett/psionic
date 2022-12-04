@@ -1,11 +1,10 @@
-import { useContext, useMemo, useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
-import { FormData } from '@contexts';
 import { StickyTooltip } from '@components/accessibility';
-import { Input } from '@components/inputs';
 import Visibility from '@assets/visibility.svg';
 import VisibilityOff from '@assets/visibility-off.svg';
+import { useFormField } from '@hooks/forms';
 import localStyles from './text-field.module.scss';
 
 /**
@@ -31,12 +30,22 @@ const TextField = ({
 
     //#endregion
 
-    //#region Context
+    //#region Misc Hooks
 
     /**
-     * Use the Form Data from context.
+     * Use the form field hook.
      */
-    const formData = useContext(FormData);
+    const [
+        formField,
+        onChange
+    ] = useFormField({
+        fieldKey,
+        type,
+        initialValue,
+        disabled,
+        validator,
+        required,
+    });
 
     //#endregion
 
@@ -58,52 +67,39 @@ const TextField = ({
 
     //#endregion
 
-    //#region Memoized Values
+    //#region Variables
 
     /**
-     * Memoized value that is currently stored in the input.
+     * Value that is currently stored in the input.
      * @type {string}
      */
-    const currentValue = useMemo(() => {
-        return formData[fieldKey]?.value;
-    }, [formData, fieldKey]);
+    const currentValue = formField?.value;
 
     /**
-     * Memoized string representing the type to use for the internal input element. If the
-     * given input type is a password, we may want to represent it with a text input if the
-     * show password button has been clicked.
+     * String representing the type to use for the internal input element. If the given
+     * input type is a password, we may want to represent it with a text input if the show
+     * password button has been clicked.
      * @type {string}
      */
-    const inputTypeToUse = useMemo(() => {
-        if (type !== 'password') return type;
-
-        return showHiddenText ? 'text' : 'password';
-    }, [type, showHiddenText]);
+    const inputTypeToUse = type !== 'password' ? type : showHiddenText ? 'text' : 'password';
 
     /**
-     * Memoized helper message that is currently stored in the input's info.
+     * Helper message that is currently stored in the input's info.
      * @type {string | null}
      */
-    const currentHelperMessage = useMemo(() => {
-        const formInfo = formData[fieldKey];
-        return formInfo?.unmodifiedSinceLastSubmission ? formInfo?.message : null;
-    }, [formData, fieldKey]);
+    const currentHelperMessage = formField?.unmodifiedSinceLastSubmission ? formField?.message : null;
 
     /**
-     * Memoized flag indicating whether the value currently stored in the input is valid.
+     * Flag indicating whether the value currently stored in the input is valid.
      * @type {boolean}
      */
-    const currentValidity = useMemo(() => {
-        return formData[fieldKey]?.valid;
-    }, [formData, fieldKey]);
+    const currentValidity = formField?.valid;
 
     /**
-     * Memoized flag indicating whether the field is unmodified since the last form submission or not.
+     * Flag indicating whether the field is unmodified since the last form submission or not.
      * @type {boolean}
      */
-    const unmodifiedSinceLastSubmission = useMemo(() => {
-        return formData[fieldKey]?.unmodifiedSinceLastSubmission;
-    }, [formData, fieldKey]);
+    const unmodifiedSinceLastSubmission = formField?.unmodifiedSinceLastSubmission;
 
     //#endregion
 
@@ -139,16 +135,13 @@ const TextField = ({
                 </label>
             </motion.div>
             <div className={localStyles.inputWrapper}>
-                <Input
+                <input
                     type={inputTypeToUse}
-                    initialValue={initialValue}
-                    fieldKey={fieldKey}
-                    required={required}
-                    validator={validator}
+                    value={currentValue}
+                    onChange={onChange}
+                    disabled={disabled}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
-                    disabled={disabled}
-                    {...InputProps}
                 />
                 {
                     type !== 'password'
