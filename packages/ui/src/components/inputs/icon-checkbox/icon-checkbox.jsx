@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Color from 'color';
 import { motion } from 'framer-motion';
 import { FormData, SetFormData } from '@contexts';
+import { useFormField } from '@hooks/forms';
 import localStyles from './icon-checkbox.module.scss';
 
 /**
@@ -37,17 +38,20 @@ const IconCheckbox = ({
 
     //#endregion
 
-    //#region Context
+    //#region Misc Hooks
 
     /**
-     * Use the Form Data from context.
+     * Use the form field hook.
      */
-    const formData = useContext(FormData);
-
-    /**
-     * Use the Set Form Data API from context.
-     */
-    const setFormData = useContext(SetFormData);
+    const [
+        formField,
+        onChange
+    ] = useFormField({
+        fieldKey,
+        initialValue,
+        type: 'icon-checkbox',
+        disabled,
+    });
 
     //#endregion
 
@@ -62,94 +66,19 @@ const IconCheckbox = ({
 
     //#region Effects
 
-    /**
-     * When the component first mounts, add its data to the form data context.
-     * When the component unmounts, remove its data from the form data context.
-     */
-    useEffect(() => {
-        // On Mount
-        setFieldValue(initialValue);
-
-        // Before Unmount
-        return () => deleteField();
-    }, []);
-
-    /**
-     * Whenever the `disabled` prop changes, we want to update that flag in the form data.
-     */
-    useEffect(() => {
-        setFieldDisabled(disabled);
-    }, [disabled]);
-
     //#endregion
 
-    //#region Memoized Values
+    //#region Variables
 
     /**
-     * Memoized value that is currently stored in the input.
+     * The value currently stored in input.
      * @type {boolean}
      */
-    const currentValue = useMemo(() => {
-        return formData[fieldKey]?.checked || false;
-    }, [formData, fieldKey]);
+    const currentValue = formField?.checked || false;
 
     //#endregion
 
     //#region Functions
-
-    /**
-     * On Change handler.
-     */
-    const onChange = () => {
-        // If the checkbox is disabled, do nothing
-        if (disabled) return;
-
-        setFieldValue(!currentValue);
-    };
-
-    /**
-     * Sets the form's data for this field key to the specified value.
-     *
-     * @param {boolean} newValue The new value for this checkbox in the form
-     */
-    const setFieldValue = (newValue) => {
-        const fieldInfo = {
-            type: 'icon-checkbox',
-            checked: newValue,
-            valid: true,
-            disabled,
-        };
-
-        setFormData((prev) => ({
-            ...prev,
-            [fieldKey]: fieldInfo,
-        }));
-    };
-
-    /**
-     * Sets the field's `disabled` flag in the form's data to the specified value.
-     *
-     * @param {boolean} disabledValue The new value for the field's `disabled` flag
-     */
-    const setFieldDisabled = (disabledValue) => {
-        setFormData((prev) => ({
-            ...prev,
-            [fieldKey]: {
-                ...(prev[fieldKey] || {}),
-                disabled: disabledValue,
-            },
-        }));
-    };
-
-    /**
-     * Deletes the form's data for the key.
-     */
-    const deleteField = () => {
-        setFormData((prev) => {
-            delete prev[fieldKey];
-            return prev;
-        });
-    };
 
     //#endregion
 

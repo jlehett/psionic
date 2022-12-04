@@ -111,7 +111,7 @@ export default {
 const Template = (args) => {
     return (
         <Form
-            onSubmit={() => {}}
+            onSubmit={(formValues) => console.log(formValues)}
             style={{ margin: '40px' }}
         >
             <Input

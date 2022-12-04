@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { FormData, SetFormData } from '@contexts';
+import { useFormField } from '@hooks/forms';
 import localStyles from './input.module.scss';
 
 /**
@@ -21,17 +22,19 @@ const Input = ({
 
     //#endregion
 
-    //#region Context
+    //#region Misc Hooks
 
-    /**
-     * Use the Form Data from context.
-     */
-    const formData = useContext(FormData);
-
-    /**
-     * Use the Set Form Data API from context.
-     */
-    const setFormData = useContext(SetFormData);
+    const [
+        formField,
+        onChange
+    ] = useFormField({
+        fieldKey,
+        type,
+        initialValue,
+        disabled,
+        validator,
+        required,
+    });
 
     //#endregion
 
@@ -41,132 +44,13 @@ const Input = ({
 
     //#region Effects
 
-    /**
-     * When the component first mounts, add its data to the form data context.
-     * When the component unmounts, remove its data from the form data context.
-     */
-    useEffect(() => {
-        // On Mount
-        setFieldValue(initialValue);
-
-        // Before Unmount
-        return () => deleteField();
-    }, []);
-
-    /**
-     * Whenever the `disabled` prop changes, we want to update that flag in the form data.
-     */
-    useEffect(() => {
-        setFieldDisabled(disabled);
-    }, [disabled]);
-
     //#endregion
 
     //#region Memoized Values
 
-    /**
-     * Memoized value that is currently stored in the input.
-     * @type {string}
-     */
-    const currentValue = useMemo(() => {
-        return formData[fieldKey]?.value || '';
-    }, [formData, fieldKey]);
+    //#endregion
 
     //#region Functions
-
-    /**
-     * On Change handler.
-     *
-     * @param {Event} event The DOM Event sent through the `onChange` handler
-     */
-    const onChange = (event) => {
-        switch (type) {
-            case 'email':
-            case 'password':
-            case 'text':
-            case 'url':
-                setFieldValue(event.target.value);
-                return;
-            default:
-                throw new Error(`Unsupported input of type, ${type}`);
-        }
-    };
-
-    /**
-     * Gets the helper message to display for the given value.
-     *
-     * @param {string} value The value to get the helper message for
-     * @returns {string | null} The appropriate helper message to display, or `null`
-     * if no helper message should be displayed
-     */
-    const getHelperMessageForValue = (value) => {
-        if (required && !value) {
-            return 'This field is required';
-        } else if (validator) {
-            return validator(value);
-        } else {
-            return null;
-        }
-    };
-
-    /**
-     * Sets the form's data for the key to the specified value.
-     *
-     * @param {*} newValue The new value for this field in the form
-     */
-    const setFieldValue = (newValue) => {
-        const message = getHelperMessageForValue(newValue);
-
-        const fieldInfo = (() => {
-            switch (type) {
-                case 'email':
-                case 'password':
-                case 'text':
-                case 'url':
-                    return {
-                        type,
-                        required: Boolean(required),
-                        value: newValue,
-                        message: disabled ? null : message,
-                        valid: disabled ? true : !Boolean(message),
-                        unmodifiedSinceLastSubmission: false,
-                        disabled,
-                    };
-                default:
-                    throw new Error(`Unsupported input of type, ${type}`);
-            }
-        })();
-
-        setFormData((prev) => ({
-            ...prev,
-            [fieldKey]: fieldInfo,
-        }));
-    };
-
-    /**
-     * Sets the field's `disabled` flag in the form's data to the specified value.
-     *
-     * @param {boolean} disabledValue The new value for the field's `disabled` flag
-     */
-    const setFieldDisabled = (disabledValue) => {
-        setFormData((prev) => ({
-            ...prev,
-            [fieldKey]: {
-                ...(prev[fieldKey] || {}),
-                disabled: disabledValue,
-            },
-        }));
-    };
-
-    /**
-     * Deletes the form's data for the key.
-     */
-    const deleteField = () => {
-        setFormData((prev) => {
-            delete prev[fieldKey];
-            return prev;
-        });
-    };
 
     //#endregion
 
@@ -178,7 +62,7 @@ const Input = ({
     return (
         <input
             type={type}
-            value={currentValue}
+            value={formField?.value}
             onChange={onChange}
             disabled={disabled}
             {...passThruProps}

@@ -1,10 +1,9 @@
-import { useContext, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
 import { motion } from 'framer-motion';
 import Check from '@assets/check.svg';
-import { FormData, SetFormData } from '@contexts';
 import { getContrastingBWColor } from '@utils/colors';
+import { useFormField } from '@hooks/forms';
 import localStyles from './checkbox.module.scss';
 
 /**
@@ -35,17 +34,22 @@ const Checkbox = ({
 
     //#endregion
 
-    //#region Context
+    //#region Misc Hooks
 
     /**
-     * Use the Form Data from context.
+     * Use the form field hook.
      */
-    const formData = useContext(FormData);
-
-    /**
-     * Use the Set Form Data API from context.
-     */
-    const setFormData = useContext(SetFormData);
+    const [
+        formField,
+        onChange
+    ] = useFormField({
+        fieldKey,
+        initialValue,
+        type: 'checkbox',
+        disabled,
+        required,
+        requiredMessage,
+    });
 
     //#endregion
 
@@ -55,125 +59,37 @@ const Checkbox = ({
 
     //#region Effects
 
-    /**
-     * When the component first mounts, add its data to the form data context.
-     * When the component unmounts, remove its data from the form data context.
-     */
-    useEffect(() => {
-        // On Mount
-        setFieldValue(initialValue);
-
-        // Before Unmount
-        return () => deleteField();
-    }, []);
-
-    /**
-     * Whenever the `disabled` prop changes, we want to update that flag in the form data.
-     */
-    useEffect(() => {
-        setFieldDisabled(disabled);
-    }, [disabled]);
-
     //#endregion
 
-    //#region Memoized Values
+    //#region Variables
 
     /**
-     * Memoized value that is currently stored in the input.
+     * The value currently stored in the input.
      * @type {boolean}
      */
-    const currentValue = useMemo(() => {
-        return formData[fieldKey]?.checked || false;
-    }, [formData, fieldKey]);
+    const currentValue = formField?.checked || false;
 
     /**
-     * Memoized helper message that is currently stored in the input's info.
+     * Helper message that is currently stored in the input's info.
      * @type {string | null}
      */
-    const currentHelperMessage = useMemo(() => {
-        const formInfo = formData[fieldKey];
-        return formInfo?.unmodifiedSinceLastSubmission ? formInfo?.message : null;
-    }, [formData, fieldKey]);
+    const currentHelperMessage = formField?.unmodifiedSinceLastSubmission ? formField?.message : null;
 
     /**
-     * Memoized flag indicating whether the value currently stored in the input is valid.
+     * Flag indicating whether the value currently stored in the input is valid.
      * @type {boolean}
      */
-    const currentValidity = useMemo(() => {
-        return formData[fieldKey]?.valid;
-    }, [formData, fieldKey]);
+    const currentValidity = formField?.valid;
 
     /**
-     * Memoized flag indicating whether the field is unmodified since the last form submission or not.
+     * Flag indicating whether the field is unmodified since the last form submission or not.
      * @type {boolean}
      */
-    const unmodifiedSinceLastSubmission = useMemo(() => {
-        return formData[fieldKey]?.unmodifiedSinceLastSubmission;
-    }, [formData, fieldKey]);
+    const unmodifiedSinceLastSubmission = formField?.unmodifiedSinceLastSubmission;
 
     //#endregion
 
     //#region Functions
-
-    /**
-     * On Change handler.
-     */
-    const onChange = () => {
-        // If the checkbox is disabled, do nothing
-        if (disabled) return;
-
-        setFieldValue(!currentValue);
-    };
-
-    /**
-     * Sets the form's data for this field key to the specified value.
-     *
-     * @param {boolean} newValue The new value for this checkbox in the form
-     */
-    const setFieldValue = (newValue) => {
-        const message = required && !newValue ? requiredMessage : null;
-
-        const fieldInfo = {
-            type: 'checkbox',
-            required: Boolean(required),
-            checked: newValue,
-            message: disabled ? null : message,
-            valid: disabled ? true : !Boolean(message),
-            unmodifiedSinceLastSubmission: false,
-            disabled,
-            _requiredMessage: requiredMessage,
-        };
-
-        setFormData((prev) => ({
-            ...prev,
-            [fieldKey]: fieldInfo,
-        }));
-    };
-
-    /**
-     * Sets the field's `disabled` flag in the form's data to the specified value.
-     *
-     * @param {boolean} disabledValue The new value for the field's `disabled` flag
-     */
-    const setFieldDisabled = (disabledValue) => {
-        setFormData((prev) => ({
-            ...prev,
-            [fieldKey]: {
-                ...(prev[fieldKey] || {}),
-                disabled: disabledValue,
-            },
-        }));
-    };
-
-    /**
-     * Deletes the form's data for the key.
-     */
-    const deleteField = () => {
-        setFormData((prev) => {
-            delete prev[fieldKey];
-            return prev;
-        });
-    };
 
     //#endregion
 
