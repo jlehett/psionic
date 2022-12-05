@@ -237,4 +237,11 @@ export const Disabled = Template.bind({});
 Disabled.args = {
     label: 'Email',
     disabled: true,
-}
+};
+
+// Multiline Demo
+export const Multiline = Template.bind({});
+Multiline.args = {
+    label: 'Story',
+    multiline: true,
+};

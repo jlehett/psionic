@@ -16,7 +16,8 @@ module.exports = {
         "builder": "@storybook/builder-vite"
     },
     "features": {
-        "storyStoreV7": true
+        "storyStoreV7": true,
+        "emotionAlias": false,
     },
     async viteFinal(config, { configType }) {
         const { config: userConfig } = await loadConfigFromFile(

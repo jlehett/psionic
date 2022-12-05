@@ -30,7 +30,24 @@
             flex-direction: row;
             align-items: center;
 
-            textarea {
+            .textBlock {
+                position: relative;
+                background: none;
+                outline: none;
+                font-size: 16px;
+                padding: 12px;
+                width: 100%;
+                box-sizing: border-box;
+
+                * {
+                    margin: 0;
+                    padding: 0;
+                    outline: none;
+                    border: none;
+                }
+            }
+
+            input {
                 width: 100%;
                 height: 100%;
                 margin: 0;
@@ -130,7 +147,7 @@
                 box-shadow: none;
                 background: #ebebeb;
 
-                textarea {
+                input {
                     color: rgba(0, 0, 0, 0.4);
                 }
             }
