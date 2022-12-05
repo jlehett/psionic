@@ -157,6 +157,11 @@
                     color: rgba(0, 0, 0, 0.4);
                 }
             }
+
+            .textBlock {
+                pointer-events: none;
+                color: rgba(0, 0, 0, 0.4);
+            }
         }
     }
 }

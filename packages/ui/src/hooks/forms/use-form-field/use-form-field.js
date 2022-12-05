@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useContext } from 'react';
+import { useEffect, useRef, useContext } from 'react';
 import { FormData, SetFormData } from '@contexts';
 
 //#region Typedefs
@@ -40,6 +40,15 @@ export default function(
         requiredMessage,
     } = {},
 ) {
+    //#region Refs
+
+    /**
+     * Track a reference to the disabled state of the form field, to ensure it stays up-to-date.
+     */
+    const disabledRef = useRef(disabled);
+
+    //#endregion
+
     //#region Context
 
     /**
@@ -72,6 +81,7 @@ export default function(
      * Whenever the `disabled` prop changes, we want to update that flag in the form data.
      */
     useEffect(() => {
+        disabledRef.current = disabled;
         setFieldDisabled(disabled);
     }, [disabled]);
 
@@ -85,8 +95,6 @@ export default function(
      * @param {Event} event The DOM Event sent through the `onChange` handler
      */
     const onChange = (event) => {
-        if (disabled) return;
-
         switch (type) {
             case 'email':
             case 'password':
@@ -124,7 +132,7 @@ export default function(
                         message: disabled ? null : message,
                         valid: disabled ? true : !Boolean(message),
                         unmodifiedSinceLastSubmission: false,
-                        disabled,
+                        disabled: disabledRef.current,
                     };
                 case 'checkbox':
                     return {
@@ -134,7 +142,7 @@ export default function(
                         message: disabled ? null : message,
                         valid: disabled ? true : !Boolean(message),
                         unmodifiedSinceLastSubmission: false,
-                        disabled,
+                        disabled: disabledRef.current,
                         _requiredMessage: requiredMessage,
                     };
                 case 'icon-checkbox':
@@ -142,7 +150,7 @@ export default function(
                         type,
                         checked: newValue,
                         valid: true,
-                        disabled,
+                        disabled: disabledRef.current,
                     };
                 default:
                     throw new Error(`Unsupported input of type, ${type}`);

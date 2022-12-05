@@ -27,6 +27,7 @@ setAsCategory(argTypes, 'Controls', [
     'required',
     'validator',
     'disabled',
+    'multiline',
 ]);
 setAsCategory(argTypes, 'Pass Thru Props', [
     'InputProps',
@@ -91,11 +92,13 @@ export default {
                                         value
                                     </td>
                                     <td>
-                                        <Code>string</Code>
+                                        <Code>string</Code> <Code>Object</Code>
                                     </td>
                                     <td>
                                         The value held by the input field at the time the form was
-                                        submitted.
+                                        submitted. If `multiline` is set to `false`, this will simply
+                                        be a string. If `multiline` is set to `true`, this will be an
+                                        Object, per <a href="https://tiptap.dev/api/editor#get-json">the Tiptap API</a>.
                                     </td>
                                 </tr>
                                 <tr>

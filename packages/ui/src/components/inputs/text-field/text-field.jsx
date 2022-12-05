@@ -77,7 +77,7 @@ const TextField = ({
     /**
      * Use the tiptap editor hook.
      */
-    const editor = useEditor({
+    const editor = !multiline ? null : useEditor({
         editable: !disabled,
         content: formField?.value,
         extensions: [
@@ -86,7 +86,7 @@ const TextField = ({
         onUpdate: ({ editor }) => {
             onChange({
                 target: {
-                    value: editor.getJSON(),
+                    value: editor.isEmpty ? null : editor.getJSON(),
                 },
             });
         },
@@ -100,8 +100,19 @@ const TextField = ({
      * Whenever the form field is updated, make sure the tiptap editor stays up-to-date.
      */
     useEffect(() => {
-        editor?.commands?.setContent?.(formField?.value);
+        if (editor) {
+            editor.commands.setContent(formField?.value);
+        }
     }, [formField]);
+
+    /**
+     * Whenever the disabled state changes, make sure the tiptap editor stays up-to-date.
+     */
+    useEffect(() => {
+        if (editor) {
+            editor?.setEditable(!disabled);
+        }
+    }, [disabled]);
 
     //#endregion
 
