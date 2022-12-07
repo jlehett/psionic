@@ -75,6 +75,12 @@ Basic.args = {
 
 };
 
+// Initial Value Demo
+export const InitialValue = Template.bind({});
+InitialValue.args = {
+    initialValue: 'green',
+};
+
 // Labeled Demo
 export const Labeled = Template.bind({});
 Labeled.args = {

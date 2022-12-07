@@ -100,7 +100,9 @@ const Radio = ({
                     border: !currentValidity && unmodifiedSinceLastSubmission
                         ? '1px solid rgb(211, 47, 47)'
                         : currentValue === value
-                        ? `2px solid ${baseColor}`
+                        ? disabled
+                            ? `2px solid rgba(0, 0, 0, 0.25)`
+                            : `2px solid ${baseColor}`
                         : '1px solid rgba(0, 0, 0, 0.25)',
                     background: disabled ? '#ebebeb' : 'white'
                 }}
