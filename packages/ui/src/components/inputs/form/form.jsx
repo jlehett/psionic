@@ -119,6 +119,9 @@ export const Form = ({
                     case 'icon-checkbox':
                         fieldInfo.checked = false;
                         break;
+                    case 'radio':
+                        fieldInfo.value = null;
+                        break;
                     default:
                         throw new Error(`Unsupported form field type of ${fieldInfo?.type} found!`);
                 }

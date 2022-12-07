@@ -92,15 +92,18 @@ export default function(
     /**
      * On Change handler.
      *
-     * @param {Event} event The DOM Event sent through the `onChange` handler
+     * @param {*} newValue The new value for the form field
      */
-    const onChange = (event) => {
+    const onChange = (newValue) => {
+        if (disabledRef.current) return;
+
         switch (type) {
             case 'email':
             case 'password':
             case 'text':
             case 'url':
-                setFieldValue(event.target.value);
+            case 'radio':
+                setFieldValue(newValue);
                 return;
             case 'checkbox':
             case 'icon-checkbox':
@@ -125,6 +128,7 @@ export default function(
                 case 'password':
                 case 'text':
                 case 'url':
+                case 'radio':
                     return {
                         type,
                         required: Boolean(required),

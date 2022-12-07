@@ -84,11 +84,7 @@ const TextField = ({
             StarterKit,
         ],
         onUpdate: ({ editor }) => {
-            onChange({
-                target: {
-                    value: editor.isEmpty ? null : editor.getJSON(),
-                },
-            });
+            onChange(editor.isEmpty ? null : editor.getJSON());
         },
     });
 
@@ -200,7 +196,7 @@ const TextField = ({
                             <input
                                 type={inputTypeToUse}
                                 value={currentValue}
-                                onChange={onChange}
+                                onChange={(event) => onChange(event.target.value)}
                                 disabled={disabled}
                                 onFocus={() => setIsFocused(true)}
                                 onBlur={() => setIsFocused(false)}

@@ -14,6 +14,8 @@ import {
     TextField,
     Checkbox,
     IconCheckbox,
+    Radio,
+    RadioGroup,
 } from '@components/inputs';
 import { Button } from '@components/buttons';
 import { Code, CodeBlock } from '../../../../.storybook/misc';
@@ -196,6 +198,22 @@ const Template = (args) => {
                         return null;
                     }}
                 />
+                <RadioGroup
+                    fieldKey="favoriteColor"
+                    label="Favorite Color"
+                    required
+                    style={{ marginTop: '16px' }}
+                >
+                    <Radio value="red">
+                        Red
+                    </Radio>
+                    <Radio value="green">
+                        Green
+                    </Radio>
+                    <Radio value="blue">
+                        Blue
+                    </Radio>
+                </RadioGroup>
                 <Checkbox
                     initialValue={false}
                     label="I agree with the terms of service"
@@ -208,7 +226,7 @@ const Template = (args) => {
                     label="Favorite App"
                     fieldKey="favoritedApp"
                     color="#f50a6c"
-                    style={{ marginBottom: '8px' }}
+                    style={{ marginBottom: '8px', marginTop: '16px' }}
                 />
             </div>
             <div style={{ display: 'flex', flexDirection: 'row', gap: '16px' }}>
