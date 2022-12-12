@@ -162,6 +162,111 @@ const ExampleForm = () => {
                             is an object that maps field keys to info about the field at the time the form was submitted / changed. See the documentation of the other
                             @psionic/ui input components for details about what is stored for that particular input in these callbacks' single parameter.
                         </p>
+                        <h2><Code>useFormField</Code> Hook</h2>
+                        <p>
+                            Sometimes you may have a form field that cannot be represented by one of the built-in components provided in this package. In order to
+                            integrate these fields into the <Code>Form</Code> component's flow, you can use the <Code>useFormField</Code> hook that is provided by
+                            the package.
+                        </p>
+                        <p>
+                            The <Code>useFormField</Code> component takes in a single configuration object as its only param, with the following properties:
+                        </p>
+                        <table>
+                            <tr>
+                                <th>Key</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    fieldKey
+                                </td>
+                                <td>
+                                    <Code>string</Code>
+                                </td>
+                                <td>
+                                    The key used to represent the field in the form data.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    type
+                                </td>
+                                <td>
+                                    <Code>string</Code>
+                                </td>
+                                <td>
+                                    The type of input that the field represents. This is used to determine how the data is stored for the field.
+                                    The following types are supported:
+                                    <ul>
+                                        <li><Code>email</Code></li>
+                                        <li><Code>password</Code></li>
+                                        <li><Code>text</Code></li>
+                                        <li><Code>url</Code></li>
+                                        <li><Code>radio</Code></li>
+                                        <li><Code>checkbox</Code></li>
+                                        <li><Code>icon-checkbox</Code></li>
+                                        <li><Code>switch</Code></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    initialValue
+                                </td>
+                                <td>
+                                    <Code>*</Code>
+                                </td>
+                                <td>
+                                    The initial value that the form field should have.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    disabled
+                                </td>
+                                <td>
+                                    <Code>bool</Code>
+                                </td>
+                                <td>
+                                    Whether this form field is currently disabled or not.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    validator
+                                </td>
+                                <td>
+                                    <Code>function</Code>
+                                </td>
+                                <td>
+                                    The validation function to run as the user changes the input's value.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    required
+                                </td>
+                                <td>
+                                    <Code>bool</Code>
+                                </td>
+                                <td>
+                                    Whether this form field should be marked as required or not.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    requiredMessage
+                                </td>
+                                <td>
+                                    <Code>string</Code>
+                                </td>
+                                <td>
+                                    The helper message to store in the form field's data if the field's data is empty, but was marked as
+                                    required when the form was submitted.
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                     <Primary/>
                     <ArgsTable story={PRIMARY_STORY}/>

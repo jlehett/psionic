@@ -98,5 +98,11 @@
             color: #333333;
         }
 
+        ul {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
     }
 }
