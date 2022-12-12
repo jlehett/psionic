@@ -7,7 +7,8 @@ import { useFormField } from '@hooks/forms';
 import localStyles from './radio-group.module.scss';
 
 /**
- * Replace this with a comment describing the component.
+ * A wrapper for a group of radio buttons that can be used in `@psionic/ui`'s `Form`
+ * component.
  */
 const RadioGroup = ({
     initialValue,

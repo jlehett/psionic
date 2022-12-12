@@ -16,6 +16,7 @@ import {
     IconCheckbox,
     Radio,
     RadioGroup,
+    Switch,
 } from '@components/inputs';
 import { Button } from '@components/buttons';
 import { Code, CodeBlock } from '../../../../.storybook/misc';
@@ -214,6 +215,12 @@ const Template = (args) => {
                         Blue
                     </Radio>
                 </RadioGroup>
+                <Switch
+                    initialValue={false}
+                    label="Enable Notifications"
+                    fieldKey="notificationsEnabled"
+                    style={{ marginTop: '16px' }}
+                />
                 <Checkbox
                     initialValue={false}
                     label="I agree with the terms of service"

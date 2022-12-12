@@ -117,6 +117,7 @@ export const Form = ({
                         break;
                     case 'checkbox':
                     case 'icon-checkbox':
+                    case 'switch':
                         fieldInfo.checked = false;
                         break;
                     case 'radio':

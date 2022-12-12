@@ -7,7 +7,7 @@ import { useFormField } from '@hooks/forms';
 import localStyles from './checkbox.module.scss';
 
 /**
- * Replace this with a comment describing the component.
+ * A checkbox that can be used in `@psionic/ui`'s `Form` component.
  */
 const Checkbox = ({
     initialValue,
@@ -115,9 +115,15 @@ const Checkbox = ({
                 onClick={onChange}
                 data-checked={currentValue}
             >
-                <label {...LabelProps}>
-                    {label}{required ? ' *' : null}
-                </label>
+                {
+                    label
+                        ? (
+                            <label {...LabelProps}>
+                                {label}{required ? ' *' : null}
+                            </label>
+                        )
+                        : null
+                }
                 <input
                     type="checkbox"
                     checked={currentValue}
@@ -148,7 +154,7 @@ Checkbox.propTypes = {
     /**
      * The label to display for the checkbox.
      */
-    label: PropTypes.string.isRequired,
+    label: PropTypes.string,
     /**
      * The key to use to represent this checkbox in the parent form. This should be unique
      * among all fields in the individual form.

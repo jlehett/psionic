@@ -7,7 +7,7 @@ import { useFormField } from '@hooks/forms';
 import localStyles from './icon-checkbox.module.scss';
 
 /**
- * Replace this with a comment describing the component.
+ * An icon checkbox that can be used in `@psionic/ui`'s `Form` component.
  */
 const IconCheckbox = ({
     SvgIcon,

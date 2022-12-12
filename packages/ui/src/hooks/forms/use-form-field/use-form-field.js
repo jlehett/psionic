@@ -107,6 +107,7 @@ export default function(
                 return;
             case 'checkbox':
             case 'icon-checkbox':
+            case 'switch':
                 setFieldValue(!formData[fieldKey]?.checked);
                 return;
             default:
@@ -150,6 +151,7 @@ export default function(
                         _requiredMessage: requiredMessage,
                     };
                 case 'icon-checkbox':
+                case 'switch':
                     return {
                         type,
                         checked: newValue,
