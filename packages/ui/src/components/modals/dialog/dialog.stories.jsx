@@ -58,7 +58,7 @@ prepareStoryForModal(Basic, 300);
 Basic.args = {
     style: { width: '600px' },
     children: (
-        <div style={{ padding: '16px 24px' }}>
+        <div style={{ padding: '16px 24px', maxWidth: '600px' }}>
             <h1 style={{ color: 'rgba(0, 0, 0, 0.87)', fontSize: '20px', fontWeight: '500', margin: 0 }}>
                 Use Google's location service?
             </h1>

@@ -211,7 +211,7 @@ const Button = ({
     //#region Functions
 
     /**
-     * Augment the `onClick` function
+     * Augment the `onClick` function.
      */
     const augmentedOnClick = async () => {
         setOnClickRunning(true);

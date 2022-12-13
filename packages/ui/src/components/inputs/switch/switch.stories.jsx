@@ -183,3 +183,10 @@ Disabled.args = {
     label: 'Label',
     disabled: true,
 };
+
+// Large Demo
+export const Large = Template.bind({});
+Large.args = {
+    width: 42 * 4,
+    height: 24 * 4,
+};

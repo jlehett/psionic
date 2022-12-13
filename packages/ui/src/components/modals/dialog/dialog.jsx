@@ -35,6 +35,11 @@ const Dialog = ({
      */
     const [childHeight, setChildHeight] = useState(null);
 
+    /**
+     * Track the child width in state.
+     */
+    const [childWidth, setChildWidth] = useState(null);
+
     //#endregion
 
     //#region Effects
@@ -44,8 +49,12 @@ const Dialog = ({
      */
     useEffect(() => {
         const newChildHeight = childRef.current?.clientHeight || null;
+        const newChildWidth = childRef.current?.clientWidth || null;
         if (newChildHeight !== childHeight) {
             setChildHeight(newChildHeight);
+        }
+        if (newChildWidth !== childWidth) {
+            setChildWidth(newChildWidth);
         }
     });
 
@@ -85,14 +94,17 @@ const Dialog = ({
                                 initial={{
                                     opacity: 0,
                                     height: '20px',
+                                    width: '20px',
                                 }}
                                 animate={{
                                     opacity: [0, 1, 1],
                                     height: ['20px', '20px', `${childHeight || 20}px`],
+                                    width: ['20px', `${childWidth || 20}px`, `${childWidth || 20}px`],
                                 }}
                                 exit={{
                                     opacity: 0,
                                     height: '20px',
+                                    width: '20px',
                                     transition: {
                                         duration: 0.2,
                                     }
