@@ -190,3 +190,10 @@ Large.args = {
     width: 42 * 4,
     height: 24 * 4,
 };
+
+// Colored Demo
+export const Colored = Template.bind({});
+Colored.args = {
+    label: 'Label',
+    color: '#2d9a00',
+}
