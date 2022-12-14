@@ -5,12 +5,14 @@ import { IconButton } from '@components/buttons';
 import localStyles from './snackbar.module.scss';
 
 /**
- * Replace this with a comment describing the component.
+ * A pre-built Snackbar component that can be used to display alert messages to users.
+ * Built to be easily used with the `SnackbarManager` component + `useSnackbar` hook.
  */
 const Snackbar = ({
     color,
     SvgIcon,
     text,
+    removeSnackbar,
     // Pass Thru Props
     ...passThruProps
 }) => {
@@ -62,9 +64,9 @@ const Snackbar = ({
             </div>
             <div className={localStyles.right}>
                 <IconButton
-                    onClick={() => {}}
+                    onClick={removeSnackbar}
                     SvgIcon={Close}
-                    color={baseColor}
+                    color={baseColor.string()}
                     size={24}
                     paddingRatio={0.35}
                 />

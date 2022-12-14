@@ -43,6 +43,10 @@
 
         code {
             font-weight: 400 !important;
+
+            * {
+                font-family: ui-monospace,Menlo,Monaco,"Roboto Mono","Oxygen Mono","Ubuntu Monospace","Source Code Pro","Droid Sans Mono","Courier New",monospace !important;
+            }
         }
 
         table {

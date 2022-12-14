@@ -13,6 +13,9 @@ setAsCategory(argTypes, 'UI', [
     'SvgIcon',
     'text',
 ]);
+setAsCategory(argTypes, 'Controls', [
+    'removeSnackbar',
+]);
 setAsCategory(argTypes, 'Pass Thru Props', [
     '...passThruProps',
 ]);
@@ -27,7 +30,10 @@ export default {
 const Template = (args) => {
     return (
         <div style={{ margin: '40px' }}>
-            <Snackbar {...args}/>
+            <Snackbar
+                removeSnackbar={() => {}}
+                {...args}
+            />
         </div>
     );
 };

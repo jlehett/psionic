@@ -68,3 +68,10 @@ PaddingRatio.args = {
     SvgIcon: Close,
     paddingRatio: 0.25,
 };
+
+// Disabled Demo
+export const Disabled = Template.bind({});
+Disabled.args = {
+    SvgIcon: Close,
+    disabled: true,
+};

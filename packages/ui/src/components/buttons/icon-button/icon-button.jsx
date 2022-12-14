@@ -123,7 +123,7 @@ const IconButton = ({
             <div className={onClickRunning ? localStyles.running : localStyles.hidden}>
                 <QuarterSpinner
                     size={size}
-                    color={disabled ? '#888888' : baseColor}
+                    color={disabled ? '#888888' : baseColor.string()}
                 />
             </div>
             {/* READY STATE */}

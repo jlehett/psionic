@@ -36,7 +36,8 @@
         "core-js": "3.26.1",
         "lodash": "4.17.21",
         "react-visibility-sensor": "5.1.1",
-        "regenerator-runtime": "0.13.11"
+        "regenerator-runtime": "0.13.11",
+        "uuid": "9.0.0"
     },
     "devDependencies": {
         "@babel/cli": "7.19.3",

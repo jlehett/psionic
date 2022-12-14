@@ -63,24 +63,24 @@ export default {
 
 const ExampleForm = () => {
 
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+        const [name, setName] = useState('');
+        const [email, setEmail] = useState('');
 
-    const onSubmit = (event) => {
-        event.preventDefault();
+        const onSubmit = (event) => {
+                event.preventDefault();
 
-        console.log(\`Name: \${name} | Email: \${email}\`);
-    };
+                console.log(\`Name: \${name} | Email: \${email}\`);
+        };
 
-    const onReset = (event) => {
-        event.preventDefault();
+        const onReset = (event) => {
+                event.preventDefault();
 
-        setName('');
-        setEmail('');
-    };
+                setName('');
+                setEmail('');
+        };
 
-    return (
-        <form>
+        return (
+                <form>
             <label>Name</label>
             <input
                 value={name}
@@ -98,7 +98,7 @@ const ExampleForm = () => {
                 Reset
             </button>
         </form>
-    );
+        );
 };`
                             }
                         </CodeBlock>
