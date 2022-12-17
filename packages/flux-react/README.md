@@ -10,4 +10,4 @@ Install the `@psionic/flux-react` NPM module:
 $ npm install @psionic/flux-react
 ```
 
-See the docs at https://psionic-7d025.web.app
+See the docs at https://psionicjs.org

@@ -1,0 +1,27 @@
+@import "@styles/colors.scss";
+@import "@styles/main.scss";
+
+@layer psionic {
+
+    .radioGroup {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        width: fit-content;
+
+        & > ul {
+            padding: 0;
+            margin: 0;
+        }
+
+        .helperMessage {
+            font-size: 13px;
+            color: $error;
+            margin: 4px 0 0 12px;
+
+            &:empty {
+                height: 18px;
+            }
+        }
+    }
+}

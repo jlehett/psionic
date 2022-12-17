@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/jlehett/psionic#readme",
   "devDependencies": {
-    "psionic-doc-gen": "^2.7.3"
+    "jsdoc": "4.0.0",
+    "psionic-doc-gen": "2.7.3",
+    "taffydb": "2.7.3"
   }
 }

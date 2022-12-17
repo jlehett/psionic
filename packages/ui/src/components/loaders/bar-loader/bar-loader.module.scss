@@ -1,0 +1,12 @@
+@import "@styles/colors.scss";
+
+@layer psionic {
+
+    .barLoader {
+        overflow: hidden;
+
+        & > div {
+            height: 100%;
+        }
+    }
+}

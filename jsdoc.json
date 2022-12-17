@@ -2,19 +2,15 @@
     "source": {
         "include": ["packages", "package.json", "README.md"],
         "includePattern": ".js$",
-        "excludePattern": "(node_modules/|docs|lib/)"
+        "excludePattern": "(node_modules/|docs|lib/|packages/ui/)"
     },
     "plugins": [
-        "plugins/markdown",
-        "category",
-        "component",
-        "load",
-        "typescript"
+        "plugins/markdown"
     ],
     "opts": {
         "encoding": "utf8",
         "template": "node_modules/psionic-doc-gen",
-        "destination": "docs/",
+        "destination": "public/docs/",
         "recurse": true,
         "verbose": true
     },

@@ -1,0 +1,85 @@
+@import "@styles/colors.scss";
+
+@layer psionic {
+
+    .checkbox {
+        width: fit-content;
+        height: fit-content;
+        cursor: pointer;
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        gap: 16px;
+
+        input {
+            -webkit-appearance: none;
+            appearance: none;
+            background-color: none;
+            margin: 0;
+            position: absolute;
+        }
+
+        label {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .customCheckbox {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            border-radius: 100px;
+
+            .hoverCircle {
+                width: calc(100% + 16px);
+                height: calc(100% + 16px);
+                position: absolute;
+                border-radius: 50%;
+                transform: translate(-8px, -8px);
+            }
+
+            .waveSvg {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                svg {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+
+            .fillSvg {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                svg {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
+
+        &[data-disabled="true"] {
+            cursor: default;
+
+            label {
+                color: rgba(0, 0, 0, 0.4);
+                cursor: default;
+            }
+
+            .customCheckbox {
+
+            }
+        }
+    }
+}

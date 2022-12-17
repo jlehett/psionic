@@ -8,3 +8,8 @@ firebase.json
 .firebase
 
 lib/
+dist/
+
+packages/ui/storybook-static/
+
+public

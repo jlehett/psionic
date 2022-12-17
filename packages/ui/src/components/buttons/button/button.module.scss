@@ -1,0 +1,49 @@
+@import "@styles/colors.scss";
+@import "@styles/main.scss";
+@import "@styles/common-mixins.scss";
+
+@layer psionic {
+
+    .button {
+        position: relative;
+        text-transform: uppercase;
+        min-height: 36px;
+        padding: 5px 15px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        white-space: nowrap;
+
+        &:not(:disabled) {
+            cursor: pointer;
+        }
+
+        &:disabled {
+            cursor: default;
+        }
+
+        &[data-running="false"] {
+
+            .running {
+                opacity: 0;
+            }
+        }
+
+        &[data-running="true"] {
+
+            .ready {
+                opacity: 0;
+            }
+        }
+
+        .running,
+        .ready {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+}
