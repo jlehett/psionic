@@ -200,6 +200,7 @@ const TextField = ({
                                 disabled={disabled}
                                 onFocus={() => setIsFocused(true)}
                                 onBlur={() => setIsFocused(false)}
+                                {...InputProps}
                             />
                         )
                 }

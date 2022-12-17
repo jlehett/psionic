@@ -1,5 +1,11 @@
 # @psionic/flux
 
+## 0.0.6
+
+<i>December 17, 2022</i>
+
+* ✍️ Minor documentation updates.
+
 ## 0.0.5
 
 <i>Oct 20, 2022</i>

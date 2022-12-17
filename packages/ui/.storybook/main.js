@@ -18,6 +18,7 @@ module.exports = {
     "features": {
         "storyStoreV7": true,
         "emotionAlias": false,
+        "buildStoriesJson": true,
     },
     async viteFinal(config, { configType }) {
         const { config: userConfig } = await loadConfigFromFile(

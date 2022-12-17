@@ -5,9 +5,6 @@ import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    define: {
-        global: {},
-    },
     resolve: {
         alias: {
             '@assets': resolve(__dirname, './src/assets'),
@@ -27,12 +24,12 @@ export default defineConfig({
     build: {
         lib: {
             entry: './src/index.js',
-            formats: ["es", "cjs"],
+            formats: ['es', 'cjs'],
             fileName: 'index',
             name: 'index',
         },
         rollupOptions: {
-            external: ["react", "react-dom"],
-        }
+            external: ['react', 'react-dom'],
+        },
     },
-})
+});
