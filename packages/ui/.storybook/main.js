@@ -31,6 +31,7 @@ module.exports = {
                 userConfig.plugins[1],
                 userConfig.plugins[2],
             ],
+            build: {}
         });
     }
 }

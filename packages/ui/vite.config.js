@@ -29,7 +29,8 @@ export default defineConfig({
             name: 'index',
         },
         rollupOptions: {
-            external: ['react', 'react-dom'],
+            external: ['react', 'react-dom', 'react-docgen'],
         },
+        modulePreload: false,
     },
 });
