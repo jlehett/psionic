@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "psionic-7d025"
+  },
+  "targets": {
+    "psionic-7d025": {
+      "hosting": {
+        "psionic-7d025": [
+          "psionic-7d025"
+        ],
+        "psionic-ui": [
+          "psionic-ui"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
