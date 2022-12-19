@@ -1,73 +1,70 @@
 @import "@styles/colors.scss";
 @import "@styles/main.scss";
 
-@layer psionic {
+.radio {
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+    padding: 4px;
+    gap: 16px;
 
-    .radio {
-        position: relative;
-        width: fit-content;
-        height: fit-content;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
+    input {
+        -webkit-appearance: none;
+        appearance: none;
+        background-color: none;
+        margin: 0;
+        position: absolute;
+    }
+
+    label {
         cursor: pointer;
-        padding: 4px;
-        gap: 16px;
+        font-size: 16px;
+    }
 
-        input {
-            -webkit-appearance: none;
-            appearance: none;
-            background-color: none;
-            margin: 0;
-            position: absolute;
-        }
+    .customRadio {
+        position: relative;
+        width: 20px;
+        height: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.25);
+        border-radius: 50%;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
 
-        label {
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .customRadio {
+        div {
             position: relative;
-            width: 20px;
-            height: 20px;
-            border: 1px solid rgba(0, 0, 0, 0.25);
-            border-radius: 50%;
-            background: white;
+            width: 60%;
+            height: 60%;
+            transform: scale(0);
+            transition: 100ms transform ease-in-out;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-sizing: border-box;
+            border-radius: 50%;
+        }
+    }
+
+    &[data-selected="true"] {
+
+        .customRadio {
 
             div {
-                position: relative;
-                width: 60%;
-                height: 60%;
-                transform: scale(0);
-                transition: 100ms transform ease-in-out;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 50%;
+                transform: scale(1);
             }
         }
+    }
 
-        &[data-selected="true"] {
+    &[data-disabled="true"] {
+        cursor: default;
 
-            .customRadio {
-
-                div {
-                    transform: scale(1);
-                }
-            }
-        }
-
-        &[data-disabled="true"] {
+        label {
             cursor: default;
-
-            label {
-                cursor: default;
-            }
         }
     }
 }

@@ -1,16 +1,14 @@
 @import "@styles/colors.scss";
+@import "@styles/main.scss";
 
-@layer psionic {
+.syncLoader {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
 
-    .syncLoader {
-        display: flex;
-        flex-direction: row;
-        gap: 16px;
-        align-items: center;
-        justify-content: center;
-
-        span {
-            border-radius: 50%;
-        }
+    span {
+        border-radius: 50%;
     }
 }

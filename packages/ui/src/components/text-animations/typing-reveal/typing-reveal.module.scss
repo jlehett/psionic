@@ -1,14 +1,11 @@
 @import "@styles/colors.scss";
 @import "@styles/main.scss";
 
-@layer psionic {
+.typingReveal {
+    display: flex;
+    flex-direction: column;
 
-    .typingReveal {
-        display: flex;
-        flex-direction: column;
-
-        & > div {
-            width: fit-content;
-        }
+    & > div {
+        width: fit-content;
     }
 }

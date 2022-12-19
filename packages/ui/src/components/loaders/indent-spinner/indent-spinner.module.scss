@@ -1,58 +1,55 @@
 @import "@styles/colors.scss";
 @import "@styles/main.scss";
 
-@layer psionic {
+.outerCircle {
+    position: relative;
+    border-radius: 50%;
+}
 
-    .outerCircle {
-        position: relative;
-        border-radius: 50%;
-    }
+.rotator {
+    transform-origin: center center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    animation-name: rotate;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
 
-    .rotator {
-        transform-origin: center center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        animation-name: rotate;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
-
-        @keyframes rotate {
-            0% {
-                rotate: 0deg;
-            }
-            25% {
-                rotate: 90deg;
-            }
-            50% {
-                rotate: 180deg;
-            }
-            75% {
-                rotate: 270deg;
-            }
-            100% {
-                rotate: 360deg;
-            }
+    @keyframes rotate {
+        0% {
+            rotate: 0deg;
+        }
+        25% {
+            rotate: 90deg;
+        }
+        50% {
+            rotate: 180deg;
+        }
+        75% {
+            rotate: 270deg;
+        }
+        100% {
+            rotate: 360deg;
         }
     }
+}
 
-    .innerCircle {
-        border-radius: 50%;
-        width: 50%;
-        height: 50%;
-        background: white;
-        position: absolute;
-        top: 25%;
-        left: 25%;
-    }
+.innerCircle {
+    border-radius: 50%;
+    width: 50%;
+    height: 50%;
+    background: white;
+    position: absolute;
+    top: 25%;
+    left: 25%;
+}
 
-    .spinner {
-        width: 25%;
-        height: 25%;
-        position: absolute;
-        border-radius: 50%;
-        top: 0;
-    }
+.spinner {
+    width: 25%;
+    height: 25%;
+    position: absolute;
+    border-radius: 50%;
+    top: 0;
 }

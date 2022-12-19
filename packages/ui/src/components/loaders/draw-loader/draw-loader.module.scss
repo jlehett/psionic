@@ -1,14 +1,12 @@
 @import "@styles/colors.scss";
+@import "@styles/main.scss";
 
-@layer psionic {
+.drawLoader {
+    position: relative;
 
-    .drawLoader {
-        position: relative;
-
-        svg {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-        }
+    svg {
+        width: 100%;
+        height: 100%;
+        position: absolute;
     }
 }

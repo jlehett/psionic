@@ -1,113 +1,111 @@
 @import "@styles/colors.scss";
 @import "@styles/common-mixins.scss";
+@import "@styles/main.scss";
 
-@layer psionic {
+.checkbox {
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 
-    .checkbox {
-        width: fit-content;
-        height: fit-content;
+    .upperWrapper {
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row-reverse;
+        align-items: center;
+        gap: 16px;
+        cursor: pointer;
+        padding: 8px 0;
 
-        .upperWrapper {
-            display: flex;
-            flex-direction: row-reverse;
-            align-items: center;
-            gap: 16px;
+        label {
             cursor: pointer;
-            padding: 8px 0;
+            user-select: none;
+        }
 
-            label {
-                cursor: pointer;
-                user-select: none;
-            }
+        input {
+            -webkit-appearance: none;
+            appearance: none;
+            background-color: none;
+            margin: 0;
+            position: absolute;
+        }
 
-            input {
-                -webkit-appearance: none;
-                appearance: none;
-                background-color: none;
-                margin: 0;
-                position: absolute;
-            }
+        .customCheckbox {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
 
-            .customCheckbox {
+            div {
                 position: relative;
                 width: 20px;
                 height: 20px;
-                border-radius: 4px;
-                background: white;
-                border: 1px solid rgba(0, 0, 0, 0.25);
+                transform: scale(0);
+                transition: 100ms transform ease-in-out;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                overflow: hidden;
+            }
+        }
+
+        &[data-checked="true"] {
+
+            .customCheckbox {
 
                 div {
-                    position: relative;
-                    width: 20px;
-                    height: 20px;
-                    transform: scale(0);
-                    transition: 100ms transform ease-in-out;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-            }
-
-            &[data-checked="true"] {
-
-                .customCheckbox {
-
-                    div {
-                        transform: scale(1);
-                    }
-                }
-            }
-
-            @include hoverIfSupported {
-
-                .customCheckbox {
-                    border: 1px solid black;
+                    transform: scale(1);
                 }
             }
         }
 
-        .helperMessage {
-            font-size: 13px;
+        @include hoverIfSupported {
+
+            .customCheckbox {
+                border: 1px solid black;
+            }
+        }
+    }
+
+    .helperMessage {
+        font-size: 13px;
+        color: $error;
+        margin: 0 0 0 12px;
+
+        &:empty {
+            height: 18px;
+        }
+    }
+
+    &[data-display-error="true"] {
+
+        .upperWrapper {
             color: $error;
-            margin: 0 0 0 12px;
 
-            &:empty {
-                height: 18px;
+            .customCheckbox {
+                border: 1px solid $error;
             }
         }
+    }
 
-        &[data-display-error="true"] {
+    &[data-disabled="true"] {
 
-            .upperWrapper {
-                color: $error;
+        .upperWrapper {
+            color: rgba(0, 0, 0, 0.4);
+            cursor: default;
 
-                .customCheckbox {
-                    border: 1px solid $error;
-                }
-            }
-        }
-
-        &[data-disabled="true"] {
-
-            .upperWrapper {
-                color: rgba(0, 0, 0, 0.4);
+            label {
                 cursor: default;
+            }
 
-                label {
-                    cursor: default;
-                }
-
-                .customCheckbox {
-                    border: 1px solid rgba(0, 0, 0, 0.26);
-                    background: #ebebeb;
-                }
+            .customCheckbox {
+                border: 1px solid rgba(0, 0, 0, 0.26);
+                background: #ebebeb;
             }
         }
     }
