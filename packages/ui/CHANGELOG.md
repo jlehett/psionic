@@ -1,5 +1,11 @@
 # @psionic/ui
 
+## 0.0.5
+
+<i>December 20, 2022</i>
+
+* 🛠️ Took a pass at making the UI components more consistent across browsers and systems.
+
 ## 0.0.4
 
 <i>December 19, 2022</i>
