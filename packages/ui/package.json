@@ -18,7 +18,8 @@
         "test": "npm run build && jest __tests__",
         "prepublishOnly": "npm run test",
         "storybook": "start-storybook -p 6006",
-        "build-storybook": "build-storybook && mv storybook-static ../../public/ui-docs"
+        "build-storybook": "rm -rf ../../public/ui-docs && build-storybook && mv storybook-static ../../public/ui-docs",
+        "host-docs": "npx http-server ../../public/ui-docs -c-1 -p 8080"
     },
     "keywords": [
         "psionic",
