@@ -1,3 +1,5 @@
+import '@styles/main.scss';
+
 export * from '@components/accessibility';
 export * from '@components/buttons';
 export * from '@components/floating-actions';

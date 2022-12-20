@@ -1,5 +1,4 @@
 @import "@styles/colors.scss";
-@import "@styles/main.scss";
 @import "@styles/common-mixins.scss";
 
 .textField {
@@ -92,7 +91,7 @@
         margin: 8px 0 0 12px;
 
         &:empty {
-            height: 18px;
+            height: 17px;
         }
     }
 

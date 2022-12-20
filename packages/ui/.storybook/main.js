@@ -28,8 +28,8 @@ module.exports = {
         return mergeConfig(config, {
             ...userConfig,
             plugins: [
-                userConfig.plugins[0],
                 userConfig.plugins[1],
+                userConfig.plugins[3],
             ],
             build: {}
         });
