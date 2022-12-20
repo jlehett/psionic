@@ -11,3 +11,5 @@ dist/
 packages/ui/storybook-static/
 
 public
+
+.vscode
