@@ -1,49 +1,46 @@
 @import "@styles/colors.scss";
 @import "@styles/main.scss";
 
-@layer psionic {
+.switch {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    width: fit-content;
+    cursor: pointer;
+    padding: 8px 0;
 
-    .switch {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 16px;
-        position: relative;
-        width: fit-content;
+    input {
+        -webkit-appearance: none;
+        appearance: none;
+        background-color: none;
+        margin: 0;
+        position: absolute;
+    }
+
+    label {
         cursor: pointer;
-        padding: 8px 0;
+    }
 
-        input {
-            -webkit-appearance: none;
-            appearance: none;
-            background-color: none;
-            margin: 0;
-            position: absolute;
-        }
+    .switchBackground {
+        border-radius: 999px;
+    }
+
+    .switchForeground {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        position: absolute;
+        background: white;
+    }
+
+    &[data-disabled="true"] {
+        cursor: default;
 
         label {
-            cursor: pointer;
-        }
-
-        .switchBackground {
-            border-radius: 999px;
-        }
-
-        .switchForeground {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            position: absolute;
-            background: white;
-        }
-
-        &[data-disabled="true"] {
             cursor: default;
-
-            label {
-                cursor: default;
-                color: rgba(0, 0, 0, 0.4);
-            }
+            color: rgba(0, 0, 0, 0.4);
         }
     }
 }

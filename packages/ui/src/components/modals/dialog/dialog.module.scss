@@ -2,35 +2,32 @@
 @import "@styles/main.scss";
 @import "@styles/common-mixins.scss";
 
-@layer psionic {
+.dialog {
+    @include hideScrollbar;
 
-    .dialog {
-        @include hideScrollbar;
+    position: fixed;
+    overflow: scroll;
+    background: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 4px;
+    z-index: 9999999;
 
-        position: fixed;
-        overflow: scroll;
-        background: white;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        border-radius: 4px;
-        z-index: 9999999;
-
-        & > div {
-            height: fit-content;
-            width: max-content;
-            box-sizing: border-box;
-            padding: 0.01px;
-        }
+    & > div {
+        height: fit-content;
+        width: max-content;
+        box-sizing: border-box;
+        padding: 0.01px;
     }
+}
 
-    .overlay {
-        background: black;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 999999;
-    }
+.overlay {
+    background: black;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999999;
 }

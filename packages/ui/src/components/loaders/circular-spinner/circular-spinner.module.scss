@@ -1,12 +1,10 @@
 @import "@styles/colors.scss";
+@import "@styles/main.scss";
 
-@layer psionic {
+.circularSpinner {
 
-    .circularSpinner {
-
-        svg {
-            width: 100%;
-            height: 100%;
-        }
+    svg {
+        width: 100%;
+        height: 100%;
     }
 }

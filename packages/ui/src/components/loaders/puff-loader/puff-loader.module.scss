@@ -1,19 +1,17 @@
 @import "@styles/colors.scss";
+@import "@styles/main.scss";
 
-@layer psionic {
+.puffLoader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    .puffLoader {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        span {
-            border-style: solid;
-            background: none;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            position: absolute;
-        }
+    span {
+        border-style: solid;
+        background: none;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        position: absolute;
     }
 }
