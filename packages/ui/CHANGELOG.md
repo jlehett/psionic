@@ -1,5 +1,12 @@
 # @psionic/ui
 
+## 0.0.6
+
+<i>January 19, 2023</i>
+
+* 🛠️ Added support for React v17 and up.
+* 🛠️ Added support for Framer Motion v6 and up.
+
 ## 0.0.5
 
 <i>December 20, 2022</i>
