@@ -130,7 +130,7 @@ function Dialog({
                     delay:    0.4,
                     duration: 0.25,
                     scale:    {
-                        duration: 0.5,
+                        duration: 0.35,
                     },
                 },
             },
