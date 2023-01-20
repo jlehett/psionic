@@ -7,6 +7,7 @@ import { StickyTooltip } from '@components/accessibility';
 import Visibility from '@assets/visibility.svg';
 import VisibilityOff from '@assets/visibility-off.svg';
 import { useFormField } from '@hooks/forms';
+import { usePseudoSelectors } from '@hooks/interactions';
 import localStyles from './text-field.module.scss';
 
 /**
@@ -49,9 +50,9 @@ function TextField({
     const [showHiddenText, setShowHiddenText] = useState(false);
 
     /**
-     * Track whether the input is focused.
+     * Track the pseudo selectors for the text field.
      */
-    const [isFocused, setIsFocused] = useState(false);
+    const [pseudoSelectorProps, pseudoSelectorStates] = usePseudoSelectors();
 
     // #endregion
 
@@ -158,7 +159,7 @@ function TextField({
     return (
         <motion.div
             data-display-error={!currentValidity && unmodifiedSinceLastSubmission}
-            data-is-focused={isFocused}
+            data-is-focused={pseudoSelectorStates.isFocused}
             data-disabled={disabled}
             {...passThruProps}
             className={`
@@ -185,8 +186,7 @@ function TextField({
                             <div
                                 className={localStyles.textBlock}
                                 ref={editorContentRef}
-                                onFocus={() => setIsFocused(true)}
-                                onBlur={() => setIsFocused(false)}
+                                {...pseudoSelectorProps}
                             >
                                 <EditorContent editor={editor} />
                             </div>
@@ -197,8 +197,7 @@ function TextField({
                                 value={currentValue || ''}
                                 onChange={(event) => onChange(event.target.value)}
                                 disabled={disabled}
-                                onFocus={() => setIsFocused(true)}
-                                onBlur={() => setIsFocused(false)}
+                                {...pseudoSelectorProps}
                                 id={fieldKey}
                                 {...InputProps}
                             />

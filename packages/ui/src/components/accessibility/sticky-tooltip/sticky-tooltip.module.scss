@@ -3,6 +3,7 @@
 .wrapper {
     width: fit-content;
     height: fit-content;
+    font-family: Roboto;
 }
 
 .tooltip {
@@ -14,6 +15,7 @@
     color: white;
     padding: 4px 8px;
     border-radius: 4px;
+    font-family: Roboto;
 
     &[data-is-hovered="true"] {
         opacity: 1;

@@ -2,7 +2,10 @@ import {
     useState, useRef, useMemo, useEffect,
 } from 'react';
 import PropTypes from 'prop-types';
-import { useMousePos } from '@hooks/interactions';
+import {
+    useMousePos,
+    usePseudoSelectors,
+} from '@hooks/interactions';
 import localStyles from './sticky-tooltip.module.scss';
 
 /**
@@ -54,9 +57,9 @@ function StickyTooltip({
     // #region State
 
     /**
-     * Track whether the component is being hovered or not.
+     * Track the pseudo selectors for the tooltip.
      */
-    const [isHovered, setIsHovered] = useState(false);
+    const [pseudoSelectorProps, pseudoSelectorStates] = usePseudoSelectors();
 
     /**
      * Track whether the tooltip is displayed or not.
@@ -73,7 +76,7 @@ function StickyTooltip({
      */
     useEffect(() => {
         // If the element is not longer being hovered, immediately turn the tooltip display off
-        if (!isHovered) {
+        if (!pseudoSelectorStates.isHovered) {
             setTooltipDisplayed(false);
             // Clear the delay timeout if one exists as well
             clearDelayTimeout();
@@ -93,7 +96,7 @@ function StickyTooltip({
                 setTooltipDisplayed(true);
             }
         }
-    }, [isHovered]);
+    }, [pseudoSelectorStates]);
 
     // #endregion
 
@@ -153,8 +156,7 @@ function StickyTooltip({
         <>
             <div
                 className={localStyles.wrapper}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
+                {...pseudoSelectorProps}
             >
                 {children}
             </div>

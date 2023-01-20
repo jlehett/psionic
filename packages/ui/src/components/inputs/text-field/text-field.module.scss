@@ -2,9 +2,9 @@
 @import "@styles/common-mixins.scss";
 
 .textField {
-
     position: relative;
     padding: 24px 0 0 0;
+    font-family: Roboto;
 
     .labelWrapper {
         position: absolute;
@@ -56,6 +56,10 @@
             background: none;
             box-sizing: border-box;
             resize: none;
+
+            &:focus-visible {
+                outline: none !important;
+            }
         }
 
         button {
