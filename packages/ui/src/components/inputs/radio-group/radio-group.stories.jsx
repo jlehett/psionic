@@ -1,6 +1,5 @@
 import {
     setAsCategory,
-    setAsDisabled,
 } from '@unifire-js/storybook-utils';
 import {
     ArgsTable,
@@ -35,26 +34,44 @@ setAsCategory(argTypes, 'Pass Thru Props', [
 
 // Storybook default export
 export default {
-    title: 'inputs/RadioGroup',
-    component: RadioGroup,
+    title:      'inputs/RadioGroup',
+    component:  RadioGroup,
     argTypes,
     parameters: {
         docs: {
             page: () => (
                 <>
                     <div className="storybookWrapper">
-                        <Title/>
-                        <Subtitle/>
+                        <Title />
+                        <Subtitle />
                         <p>
-                            The <Code>RadioGroup</Code> component provides a general purpose radio select
-                            input plus label that can be used in the <Code>@psionic/ui</Code> <Code>Form</Code> flow.
+                            The
+                            {' '}
+                            <Code>RadioGroup</Code>
+                            {' '}
+                            component provides a general purpose radio select
+                            input plus label that can be used in the
+                            {' '}
+                            <Code>@psionic/ui</Code>
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            flow.
                         </p>
                         <h2>
                             Form Field Information
                         </h2>
                         <p>
                             The following information is stored in an object under the
-                            input's <Code>fieldKey</Code> in the form's <Code>onSubmit</Code> callback param:
+                            input's
+                            {' '}
+                            <Code>fieldKey</Code>
+                            {' '}
+                            in the form's
+                            {' '}
+                            <Code>onSubmit</Code>
+                            {' '}
+                            callback param:
                             <table>
                                 <tr>
                                     <th>Key</th>
@@ -69,7 +86,10 @@ export default {
                                         <Code>string</Code>
                                     </td>
                                     <td>
-                                        The type of the input. Always <Code>"radio"</Code>.
+                                        The type of the input. Always
+                                        {' '}
+                                        <Code>"radio"</Code>
+                                        .
                                     </td>
                                 </tr>
                                 <tr>
@@ -80,8 +100,16 @@ export default {
                                         <Code>boolean</Code>
                                     </td>
                                     <td>
-                                        Flag indicating whether the <Code>RadioGroup</Code> was marked
-                                        as <Code>required</Code> or not in its props.
+                                        Flag indicating whether the
+                                        {' '}
+                                        <Code>RadioGroup</Code>
+                                        {' '}
+                                        was marked
+                                        as
+                                        {' '}
+                                        <Code>required</Code>
+                                        {' '}
+                                        or not in its props.
                                     </td>
                                 </tr>
                                 <tr>
@@ -100,7 +128,9 @@ export default {
                                         message
                                     </td>
                                     <td>
-                                        <Code>string</Code> <Code>null</Code>
+                                        <Code>string</Code>
+                                        {' '}
+                                        <Code>null</Code>
                                     </td>
                                     <td>
                                         The message associated with the radio group's current state at
@@ -148,20 +178,31 @@ export default {
                             </table>
                         </p>
                         <p>
-                            See the <Code>Form</Code> component's documentation for more information
-                            about <Code>@psionic/ui</Code>'s <Code>Form</Code> workflow.
+                            See the
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            component's documentation for more information
+                            about
+                            {' '}
+                            <Code>@psionic/ui</Code>
+                            's
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            workflow.
                         </p>
                     </div>
-                    <Primary/>
-                    <ArgsTable story={PRIMARY_STORY}/>
-                    <Stories/>
+                    <Primary />
+                    <ArgsTable story={PRIMARY_STORY} />
+                    <Stories />
                 </>
             ),
         },
     },
 };
 
-const Template = (args) => {
+function Template(args) {
     return (
         <Form
             onSubmit={() => {}}
@@ -171,17 +212,20 @@ const Template = (args) => {
                 fieldKey="testKey"
                 {...args}
             >
-                <Radio value="red">
+                <Radio value="red" id="red">
                     Red
                 </Radio>
-                <Radio value="green">
+                <Radio value="green" id="green">
                     Green
                 </Radio>
-                <Radio value="blue">
+                <Radio value="blue" id="blue">
                     Blue
                 </Radio>
             </RadioGroup>
-            <div style={{ display: 'flex', flexDirection: 'row', gap: '16px', marginTop: '16px' }}>
+            <div style={{
+                display: 'flex', flexDirection: 'row', gap: '16px', marginTop: '16px',
+            }}
+            >
                 <Button
                     variant="contained"
                     type="submit"
@@ -197,7 +241,7 @@ const Template = (args) => {
             </div>
         </Form>
     );
-};
+}
 
 // Basic Demo
 export const Basic = Template.bind({});
@@ -220,21 +264,21 @@ Labeled.args = {
 // Required Demo
 export const Required = Template.bind({});
 Required.args = {
-    label: 'Favorite Color',
+    label:    'Favorite Color',
     required: true,
 };
 
 // Required Message Demo
 export const RequiredMessage = Template.bind({});
 RequiredMessage.args = {
-    label: 'Favorite Color',
-    required: true,
+    label:           'Favorite Color',
+    required:        true,
     requiredMessage: 'Please select a color',
 };
 
 // Disabled Demo
 export const Disabled = Template.bind({});
 Disabled.args = {
-    label: 'Favorite Color',
+    label:    'Favorite Color',
     disabled: true,
 };

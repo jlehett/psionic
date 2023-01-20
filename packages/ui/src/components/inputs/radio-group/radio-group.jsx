@@ -1,16 +1,17 @@
-import { useState } from 'react';
+import { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import Color, { rgb } from 'color';
+import Color from 'color';
 import { motion } from 'framer-motion';
 import { RadioGroupContext } from '@contexts';
 import { useFormField } from '@hooks/forms';
+import { usePseudoSelectors } from '@hooks/interactions';
 import localStyles from './radio-group.module.scss';
 
 /**
  * A wrapper for a group of radio buttons that can be used in `@psionic/ui`'s `Form`
  * component.
  */
-const RadioGroup = ({
+function RadioGroup({
     initialValue,
     fieldKey,
     disabled,
@@ -21,38 +22,37 @@ const RadioGroup = ({
     children,
     // Pass-thru props
     ...passThruProps
-}) => {
-
-    //#region Constants
+}) {
+    // #region Constants
 
     /**
      * Various colors for the radio group.
      */
     const baseColor = Color(color);
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
     /**
-     * Track whether the component is being hovered.
+     * Track the pseudo selectors for the radio group.
      */
-    const [isHovered, setIsHovered] = useState(false);
+    const [pseudoSelectorProps, pseudoSelectorStates] = usePseudoSelectors();
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
-    //#endregion
+    // #endregion
 
-    //#region Misc Hooks
+    // #region Misc Hooks
 
     /**
      * Use the form field hook.
      */
     const [
         formField,
-        onChange
+        onChange,
     ] = useFormField({
         fieldKey,
         type: 'radio',
@@ -62,13 +62,28 @@ const RadioGroup = ({
         disabled,
     });
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Memoized Values
 
-    //#endregion
+    /**
+     * The context value for the radio group.
+     */
+    const radioGroupValue = useMemo(() => ({
+        formField,
+        onChange,
+        disabled,
+        color,
+        fieldKey,
+    }), [formField, onChange, disabled, color, fieldKey]);
 
-    //#region Variables
+    // #endregion
+
+    // #region Functions
+
+    // #endregion
+
+    // #region Variables
 
     /**
      * Helper message that is currently stored in the input's info.
@@ -88,57 +103,52 @@ const RadioGroup = ({
      */
     const unmodifiedSinceLastSubmission = formField?.unmodifiedSinceLastSubmission;
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
      */
     return (
         <RadioGroupContext.Provider
-            value={{
-                formField,
-                onChange,
-                disabled,
-                color,
-            }}
+            value={radioGroupValue}
         >
-            <motion.div
+            <motion.fieldset
                 data-display-error={!currentValidity && unmodifiedSinceLastSubmission}
                 data-disabled={disabled}
                 {...passThruProps}
                 className={`
-                    ${localStyles.radioGroup}
+                    ${localStyles.fieldSet}
                     ${passThruProps?.className}
                 `}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
+                {...pseudoSelectorProps}
                 animate={{ x: !currentValidity && unmodifiedSinceLastSubmission ? [0, 10, -10, 10, 0] : 0 }}
                 transition={{ duration: 0.4 }}
             >
                 {
                     label
                         ? (
-                            <label
+                            <legend
                                 style={{
                                     color: !currentValidity && unmodifiedSinceLastSubmission
                                         ? 'rgb(211, 47, 47)'
                                         : disabled
-                                        ? 'rgba(0, 0, 0, 0.4)'
-                                        : isHovered
-                                        ? baseColor
-                                        : 'rgba(0, 0, 0, 0.6)'
+                                            ? 'rgba(0, 0, 0, 0.4)'
+                                            : pseudoSelectorStates.isHovered
+                                                ? baseColor
+                                                : 'rgba(0, 0, 0, 0.6)',
                                 }}
                             >
-                                {label}{required ? ' *' : null}
-                            </label>
+                                {label}
+                                {required ? ' *' : null}
+                            </legend>
                         )
                         : null
                 }
-                <ul className={localStyles.radioGroup}>
+                <div className={localStyles.radioGroup}>
                     {children}
-                </ul>
+                </div>
                 {
                     required
                         ? (
@@ -148,48 +158,48 @@ const RadioGroup = ({
                         )
                         : null
                 }
-            </motion.div>
+            </motion.fieldset>
         </RadioGroupContext.Provider>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 RadioGroup.propTypes = {
     /**
      * The initial value of the radio group. If set, it should correspond to one of the radio group's `Radio`
      * childrens' values.
      */
-    initialValue: PropTypes.any,
+    initialValue:       PropTypes.any,
     /**
      * The key to use for the field in the form.
      */
-    fieldKey: PropTypes.string.isRequired,
+    fieldKey:           PropTypes.string.isRequired,
     /**
      * Flag indicating whether the radio group is disabled or not.
      */
-    disabled: PropTypes.bool,
+    disabled:           PropTypes.bool,
     /**
      * The color to use for the radio group. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
      */
-    color: PropTypes.string,
+    color:              PropTypes.string,
     /**
      * The label to use for the radio group.
      */
-    label: PropTypes.string,
+    label:              PropTypes.string,
     /**
      * Flag indicating whether the radio group is required or not.
      */
-    required: PropTypes.bool,
+    required:           PropTypes.bool,
     /**
      * The message to display if the radio group is required and the user does not have a value selected after attempting
      * to submit the form.
      */
-    requiredMessage: PropTypes.string,
+    requiredMessage:    PropTypes.string,
     /**
      * Any children to render inside the radio group. Should have at least one `Radio` child.
      */
-    children: PropTypes.any.isRequired,
+    children:           PropTypes.any.isRequired,
     /**
      * The remaining props to spread to the internal `div` HTML element that acts as a root container
      * of the component.
@@ -197,11 +207,11 @@ RadioGroup.propTypes = {
      * This is not a prop of `passThruProps` -- this is simply a representation of any additional props
      * passed to the `RadioGroup` component that aren't covered above.
      */
-    "...passThruProps": PropTypes.any,
+    '...passThruProps': PropTypes.any,
 };
 
 RadioGroup.defaultProps = {
-    color: '#0072E5',
+    color:    '#0072E5',
     disabled: false,
     required: false,
 };

@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import { filter } from 'lodash';
@@ -13,16 +13,15 @@ import localStyles from './snackbar-manager.module.scss';
  * A manager component that handles the display of snackbars. Should likely be used as one
  * of the wrappers of the root of your app.
  */
-export const SnackbarManager = ({
+export function SnackbarManager({
     children,
     maxSnackbars,
-}) => {
+}) {
+    // #region Constants
 
-    //#region Constants
+    // #endregion
 
-    //#endregion
-
-    //#region Context
+    // #region Context
 
     /**
      * Use the snackbar list context.
@@ -34,53 +33,51 @@ export const SnackbarManager = ({
      */
     const snackbarAPI = useContext(SnackbarAPI);
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Render each snackbar in the list.
      */
     const renderSnackbars = () => (
-        snackbarList.map((snackbar) => {
-            return (
-                <motion.div
-                    key={snackbar.id}
-                    layout
-                    initial={{
-                        opacity: 0,
-                        x: -200,
-                    }}
-                    animate={{
-                        opacity: 1,
-                        x: 0,
-                    }}
-                    exit={{
-                        opacity: 0,
-                        x: -200,
-                    }}
-                    transition={{
-                        duration: 0.25,
-                        ease: 'easeOut',
-                    }}
-                    className={localStyles.snackbar}
-                >
-                    <snackbar.Snackbar removeSnackbar={() => snackbarAPI.removeSnackbar(snackbar.id)}/>
-                </motion.div>
-            )
-        })
+        snackbarList.map((snackbar) => (
+            <motion.div
+                key={snackbar.id}
+                layout
+                initial={{
+                    opacity: 0,
+                    x:       -200,
+                }}
+                animate={{
+                    opacity: 1,
+                    x:       0,
+                }}
+                exit={{
+                    opacity: 0,
+                    x:       -200,
+                }}
+                transition={{
+                    duration: 0.25,
+                    ease:     'easeOut',
+                }}
+                className={localStyles.snackbar}
+            >
+                <snackbar.Snackbar removeSnackbar={() => snackbarAPI.removeSnackbar(snackbar.id)} />
+            </motion.div>
+        ))
     );
 
     /**
@@ -97,14 +94,14 @@ export const SnackbarManager = ({
         </>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 SnackbarManager.propTypes = {
     /**
      * The children to wrap with the snackbar manager.
      */
-    children: PropTypes.any.isRequired,
+    children:     PropTypes.any.isRequired,
     /**
      * The maximum number of snackbars to display at once.
      */
@@ -118,11 +115,11 @@ SnackbarManager.defaultProps = {
 /**
  * Wrapper for the Snackbar Manager which will provide the Snackbar contexts.
  */
-const SnackbarManagerWrapper = (props) => {
+function SnackbarManagerWrapper(props) {
     const [snackbarList, setSnackbarList] = useState([]);
 
     // Define a function to add a snackbar to the snackbar list
-    const addSnackbar = (snackbarRender, duration=3000) => {
+    const addSnackbar = (snackbarRender, duration = 3000) => {
         setSnackbarList((prev) => {
             const newSnackbarID = uuidv4();
 
@@ -131,10 +128,11 @@ const SnackbarManagerWrapper = (props) => {
             }, duration);
 
             return [
+                // eslint-disable-next-line react/prop-types
                 ...(props.maxSnackbars > 1 ? prev.slice(-props.maxSnackbars + 1) : []),
                 {
                     Snackbar: snackbarRender,
-                    id: newSnackbarID,
+                    id:       newSnackbarID,
                     timeoutID,
                 },
             ];
@@ -154,20 +152,21 @@ const SnackbarManagerWrapper = (props) => {
         });
     };
 
+    // Memoize the Provider value
+    const snackbarAPI = useMemo(() => ({
+        addSnackbar,
+        removeSnackbar,
+    }), [addSnackbar, removeSnackbar]);
+
     // Wrapped render
     return (
         <SnackbarList.Provider value={snackbarList}>
-            <SnackbarAPI.Provider
-                value={{
-                    addSnackbar,
-                    removeSnackbar,
-                }}
-            >
-                <SnackbarManager {...props}/>
+            <SnackbarAPI.Provider value={snackbarAPI}>
+                <SnackbarManager {...props} />
             </SnackbarAPI.Provider>
         </SnackbarList.Provider>
     );
-};
+}
 
 SnackbarManagerWrapper.defaultProps = SnackbarManager.defaultProps;
 

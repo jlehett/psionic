@@ -17,19 +17,18 @@ import localStyles from './form.module.scss';
  * The form can be submitted like a normal React HTML form with a
  * `<button type="submit">` HTML element.
  */
-export const Form = ({
+export function Form({
     children,
     onSubmit,
     onChange,
     // Pass-thru Props
     ...passThruProps
-}) => {
+}) {
+    // #region Constants
 
-    //#region Constants
+    // #endregion
 
-    //#endregion
-
-    //#region Context
+    // #region Context
 
     /**
      * Use the form data from context.
@@ -41,13 +40,13 @@ export const Form = ({
      */
     const setFormData = useContext(SetFormData);
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
     /**
      * Whenever the form data changes, call the `onChange` callback, if one was provided.
@@ -56,9 +55,9 @@ export const Form = ({
         onChange?.(cloneDeep(formData));
     }, [formData]);
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
     /**
      * Handle the `onSubmit` event for the form.
@@ -139,9 +138,9 @@ export const Form = ({
         });
     };
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
@@ -156,14 +155,14 @@ export const Form = ({
         </form>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 Form.propTypes = {
     /**
      * The children to render as part of the form.
      */
-    children: PropTypes.any,
+    children:           PropTypes.any,
     /**
      * The callback for when the form is submitted. This callback should take in an Object
      * that maps field keys (from inputs in this library, such as TextField) to the values
@@ -176,20 +175,20 @@ Form.propTypes = {
      * with a `required` prop, or due to a `validator` prop for the field), the `onSubmit`
      * callback will NOT be called.
      */
-    onSubmit: PropTypes.func.isRequired,
+    onSubmit:           PropTypes.func,
     /**
      * Optionally pass a callback to the form which will be called everytime any of the form's
      * data changes. This callback should take in an Object that maps field keys (from inputs in
      * this library, such as TextField) to the values they held at the time the form updated.
      */
-    onChange: PropTypes.func,
+    onChange:           PropTypes.func,
     /**
      * The remaining props to spread to the internal `form` HTML element.
      *
      * This is not a prop of `passThruProps` -- this is simply a representation of any
      * additional props passed to the `Form` component that aren't covered above.
      */
-    "...passThruProps": PropTypes.any,
+    '...passThruProps': PropTypes.any,
 };
 
 Form.defaultProps = {
@@ -199,16 +198,16 @@ Form.defaultProps = {
 /**
  * Wraps the Form component in the necessary context providers to handle the form values internally.
  */
-const FormWrapper = (props) => {
+function FormWrapper(props) {
     const [formData, setFormData] = useState({});
 
     return (
         <FormData.Provider value={formData}>
             <SetFormData.Provider value={setFormData}>
-                <Form {...props}/>
+                <Form {...props} />
             </SetFormData.Provider>
         </FormData.Provider>
     );
-};
+}
 
 export default FormWrapper;

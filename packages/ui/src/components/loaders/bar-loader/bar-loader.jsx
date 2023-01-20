@@ -6,15 +6,14 @@ import localStyles from './bar-loader.module.scss';
 /**
  * A loader that displays a bar moving from left to right.
  */
-const BarLoader = ({
+function BarLoader({
     color,
     speed,
     width,
     height,
     progress,
-}) => {
-
-    //#region Constants
+}) {
+    // #region Constants
 
     /**
      * Various colors for the bar loader.
@@ -22,21 +21,21 @@ const BarLoader = ({
     const baseColor = Color(color);
     const baseColorFaded = baseColor.fade(0.75);
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
@@ -52,20 +51,20 @@ const BarLoader = ({
         >
             <motion.div
                 initial={{
-                    x: progress === undefined ? -width : '0%',
+                    x:     progress === undefined ? -width : '0%',
                     width: progress === undefined ? width : '0%',
                 }}
                 animate={{
-                    x: progress === undefined ? [-width, width] : '0%',
+                    x:     progress === undefined ? [-width, width] : '0%',
                     width: progress === undefined ? width : `${progress * 100}%`,
                 }}
                 transition={{
-                    duration: speed,
-                    repeat: progress === undefined ? Infinity : 0,
+                    duration:   speed,
+                    repeat:     progress === undefined ? Infinity : 0,
                     repeatType: 'loop',
-                    delay: speed / 2,
-                    ease: progress == undefined ? 'easeInOut' : 'linear',
-                    times: progress === undefined ? [0, 0.6] : undefined,
+                    delay:      speed / 2,
+                    ease:       progress === undefined ? 'easeInOut' : 'linear',
+                    times:      progress === undefined ? [0, 0.6] : undefined,
                 }}
                 style={{
                     background: baseColor,
@@ -74,26 +73,26 @@ const BarLoader = ({
         </div>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 BarLoader.propTypes = {
     /**
      * The color of the bar loader.
      */
-    color: PropTypes.string,
+    color:    PropTypes.string,
     /**
      * The speed of the bar loader animation, in seconds.
      */
-    speed: PropTypes.number,
+    speed:    PropTypes.number,
     /**
      * The width of the bar loader.
      */
-    width: PropTypes.number,
+    width:    PropTypes.number,
     /**
      * The height of the bar loader.
      */
-    height: PropTypes.number,
+    height:   PropTypes.number,
     /**
      * If specified, this loader will display the given portion of the bar. Can be used to make
      * the `BarLoader` act as a definite progress indicator instead of an indefinite progress
@@ -105,10 +104,10 @@ BarLoader.propTypes = {
 };
 
 BarLoader.defaultProps = {
-    speed: 2.5,
-    width: 100,
+    speed:  2.5,
+    width:  100,
     height: 4,
-    color: '#0072E5',
+    color:  '#0072E5',
 };
 
 export default BarLoader;

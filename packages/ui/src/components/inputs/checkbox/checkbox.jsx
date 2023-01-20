@@ -9,7 +9,7 @@ import localStyles from './checkbox.module.scss';
 /**
  * A checkbox that can be used in `@psionic/ui`'s `Form` component.
  */
-const Checkbox = ({
+function Checkbox({
     initialValue,
     label,
     fieldKey,
@@ -17,14 +17,14 @@ const Checkbox = ({
     requiredMessage,
     color,
     disabled,
+    ariaLabel,
     // Specific Component Props
     InputProps,
     LabelProps,
     // Pass Thru Props
     ...passThruProps
-}) => {
-
-    //#region Constants
+}) {
+    // #region Constants
 
     /**
      * Various colors for the checkbox.
@@ -32,16 +32,16 @@ const Checkbox = ({
     const baseColor = Color(color);
     const iconColor = getContrastingBWColor(baseColor);
 
-    //#endregion
+    // #endregion
 
-    //#region Misc Hooks
+    // #region Misc Hooks
 
     /**
      * Use the form field hook.
      */
     const [
         formField,
-        onChange
+        onChange,
     ] = useFormField({
         fieldKey,
         initialValue,
@@ -51,17 +51,17 @@ const Checkbox = ({
         requiredMessage,
     });
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
-    //#endregion
+    // #endregion
 
-    //#region Variables
+    // #region Variables
 
     /**
      * The value currently stored in the input.
@@ -87,13 +87,13 @@ const Checkbox = ({
      */
     const unmodifiedSinceLastSubmission = formField?.unmodifiedSinceLastSubmission;
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
@@ -112,14 +112,14 @@ const Checkbox = ({
         >
             <div
                 className={localStyles.upperWrapper}
-                onClick={onChange}
                 data-checked={currentValue}
             >
                 {
                     label
                         ? (
-                            <label {...LabelProps}>
-                                {label}{required ? ' *' : null}
+                            <label {...LabelProps} htmlFor={fieldKey}>
+                                {label}
+                                {required ? ' *' : null}
                             </label>
                         )
                         : null
@@ -129,11 +129,13 @@ const Checkbox = ({
                     checked={currentValue}
                     onChange={onChange}
                     disabled={disabled}
+                    id={fieldKey}
+                    aria-label={ariaLabel}
                     {...InputProps}
                 />
                 <div className={localStyles.customCheckbox}>
                     <div style={{ background: disabled ? '#bbb' : baseColor }}>
-                        <Check style={{ fill: iconColor }}/>
+                        <Check style={{ fill: iconColor }} />
                     </div>
                 </div>
             </div>
@@ -143,47 +145,51 @@ const Checkbox = ({
         </motion.div>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 Checkbox.propTypes = {
     /**
      * The initial value of the checkbox.
      */
-    initialValue: PropTypes.bool,
+    initialValue:       PropTypes.bool,
     /**
      * The label to display for the checkbox.
      */
-    label: PropTypes.string,
+    label:              PropTypes.string,
     /**
      * The key to use to represent this checkbox in the parent form. This should be unique
      * among all fields in the individual form.
      */
-    fieldKey: PropTypes.string.isRequired,
+    fieldKey:           PropTypes.string.isRequired,
     /**
      * Whether or not having this checkbox checked is required in order to submit the form.
      */
-    required: PropTypes.bool,
+    required:           PropTypes.bool,
     /**
      * The message to display if the checkbox is required but not checked when the form is submitted.
      */
-    requiredMessage: PropTypes.string,
+    requiredMessage:    PropTypes.string,
     /**
      * The color to use for the checkbox. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
      */
-    color: PropTypes.string,
+    color:              PropTypes.string,
     /**
      * Flag indicating whether the checkbox is disabled.
      */
-    disabled: PropTypes.bool,
+    disabled:           PropTypes.bool,
+    /**
+     * The aria label to use for the checkbox.
+     */
+    ariaLabel:          PropTypes.string,
     /**
      * Any props to pass to the internal `input` HTML element.
      */
-    InputProps: PropTypes.object,
+    InputProps:         PropTypes.object,
     /**
      * Any props to pass to the internal `label` HTML element.
      */
-    LabelProps: PropTypes.object,
+    LabelProps:         PropTypes.object,
     /**
      * The remaining props to spread to the internal `div` HTML element that acts as a
      * root container of the component.
@@ -191,15 +197,15 @@ Checkbox.propTypes = {
      * This is not a prop of `passThruProps` -- this is simply a representation of any additional props
      * passed to the `div` component that aren't covered above.
      */
-    "...passThruProps": PropTypes.any,
+    '...passThruProps': PropTypes.any,
 };
 
 Checkbox.defaultProps = {
-    initialValue: false,
-    required: false,
+    initialValue:    false,
+    required:        false,
     requiredMessage: 'This field is required',
-    color: '#0072E5',
-    disabled: false,
+    color:           '#0072E5',
+    disabled:        false,
 };
 
 export default Checkbox;

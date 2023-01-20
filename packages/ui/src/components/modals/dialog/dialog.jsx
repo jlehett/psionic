@@ -1,34 +1,35 @@
 import { useRef, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
+import FocusTrap from 'focus-trap-react';
+import { useKeyEvents } from '@hooks/interactions';
 import localStyles from './dialog.module.scss';
 
 /**
  * A basic dialog component that any content can be displayed within.
  */
-const Dialog = ({
+function Dialog({
     children,
     isOpen,
     setIsOpen,
     closeOnClickOutside,
     // Pass Thru Props
     ...passThruProps
-}) => {
+}) {
+    // #region Constants
 
-    //#region Constants
+    // #endregion
 
-    //#endregion
-
-    //#region Refs
+    // #region Refs
 
     /**
      * Track a reference to the children.
      */
     const childRef = useRef();
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
     /**
      * Track the child height in state.
@@ -40,9 +41,9 @@ const Dialog = ({
      */
     const [childWidth, setChildWidth] = useState(null);
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
     /**
      * Every re-render, get the height of the children. If it has changed, then update state.
@@ -58,13 +59,24 @@ const Dialog = ({
         }
     });
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Key Events
 
-    //#endregion
+    /**
+     * Define key events.
+     */
+    useKeyEvents({
+        Escape: () => setIsOpen(false),
+    });
 
-    //#region Render Functions
+    // #endregion
+
+    // #region Functions
+
+    // #endregion
+
+    // #region Render Functions
 
     /**
      * Main render.
@@ -83,42 +95,46 @@ const Dialog = ({
                                 transition={{
                                     duration: 0.2,
                                 }}
-                                onClick={() => closeOnClickOutside ? setIsOpen(false) : null}
+                                onClick={() => (closeOnClickOutside ? setIsOpen(false) : null)}
                             />
-                            <motion.div
-                                {...passThruProps}
-                                className={`
-                                    ${localStyles.dialog}
-                                    ${passThruProps?.className}
-                                `}
-                                initial={{
-                                    opacity: 0,
-                                    height: '20px',
-                                    width: '20px',
-                                }}
-                                animate={{
-                                    opacity: [0, 1, 1],
-                                    height: ['20px', '20px', `${childHeight || 20}px`],
-                                    width: ['20px', `${childWidth || 20}px`, `${childWidth || 20}px`],
-                                }}
-                                exit={{
-                                    opacity: 0,
-                                    height: '20px',
-                                    width: '20px',
-                                    transition: {
-                                        duration: 0.2,
-                                    }
-                                }}
-                                transition={{
-                                    duration: 0.5,
-                                }}
-                            >
-                                <div
-                                    ref={childRef}
+                            <FocusTrap>
+                                <motion.div
+                                    {...passThruProps}
+                                    className={`
+                                        ${localStyles.dialog}
+                                        ${passThruProps?.className}
+                                    `}
+                                    initial={{
+                                        opacity: 0,
+                                        height:  '20px',
+                                        width:   '20px',
+                                    }}
+                                    animate={{
+                                        opacity: [0, 1, 1],
+                                        height:  ['20px', '20px', `${childHeight || 20}px`],
+                                        width:   ['20px', `${childWidth || 20}px`, `${childWidth || 20}px`],
+                                    }}
+                                    exit={{
+                                        opacity:    0,
+                                        height:     '20px',
+                                        width:      '20px',
+                                        transition: {
+                                            duration: 0.2,
+                                        },
+                                    }}
+                                    transition={{
+                                        duration: 0.5,
+                                    }}
+                                    tabIndex={-1}
+                                    role="dialog"
                                 >
-                                    {children}
-                                </div>
-                            </motion.div>
+                                    <div
+                                        ref={childRef}
+                                    >
+                                        {children}
+                                    </div>
+                                </motion.div>
+                            </FocusTrap>
                         </>
                     )
                     : null
@@ -126,22 +142,22 @@ const Dialog = ({
         </AnimatePresence>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 Dialog.propTypes = {
     /**
      * The children to render within the dialog.
      */
-    children: PropTypes.any.isRequired,
+    children:            PropTypes.any.isRequired,
     /**
      * Whether or not the dialog is open.
      */
-    isOpen: PropTypes.bool.isRequired,
+    isOpen:              PropTypes.bool.isRequired,
     /**
      * The function to call to set the open state of the dialog.
      */
-    setIsOpen: PropTypes.func.isRequired,
+    setIsOpen:           PropTypes.func.isRequired,
     /**
      * Whether or not to close the dialog when the user clicks outside of it.
      */
@@ -153,7 +169,7 @@ Dialog.propTypes = {
      * This is not a prop of `passThruProps` -- this is simply a representation of any additional props
      * passed to the `Dialog` component that aren't covered above.
      */
-    "...passThruProps": PropTypes.any,
+    '...passThruProps':  PropTypes.any,
 };
 
 Dialog.defaultProps = {

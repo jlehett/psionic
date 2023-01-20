@@ -7,7 +7,7 @@ import localStyles from './switch.module.scss';
 /**
  * A switch that can be used in `@psionic/ui`'s `Form` component.
  */
-const Switch = ({
+function Switch({
     initialValue,
     label,
     fieldKey,
@@ -15,14 +15,14 @@ const Switch = ({
     disabled,
     width,
     height,
+    ariaLabel,
     // Specific Component Props
     InputProps,
     LabelProps,
     // Pass Thru Props
     ...passThruProps
-}) => {
-
-    //#region Constants
+}) {
+    // #region Constants
 
     /**
      * Various colors for the switch.
@@ -34,16 +34,16 @@ const Switch = ({
      */
     const borderRatio = 0.8;
 
-    //#endregion
+    // #endregion
 
-    //#region Misc Hooks
+    // #region Misc Hooks
 
     /**
      * Use the form field hook.
      */
     const [
         formField,
-        onChange
+        onChange,
     ] = useFormField({
         fieldKey,
         initialValue,
@@ -51,17 +51,17 @@ const Switch = ({
         disabled,
     });
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
-    //#endregion
+    // #endregion
 
-    //#region Variables
+    // #region Variables
 
     /**
      * The value currently stored in the input.
@@ -75,13 +75,13 @@ const Switch = ({
      */
     const switchBgColor = currentValue ? baseColor : Color('rgba(0, 0, 0, 0.38)');
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
@@ -94,7 +94,6 @@ const Switch = ({
                 ${passThruProps?.className}
                 ${localStyles.switch}
             `}
-            onClick={onChange}
         >
             {/* Input */}
             <input
@@ -102,34 +101,36 @@ const Switch = ({
                 checked={currentValue}
                 onChange={onChange}
                 disabled={disabled}
+                id={fieldKey}
+                aria-label={ariaLabel}
                 {...InputProps}
             />
             {/* UI */}
             <motion.div
                 className={localStyles.switchBackground}
                 style={{
-                    width: `${width}px`,
+                    width:  `${width}px`,
                     height: `${height}px`,
                 }}
-                initial={{ backgroundColor: disabled ? switchBgColor.fade(0.6).string() : switchBgColor.string()}}
-                animate={{ backgroundColor: disabled ? switchBgColor.fade(0.6).string() : switchBgColor.string()}}
+                initial={{ backgroundColor: disabled ? switchBgColor.fade(0.6).string() : switchBgColor.string() }}
+                animate={{ backgroundColor: disabled ? switchBgColor.fade(0.6).string() : switchBgColor.string() }}
                 transition={{ duration: 0.2 }}
             >
                 <motion.div
                     className={localStyles.switchForeground}
                     style={{
-                        width: `${height*borderRatio}px`,
-                        height: `${height*borderRatio}px`,
+                        width:  `${height * borderRatio}px`,
+                        height: `${height * borderRatio}px`,
                     }}
                     initial={{
                         backgroundColor: 'rgb(242, 242, 242)',
-                        x: currentValue ? `${width-(height*borderRatio)-(height*(1-borderRatio)/2)}px` : `${height*(1-borderRatio)/2}px`,
-                        y: `${height*(1-borderRatio)/2}px`,
+                        x:               currentValue ? `${width - (height * borderRatio) - (height * (1 - borderRatio) / 2)}px` : `${height * (1 - borderRatio) / 2}px`,
+                        y:               `${height * (1 - borderRatio) / 2}px`,
                     }}
                     animate={{
                         backgroundColor: 'rgb(242, 242, 242)',
-                        x: currentValue ? `${width-(height*borderRatio)-(height*(1-borderRatio)/2)}px` : `${height*(1-borderRatio)/2}px`,
-                        y: `${height*(1-borderRatio)/2}px`,
+                        x:               currentValue ? `${width - (height * borderRatio) - (height * (1 - borderRatio) / 2)}px` : `${height * (1 - borderRatio) / 2}px`,
+                        y:               `${height * (1 - borderRatio) / 2}px`,
                     }}
                     transition={{
                         backgroundColor: {
@@ -137,7 +138,7 @@ const Switch = ({
                         },
                         x: {
                             duration: 0.15,
-                            ease: 'easeOut',
+                            ease:     'easeOut',
                         },
                     }}
                 />
@@ -145,7 +146,7 @@ const Switch = ({
             {
                 label
                     ? (
-                        <label {...LabelProps}>
+                        <label {...LabelProps} htmlFor={fieldKey}>
                             {label}
                         </label>
                     )
@@ -154,47 +155,51 @@ const Switch = ({
         </div>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 Switch.propTypes = {
     /**
      * The initial value of the switch.
      */
-    initialValue: PropTypes.bool,
+    initialValue:       PropTypes.bool,
     /**
      * The label to display next to the switch.
      */
-    label: PropTypes.string,
+    label:              PropTypes.string,
     /**
      * The key to use to represent this switch in the parent form. This should be unique
      * among all fields in the individual form.
      */
-    fieldKey: PropTypes.string.isRequired,
+    fieldKey:           PropTypes.string.isRequired,
     /**
      * The color to use for the checkbox. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
      */
-    color: PropTypes.string,
+    color:              PropTypes.string,
     /**
      * Whether or not the switch is disabled.
      */
-    disabled: PropTypes.bool,
+    disabled:           PropTypes.bool,
+    /**
+     * The aria label to use for the switch.
+     */
+    ariaLabel:          PropTypes.string,
     /**
      * The width of the switch, in pixels.
      */
-    width: PropTypes.number,
+    width:              PropTypes.number,
     /**
      * The height of the switch, in pixels.
      */
-    height: PropTypes.number,
+    height:             PropTypes.number,
     /**
      * Any props to pass to the internal `input` HTML element.
      */
-    InputProps: PropTypes.object,
+    InputProps:         PropTypes.object,
     /**
      * Any props to pass to the internal `label` HTML element.
      */
-    LabelProps: PropTypes.object,
+    LabelProps:         PropTypes.object,
     /**
      * The remaining props to spread to the internal `div` HTML element that acts as a
      * root container of the component.
@@ -202,15 +207,15 @@ Switch.propTypes = {
      * This is not a prop of `passThruProps` -- this is simply a representation of any additional props
      * passed to the `div` component that aren't covered above.
      */
-    "...passThruProps": PropTypes.any,
+    '...passThruProps': PropTypes.any,
 };
 
 Switch.defaultProps = {
     initialValue: false,
-    color: '#0072E5',
-    disabled: false,
-    width: 42,
-    height: 24,
+    color:        '#0072E5',
+    disabled:     false,
+    width:        42,
+    height:       24,
 };
 
 export default Switch;

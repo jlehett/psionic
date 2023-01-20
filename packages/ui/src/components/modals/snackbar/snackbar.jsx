@@ -8,37 +8,36 @@ import localStyles from './snackbar.module.scss';
  * A pre-built Snackbar component that can be used to display alert messages to users.
  * Built to be easily used with the `SnackbarManager` component + `useSnackbar` hook.
  */
-const Snackbar = ({
+function Snackbar({
     color,
     SvgIcon,
     text,
     removeSnackbar,
     // Pass Thru Props
     ...passThruProps
-}) => {
-
-    //#region Constants
+}) {
+    // #region Constants
 
     /**
      * Various colors for the snackbar.
      */
     const baseColor = Color(color);
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
@@ -51,14 +50,14 @@ const Snackbar = ({
                 ${passThruProps?.className}
             `}
             style={{
-                boxShadow: `rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px`,
+                boxShadow:  'rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px',
                 borderLeft: `6px solid ${baseColor.string()}`,
                 ...(passThruProps?.style || {}),
             }}
         >
             <div className={localStyles.left}>
-                <SvgIcon style={{ fill: baseColor.string() }}/>
-                <p>
+                <SvgIcon style={{ fill: baseColor.string() }} />
+                <p aria-live="polite">
                     {text}
                 </p>
             </div>
@@ -69,27 +68,32 @@ const Snackbar = ({
                     color={baseColor.string()}
                     size={24}
                     paddingRatio={0.35}
+                    aria-label="close notification"
                 />
             </div>
         </div>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 Snackbar.propTypes = {
     /**
      * The accent color of the snackbar.
      */
-    color: PropTypes.string,
+    color:              PropTypes.string,
     /**
      * The icon to display on the left side of the snackbar.
      */
-    SvgIcon: PropTypes.func.isRequired,
+    SvgIcon:            PropTypes.func.isRequired,
     /**
      * The text to display on the snackbar.
      */
-    text: PropTypes.string.isRequired,
+    text:               PropTypes.string.isRequired,
+    /**
+     * Function to call to remove the snackbar from the DOM.
+     */
+    removeSnackbar:     PropTypes.func.isRequired,
     /**
      * Any additional props to pass through to the internal `button` element.
      *

@@ -1,14 +1,17 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import {
+    useState, useEffect, useRef, useMemo,
+} from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
 import { getContrastingBWColor } from '@utils/colors';
+import { usePseudoSelectors } from '@hooks/interactions';
 import { QuarterSpinner } from '@components/loaders';
 import localStyles from './button.module.scss';
 
 /**
  * Replace this with a comment describing the component.
  */
-const Button = ({
+function Button({
     width,
     height,
     type,
@@ -21,9 +24,8 @@ const Button = ({
     rounded,
     // Pass-thru Props
     ...passThruProps
-}) => {
-
-    //#region Constants
+}) {
+    // #region Constants
 
     /**
      * Various colors for the button.
@@ -35,9 +37,9 @@ const Button = ({
     const baseColorOpacity90 = baseColor.fade(0.9);
     const textColor = getContrastingBWColor(baseColor);
 
-    //#endregion
+    // #endregion
 
-    //#region Refs
+    // #region Refs
 
     /**
      * Running children reference.
@@ -49,24 +51,19 @@ const Button = ({
      */
     const readyChildRef = useRef();
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
+
+    /**
+     * Track the button's pseudo selector states.
+     */
+    const [pseudoSelectorProps, pseudoSelectorStates] = usePseudoSelectors();
 
     /**
      * Track whether the button's `onClick` function is running or not.
      */
     const [onClickRunning, setOnClickRunning] = useState(false);
-
-    /**
-     * Track whether the button is being hovered or not.
-     */
-    const [isHovered, setIsHovered] = useState(false);
-
-    /**
-     * Track whether the button is being pressed or not.
-     */
-    const [isPressed, setIsPressed] = useState(false);
 
     /**
      * Track the max height of the button's children.
@@ -78,16 +75,14 @@ const Button = ({
      */
     const [buttonMaxWidth, setButtonMaxWidth] = useState(null);
 
-    //#endregion
+    // #endregion
 
-    //#region Memoized Values
+    // #region Memoized Values
 
     /**
      * Memoized color to use in the SCSS, factoring in disabled and running states.
      */
-    const colorToUse = useMemo(() => {
-        return onClickRunning || disabled ? '#888888' : color;
-    }, [onClickRunning, disabled, color]);
+    const colorToUse = useMemo(() => (onClickRunning || disabled ? '#888888' : color), [onClickRunning, disabled, color]);
 
     /**
      * Memoized color to use for the spinner, depending on the `variant` of the button.
@@ -118,11 +113,11 @@ const Button = ({
                         return 'none';
                     }
 
-                    if (!isHovered) {
+                    if (!pseudoSelectorStates.isHovered) {
                         return 'none';
                     }
 
-                    if (isPressed && isHovered) {
+                    if (pseudoSelectorStates.isPressed && pseudoSelectorStates.isHovered) {
                         return baseColorOpacity80;
                     }
 
@@ -131,9 +126,9 @@ const Button = ({
 
                 return {
                     outline: 'none',
-                    border: 'none',
+                    border:  'none',
                     background,
-                    color: colorToUse,
+                    color:   colorToUse,
                 };
             case 'contained':
                 background = (() => {
@@ -141,11 +136,11 @@ const Button = ({
                         return '#cccccc';
                     }
 
-                    if (!isHovered) {
+                    if (!pseudoSelectorStates.isHovered) {
                         return colorToUse;
                     }
 
-                    if (isPressed && isHovered) {
+                    if (pseudoSelectorStates.isPressed && pseudoSelectorStates.isHovered) {
                         return baseColorDarker;
                     }
 
@@ -154,17 +149,17 @@ const Button = ({
 
                 return {
                     outline: 'none',
-                    border: 'none',
+                    border:  'none',
                     background,
-                    color: textColor,
+                    color:   textColor,
                 };
             case 'outlined':
                 background = (() => {
-                    if (onClickRunning || disabled || !isHovered) {
+                    if (onClickRunning || disabled || !pseudoSelectorStates.isHovered) {
                         return 'none';
                     }
 
-                    if (isPressed && isHovered) {
+                    if (pseudoSelectorStates.isPressed && pseudoSelectorStates.isHovered) {
                         return baseColorOpacity80;
                     }
 
@@ -172,21 +167,21 @@ const Button = ({
                 })();
 
                 return {
-                    outline: 'none',
+                    outline:     'none',
                     borderWidth: '1px',
                     borderStyle: 'solid',
                     borderColor: colorToUse,
-                    color: colorToUse,
+                    color:       colorToUse,
                     background,
                 };
             default:
                 throw new Error(`Button variant, ${variant}, is unsupported.`);
         }
-    }, [variant, disabled, isHovered, isPressed, colorToUse, onClickRunning]);
+    }, [variant, disabled, pseudoSelectorStates, colorToUse, onClickRunning]);
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
     /**
      * Use a layout effect to determine the width of both of the button's children.
@@ -206,9 +201,9 @@ const Button = ({
         setButtonMaxWidth(Math.max(readyWidth, runningWidth));
     }, []);
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
     /**
      * Augment the `onClick` function.
@@ -219,9 +214,9 @@ const Button = ({
         setOnClickRunning(false);
     };
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
@@ -230,27 +225,22 @@ const Button = ({
         <button
             type={type}
             onClick={allowMultipleClicks ? onClick : augmentedOnClick}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => {
-                setIsHovered(false);
-                setIsPressed(false);
-            }}
-            onMouseDown={() => setIsPressed(true)}
-            onMouseUp={() => setIsPressed(false)}
+            {...pseudoSelectorProps}
             {...passThruProps}
             className={`
                 ${localStyles.button}
                 ${passThruProps?.className}
             `}
             style={{
-                width: width || `${buttonMaxWidth + 24}px`,
-                height: height || `${buttonMaxHeight + 8}px`,
+                width:        width || `${buttonMaxWidth + 24}px`,
+                height:       height || `${buttonMaxHeight + 8}px`,
                 borderRadius: rounded ? '500px' : '4px',
                 ...(stylesToUse || {}),
-                ...(passThruProps?.style || {})
+                ...(passThruProps?.style || {}),
             }}
             data-running={onClickRunning}
             disabled={onClickRunning || disabled}
+            tabIndex={0}
         >
             {/* RUNNING STATE */}
             <div
@@ -272,8 +262,8 @@ const Button = ({
         </button>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 Button.propTypes = {
     /**
@@ -296,20 +286,20 @@ Button.propTypes = {
     /**
      * The internal `button` element's `type` attribute.
      */
-    type: PropTypes.string,
+    type:                PropTypes.string,
     /**
      * The callback to run when the button is clicked.
      */
-    onClick: PropTypes.func,
+    onClick:             PropTypes.func,
     /**
      * Flag indicating whether the button is in a disabled state. Will prevent `onClick` events
      * from being fired.
      */
-    disabled: PropTypes.bool,
+    disabled:            PropTypes.bool,
     /**
      * Any children to render within the button.
      */
-    children: PropTypes.any.isRequired,
+    children:            PropTypes.any.isRequired,
     /**
      * Flag indicating if the button should enter a "running" state that prevents another `onClick` event
      * from being fired until the current `onClick` callback has finished running (if it is async).
@@ -318,11 +308,11 @@ Button.propTypes = {
     /**
      * The color to use for the button. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
      */
-    color: PropTypes.string,
+    color:               PropTypes.string,
     /**
      * The variant of the button to render. Only impacts the visual appearance of the button.
      */
-    variant: PropTypes.oneOf([
+    variant:             PropTypes.oneOf([
         'outlined',
         'contained',
         'text',
@@ -331,7 +321,7 @@ Button.propTypes = {
      * Flag indicating whether the button should have fully rounded corners or not. Frequently used when displaying a
      * button on a mobile device or a smaller screen size.
      */
-    rounded: PropTypes.bool,
+    rounded:            PropTypes.bool,
     /**
      * Any additional props to pass through to the internal `button` element.
      *
@@ -342,13 +332,13 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
-    type: 'button',
-    color: '#0072E5',
-    disabled: false,
+    type:                'button',
+    color:               '#0072E5',
+    disabled:            false,
     allowMultipleClicks: false,
-    variant: 'outlined',
-    rounded: false,
-    onClick: () => {},
+    variant:             'outlined',
+    rounded:             false,
+    onClick:             () => {},
 };
 
 export default Button;

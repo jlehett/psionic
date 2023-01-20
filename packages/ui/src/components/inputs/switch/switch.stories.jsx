@@ -17,29 +17,66 @@ import Switch from './switch';
 
 // Construct the argTypes object
 const argTypes = {};
+setAsCategory(argTypes, 'UI', [
+    'label',
+    'color',
+    'width',
+    'height',
+]);
+setAsCategory(argTypes, 'Accessibility', [
+    'ariaLabel',
+]);
+setAsCategory(argTypes, 'Controls', [
+    'initialValue',
+    'fieldKey',
+    'disabled',
+]);
+setAsCategory(argTypes, 'Pass Thru Props', [
+    'InputProps',
+    'LabelProps',
+    '...passThruProps',
+]);
 
 // Storybook default export
 export default {
-    title: 'inputs/Switch',
-    component: Switch,
+    title:      'inputs/Switch',
+    component:  Switch,
     argTypes,
     parameters: {
         docs: {
             page: () => (
                 <>
                     <div className="storybookWrapper">
-                        <Title/>
-                        <Subtitle/>
+                        <Title />
+                        <Subtitle />
                         <p>
-                            The <Code>Switch</Code> component provides a general purpose switch
-                            input plus label that can be used in the <Code>@psionic/ui</Code> <Code>Form</Code> flow.
+                            The
+                            {' '}
+                            <Code>Switch</Code>
+                            {' '}
+                            component provides a general purpose switch
+                            input plus label that can be used in the
+                            {' '}
+                            <Code>@psionic/ui</Code>
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            flow.
                         </p>
                         <h2>
                             Form Field Information
                         </h2>
                         <p>
                             The following information is stored in an object under the
-                            input's <Code>fieldKey</Code> in the form's <Code>onSubmit</Code> callback param:
+                            input's
+                            {' '}
+                            <Code>fieldKey</Code>
+                            {' '}
+                            in the form's
+                            {' '}
+                            <Code>onSubmit</Code>
+                            {' '}
+                            callback param:
                             <table>
                                 <tr>
                                     <th>Key</th>
@@ -54,7 +91,10 @@ export default {
                                         <Code>string</Code>
                                     </td>
                                     <td>
-                                        The type of the input. Always <Code>"switch"</Code>.
+                                        The type of the input. Always
+                                        {' '}
+                                        <Code>"switch"</Code>
+                                        .
                                     </td>
                                 </tr>
                                 <tr>
@@ -74,7 +114,9 @@ export default {
                                         message
                                     </td>
                                     <td>
-                                        <Code>string</Code> <Code>null</Code>
+                                        <Code>string</Code>
+                                        {' '}
+                                        <Code>null</Code>
                                     </td>
                                     <td>
                                         The message associated with the switch's current state at
@@ -107,36 +149,31 @@ export default {
                             </table>
                         </p>
                         <p>
-                            See the <Code>Form</Code> component's documentation for more information
-                            about <Code>@psionic/ui</Code>'s <Code>Form</Code> workflow.
+                            See the
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            component's documentation for more information
+                            about
+                            {' '}
+                            <Code>@psionic/ui</Code>
+                            's
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            workflow.
                         </p>
                     </div>
-                    <Primary/>
-                    <ArgsTable story={PRIMARY_STORY}/>
-                    <Stories/>
+                    <Primary />
+                    <ArgsTable story={PRIMARY_STORY} />
+                    <Stories />
                 </>
             ),
         },
     },
 };
-setAsCategory(argTypes, 'UI', [
-    'label',
-    'color',
-    'width',
-    'height',
-]);
-setAsCategory(argTypes, 'Controls', [
-    'initialValue',
-    'fieldKey',
-    'disabled',
-]);
-setAsCategory(argTypes, 'Pass Thru Props', [
-    'InputProps',
-    'LabelProps',
-    '...passThruProps'
-]);
 
-const Template = (args) => {
+function Template(args) {
     return (
         <Form
             onSubmit={() => {}}
@@ -163,12 +200,12 @@ const Template = (args) => {
             </div>
         </Form>
     );
-};
+}
 
 // Basic Demo
 export const Basic = Template.bind({});
 Basic.args = {
-
+    ariaLabel: 'test',
 };
 
 // Labeled Demo
@@ -180,15 +217,16 @@ Labeled.args = {
 // Disabled Demo
 export const Disabled = Template.bind({});
 Disabled.args = {
-    label: 'Label',
+    label:    'Label',
     disabled: true,
 };
 
 // Large Demo
 export const Large = Template.bind({});
 Large.args = {
-    width: 42 * 4,
-    height: 24 * 4,
+    width:     42 * 4,
+    height:    24 * 4,
+    ariaLabel: 'test',
 };
 
 // Colored Demo
@@ -196,4 +234,4 @@ export const Colored = Template.bind({});
 Colored.args = {
     label: 'Label',
     color: '#2d9a00',
-}
+};

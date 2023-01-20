@@ -1,6 +1,5 @@
 import {
     setAsCategory,
-    setAsDisabled,
 } from '@unifire-js/storybook-utils';
 import { RadioGroup, Form } from '@components/inputs';
 import { Button } from '@components/buttons';
@@ -11,6 +10,9 @@ const argTypes = {};
 setAsCategory(argTypes, 'UI', [
     'children',
 ]);
+setAsCategory(argTypes, 'Accessibility', [
+    'id',
+]);
 setAsCategory(argTypes, 'Controls', [
     'value',
 ]);
@@ -20,19 +22,22 @@ setAsCategory(argTypes, 'Pass Thru Props', [
 
 // Storybook default export
 export default {
-    title: 'inputs/Radio',
+    title:     'inputs/Radio',
     component: Radio,
     argTypes,
 };
 
-const Template = (args) => {
+function Template(args) {
     return (
         <div style={{ margin: '40px' }}>
             <Form>
                 <RadioGroup fieldKey="testKey">
-                    <Radio {...args}/>
+                    <Radio {...args} id="testRadio" />
                 </RadioGroup>
-                <div style={{ display: 'flex', flexDirection: 'row', gap: '16px', marginTop: '16px' }}>
+                <div style={{
+                    display: 'flex', flexDirection: 'row', gap: '16px', marginTop: '16px',
+                }}
+                >
                     <Button
                         variant="contained"
                         type="submit"
@@ -49,11 +54,11 @@ const Template = (args) => {
             </Form>
         </div>
     );
-};
+}
 
 // Basic Demo
 export const Basic = Template.bind({});
 Basic.args = {
-    value: 'blue',
+    value:    'blue',
     children: 'Blue',
 };
