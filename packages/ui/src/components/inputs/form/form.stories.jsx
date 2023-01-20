@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import {
     ArgsTable,
     Primary,
@@ -7,7 +8,7 @@ import {
     Title,
 } from '@storybook/addon-docs';
 import {
-    setAsCategory
+    setAsCategory,
 } from '@unifire-js/storybook-utils';
 import Favorite from '@assets/favorite.svg';
 import {
@@ -37,8 +38,8 @@ setAsCategory(argTypes, 'Pass Thru Props', [
 
 // Storybook default export
 export default {
-    title: 'inputs/Form',
-    component: docs,
+    title:         'inputs/Form',
+    component:     docs,
     subcomponents: {
         TextField,
     },
@@ -48,18 +49,30 @@ export default {
             page: () => (
                 <>
                     <div className="storybookWrapper">
-                        <Title/>
+                        <Title />
                         <subtitle>A Wrapper For Better React Forms</subtitle>
-                        <Subtitle/>
+                        <Subtitle />
                         <h2>Why should I use the @psionic/ui Form component?</h2>
                         <p>
-                            Using vanilla <Code>form</Code> elements in React often involves creating a lot of controlled inputs, which in turn, requires potentially many calls
-                            to <Code>useState</Code> hooks to set up. Oftentimes, there is very little interesting code in the <Code>onChange</Code> handlers
+                            Using vanilla
+                            {' '}
+                            <Code>form</Code>
+                            {' '}
+                            elements in React often involves creating a lot of controlled inputs, which in turn, requires potentially many calls
+                            to
+                            {' '}
+                            <Code>useState</Code>
+                            {' '}
+                            hooks to set up. Oftentimes, there is very little interesting code in the
+                            {' '}
+                            <Code>onChange</Code>
+                            {' '}
+                            handlers
                             for these form input fields, and it could all be considered boilerplate. An example is given below:
                         </p>
                         <CodeBlock>
                             {
-`import { useState } from 'react';
+                                `import { useState } from 'react';
 
 const ExampleForm = () => {
 
@@ -103,17 +116,33 @@ const ExampleForm = () => {
                             }
                         </CodeBlock>
                         <p>
-                            The goal of the @psionic/ui <Code>Form</Code> component is to eliminate the need for setting up the controlled inputs, leaving you free
-                            to develop the <i>interesting</i> parts of your application!
+                            The goal of the @psionic/ui
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            component is to eliminate the need for setting up the controlled inputs, leaving you free
+                            to develop the
+                            {' '}
+                            <i>interesting</i>
+                            {' '}
+                            parts of your application!
                         </p>
                         <h2>@psionic/ui Form Usage</h2>
                         <p>
-                            Utilizing the @psionic/ui <Code>Form</Code> component is designed to be as easy as possible. The following code snippet sets up the same
-                            form as the example above, but utilizing the @psionic/ui <Code>Form</Code> component:
+                            Utilizing the @psionic/ui
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            component is designed to be as easy as possible. The following code snippet sets up the same
+                            form as the example above, but utilizing the @psionic/ui
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            component:
                         </p>
                         <CodeBlock>
                             {
-`import { Form, TextField } from '@psionic/ui';
+                                `import { Form, TextField } from '@psionic/ui';
 
 const ExampleForm = () => {
 
@@ -143,33 +172,111 @@ const ExampleForm = () => {
                             }
                         </CodeBlock>
                         <p>
-                            Creating a vanilla HTML <Code>{`<button type="submit">`}</Code> button and clicking on it will automatically trigger
-                            the <Code>Form</Code>'s <Code>onSubmit</Code> handler. To note, if any of the fields in the form are marked as invalid
-                            {'('}either through an empty field with a <Code>required</Code> prop, or due to a <Code>validator</Code> prop for the
-                            field{')'}, the <Code>onSubmit</Code> callback will NOT be called.
+                            Creating a vanilla HTML
+                            {' '}
+                            <Code>{'<button type="submit">'}</Code>
+                            {' '}
+                            button and clicking on it will automatically trigger
+                            the
+                            {' '}
+                            <Code>Form</Code>
+                            's
+                            {' '}
+                            <Code>onSubmit</Code>
+                            {' '}
+                            handler. To note, if any of the fields in the form are marked as invalid
+                            (
+                            either through an empty field with a
+                            {' '}
+                            <Code>required</Code>
+                            {' '}
+                            prop, or due to a
+                            {' '}
+                            <Code>validator</Code>
+                            {' '}
+                            prop for the
+                            field
+                            )
+                            , the
+                            {' '}
+                            <Code>onSubmit</Code>
+                            {' '}
+                            callback will NOT be called.
                         </p>
                         <p>
-                            Creating a vanilla HTML <Code>{`<button type="reset">`}</Code> button and clicking on it will automatically clear the form,
-                            just like with a vanilla JavaScript <Code>form</Code> element.
+                            Creating a vanilla HTML
+                            {' '}
+                            <Code>{'<button type="reset">'}</Code>
+                            {' '}
+                            button and clicking on it will automatically clear the form,
+                            just like with a vanilla JavaScript
+                            {' '}
+                            <Code>form</Code>
+                            {' '}
+                            element.
                         </p>
                         <p>
-                            The important thing to note when using the <Code>Form</Code> component is that all inputs that you want to have auto-managed by
-                            the <Code>Form</Code> should be utilizing one of the various input components provided in the @psionic/ui library.
+                            The important thing to note when using the
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            component is that all inputs that you want to have auto-managed by
+                            the
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            should be utilizing one of the various input components provided in the @psionic/ui library.
                         </p>
-                        <h2><Code>onSubmit</Code> and <Code>onChange</Code> Callbacks</h2>
+                        <h2>
+                            <Code>onSubmit</Code>
+                            {' '}
+                            and
+                            {' '}
+                            <Code>onChange</Code>
+                            {' '}
+                            Callbacks
+                        </h2>
                         <p>
-                            The <Code>onSubmit</Code> and <Code>onChange</Code> callbacks for the @psionic/ui <Code>Form</Code> component take in a single param which
+                            The
+                            {' '}
+                            <Code>onSubmit</Code>
+                            {' '}
+                            and
+                            {' '}
+                            <Code>onChange</Code>
+                            {' '}
+                            callbacks for the @psionic/ui
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            component take in a single param which
                             is an object that maps field keys to info about the field at the time the form was submitted / changed. See the documentation of the other
                             @psionic/ui input components for details about what is stored for that particular input in these callbacks' single parameter.
                         </p>
-                        <h2><Code>useFormField</Code> Hook</h2>
+                        <h2>
+                            <Code>useFormField</Code>
+                            {' '}
+                            Hook
+                        </h2>
                         <p>
                             Sometimes you may have a form field that cannot be represented by one of the built-in components provided in this package. In order to
-                            integrate these fields into the <Code>Form</Code> component's flow, you can use the <Code>useFormField</Code> hook that is provided by
+                            integrate these fields into the
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            component's flow, you can use the
+                            {' '}
+                            <Code>useFormField</Code>
+                            {' '}
+                            hook that is provided by
                             the package.
                         </p>
                         <p>
-                            The <Code>useFormField</Code> component takes in a single configuration object as its only param, with the following properties:
+                            The
+                            {' '}
+                            <Code>useFormField</Code>
+                            {' '}
+                            component takes in a single configuration object as its only param, with the following properties:
                         </p>
                         <table>
                             <tr>
@@ -268,30 +375,31 @@ const ExampleForm = () => {
                             </tr>
                         </table>
                     </div>
-                    <Primary/>
-                    <ArgsTable story={PRIMARY_STORY}/>
-                    <Stories/>
+                    <Primary />
+                    <ArgsTable story={PRIMARY_STORY} />
+                    <Stories />
                 </>
             ),
         },
     },
 };
 
-const Template = (args) => {
-
+function Template(args) {
     // Submit handler
-    function onSubmit(formData) {
+    const onSubmit = useCallback((formData) => {
         console.log('Form Data:', formData);
-    }
+    }, []);
 
     return (
         <Form
             onSubmit={onSubmit}
-            style={{ margin: '40px', display: 'flex', flexDirection: 'column', gap: '16px' }}
+            style={{
+                margin: '40px', display: 'flex', flexDirection: 'column', gap: '16px',
+            }}
             {...args}
         >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0px' }}>
-                <TextField required label="Name" fieldKey="name"/>
+                <TextField required label="Name" fieldKey="name" />
                 <TextField
                     required
                     label="Password"
@@ -310,13 +418,13 @@ const Template = (args) => {
                     required
                     style={{ marginTop: '16px' }}
                 >
-                    <Radio value="red">
+                    <Radio value="red" id="red">
                         Red
                     </Radio>
-                    <Radio value="green">
+                    <Radio value="green" id="green">
                         Green
                     </Radio>
-                    <Radio value="blue">
+                    <Radio value="blue" id="blue">
                         Blue
                     </Radio>
                 </RadioGroup>
@@ -357,7 +465,7 @@ const Template = (args) => {
             </div>
         </Form>
     );
-};
+}
 
 // Basic Demo
 export const Basic = Template.bind({});

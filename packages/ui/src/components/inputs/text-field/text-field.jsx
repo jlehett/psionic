@@ -194,7 +194,7 @@ function TextField({
                         : (
                             <input
                                 type={inputTypeToUse}
-                                value={currentValue}
+                                value={currentValue || ''}
                                 onChange={(event) => onChange(event.target.value)}
                                 disabled={disabled}
                                 onFocus={() => setIsFocused(true)}
