@@ -1,4 +1,6 @@
-import { useState, useContext } from 'react';
+import {
+    useState, useContext, useRef, useEffect,
+} from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -56,6 +58,20 @@ export function FloatingActionMenu({
 
     // #endregion
 
+    // #region Refs
+
+    /**
+     * Track a reference to the open button.
+     */
+    const openButton = useRef();
+
+    /**
+     * Track a reference to the close button.
+     */
+    const closeButton = useRef();
+
+    // #endregion
+
     // #region State
 
     /**
@@ -63,9 +79,30 @@ export function FloatingActionMenu({
      */
     const [pseudoSelectorProps, pseudoSelectorStates] = usePseudoSelectors();
 
+    /**
+     * Track whether this is the first render or not.
+     */
+    const [menuToggledAtLeastOnce, setMenuToggledAtLeastOnce] = useState(false);
+
     // #endregion
 
     // #region Effects
+
+    /**
+     * Whenever the menu is toggled on or off, focus the appropriate button.
+     */
+    useEffect(() => {
+        // If the menu hasn't been toggled at least once yet, don't do anything
+        if (!menuToggledAtLeastOnce) {
+            return;
+        }
+
+        if (menuOpen) {
+            closeButton.current.focus();
+        } else {
+            openButton.current.focus();
+        }
+    }, [menuOpen]);
 
     // #endregion
 
@@ -75,6 +112,7 @@ export function FloatingActionMenu({
      * Toggles the menu being open.
      */
     const toggleMenu = () => {
+        setMenuToggledAtLeastOnce(true);
         setMenuOpen((prev) => !prev);
     };
 
@@ -92,7 +130,7 @@ export function FloatingActionMenu({
         },
         animate: {
             opacity: 1,
-            scale:   pseudoSelectorStates.isHovered ? 1.05 : 1,
+            scale:   pseudoSelectorStates.isHovered || pseudoSelectorStates.isFocused ? 1.05 : 1,
             rotate:  0,
             background:
                     forOpenedButton
@@ -158,6 +196,7 @@ export function FloatingActionMenu({
                 {menuOpen && (
                     <>
                         <motion.button
+                            ref={closeButton}
                             onClick={toggleMenu}
                             {...pseudoSelectorProps}
                             {...getAnimationControls(true)}
@@ -186,6 +225,7 @@ export function FloatingActionMenu({
             <AnimatePresence>
                 {!menuOpen && (
                     <motion.button
+                        ref={openButton}
                         onClick={toggleMenu}
                         {...pseudoSelectorProps}
                         {...getAnimationControls(false)}
