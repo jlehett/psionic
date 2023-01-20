@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 
-//#region Hook
+// #region Hook
 
 /**
  * Hook for tracking the user's mouse position in React state.
  */
-export default function() {
+export default function () {
     /**
      * Track the user's mouse position in state.
      */
@@ -29,8 +29,8 @@ export default function() {
     return [mousePos.x, mousePos.y];
 }
 
-//#endregion
+// #endregion
 
-//#region Helper Functions
+// #region Helper Functions
 
-//#endregion
+// #endregion

@@ -35,6 +35,7 @@
         "@tiptap/starter-kit": "2.0.0-beta.204",
         "color": "4.2.3",
         "core-js": "3.26.1",
+        "focus-trap-react": "^10.0.2",
         "lodash": "4.17.21",
         "prop-types": "15.8.1",
         "prosemirror-commands": "1.5.0",

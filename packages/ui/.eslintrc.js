@@ -56,5 +56,6 @@ module.exports = {
         'no-continue':                       'off',
         'no-underscore-dangle':              'off',
         'no-mixed-operators':                'off',
+        'react/destructuring-assignment':    'off',
     },
 };

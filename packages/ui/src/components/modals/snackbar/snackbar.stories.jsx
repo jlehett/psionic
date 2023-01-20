@@ -22,12 +22,12 @@ setAsCategory(argTypes, 'Pass Thru Props', [
 
 // Storybook default export
 export default {
-    title: 'modals/Snackbar',
+    title:     'modals/Snackbar',
     component: Snackbar,
     argTypes,
 };
 
-const Template = (args) => {
+function Template(args) {
     return (
         <div style={{ margin: '40px' }}>
             <Snackbar
@@ -36,19 +36,19 @@ const Template = (args) => {
             />
         </div>
     );
-};
+}
 
 // Basic Demo
 export const Basic = Template.bind({});
 Basic.args = {
     SvgIcon: Check,
-    text: 'You have successfully completed this task',
+    text:    'You have successfully completed this task',
 };
 
 // Colored Demo
 export const Colored = Template.bind({});
 Colored.args = {
     SvgIcon: VisibilityOff,
-    text: 'You are now on mute',
-    color: 'red',
+    text:    'You are now on mute',
+    color:   'red',
 };
