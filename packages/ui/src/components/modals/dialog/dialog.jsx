@@ -120,7 +120,10 @@ function Dialog({
                 opacity:    0,
                 scale:      0.95,
                 transition: {
-                    duration: 0.1,
+                    duration: 0.3,
+                    opacity:  {
+                        duration: 0.2,
+                    },
                 },
             },
             visible: {
@@ -128,10 +131,7 @@ function Dialog({
                 scale:      1,
                 transition: {
                     delay:    0.4,
-                    duration: 0.25,
-                    scale:    {
-                        duration: 0.35,
-                    },
+                    duration: 0.35,
                 },
             },
         },
