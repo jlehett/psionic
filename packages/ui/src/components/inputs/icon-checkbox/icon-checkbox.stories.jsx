@@ -1,6 +1,5 @@
 import {
     setAsCategory,
-    setAsDisabled,
 } from '@unifire-js/storybook-utils';
 import {
     ArgsTable,
@@ -11,7 +10,7 @@ import {
     Title,
 } from '@storybook/addon-docs';
 import Favorite from '@assets/favorite.svg';
-import Aid from '@assets/aid.svg';
+import Check from '@assets/check.svg';
 import { Form } from '@components/inputs';
 import { Button } from '@components/buttons';
 import { Code } from '../../../../.storybook/misc';
@@ -38,26 +37,44 @@ setAsCategory(argTypes, 'Pass Thru Props', [
 
 // Storybook default export
 export default {
-    title: 'inputs/IconCheckbox',
-    component: IconCheckbox,
+    title:      'inputs/IconCheckbox',
+    component:  IconCheckbox,
     argTypes,
     parameters: {
         docs: {
             page: () => (
                 <>
                     <div className="storybookWrapper">
-                        <Title/>
-                        <Subtitle/>
+                        <Title />
+                        <Subtitle />
                         <p>
-                            The <Code>IconCheckbox</Code> component provides a general purpose icon checkbox input
-                            plus optional label that can be used in the <Code>@psionic/ui</Code> <Code>Form</Code> flow.
+                            The
+                            {' '}
+                            <Code>IconCheckbox</Code>
+                            {' '}
+                            component provides a general purpose icon checkbox input
+                            plus optional label that can be used in the
+                            {' '}
+                            <Code>@psionic/ui</Code>
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            flow.
                         </p>
                         <h2>
                             Form Field Information
                         </h2>
                         <p>
                             The following information is stored in an object under the
-                            input's <Code>fieldKey</Code> in the form's <Code>onSubmit</Code> callback param:
+                            input's
+                            {' '}
+                            <Code>fieldKey</Code>
+                            {' '}
+                            in the form's
+                            {' '}
+                            <Code>onSubmit</Code>
+                            {' '}
+                            callback param:
                             <table>
                                 <tr>
                                     <th>Key</th>
@@ -72,7 +89,9 @@ export default {
                                         <Code>string</Code>
                                     </td>
                                     <td>
-                                        The type of the input. Always <Code>"icon-checkbox"</Code>
+                                        The type of the input. Always
+                                        {' '}
+                                        <Code>"icon-checkbox"</Code>
                                     </td>
                                 </tr>
                                 <tr>
@@ -97,7 +116,11 @@ export default {
                                     <td>
                                         Flag indicating whether the icon checkbox was valid at the time the form
                                         was submitted. This will always be `true` for icon checkboxes, and is mostly
-                                        used for internal purposes in the <Code>Form</Code> logic.
+                                        used for internal purposes in the
+                                        {' '}
+                                        <Code>Form</Code>
+                                        {' '}
+                                        logic.
                                     </td>
                                 </tr>
                                 <tr>
@@ -114,20 +137,31 @@ export default {
                             </table>
                         </p>
                         <p>
-                            See the <Code>Form</Code> component's documentation for more information
-                            about <Code>@psionic/ui</Code>'s <Code>Form</Code> workflow.
+                            See the
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            component's documentation for more information
+                            about
+                            {' '}
+                            <Code>@psionic/ui</Code>
+                            's
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            workflow.
                         </p>
                     </div>
-                    <Primary/>
-                    <ArgsTable story={PRIMARY_STORY}/>
-                    <Stories/>
+                    <Primary />
+                    <ArgsTable story={PRIMARY_STORY} />
+                    <Stories />
                 </>
             ),
         },
     },
 };
 
-const Template = (args) => {
+function Template(args) {
     return (
         <Form
             onSubmit={() => {}}
@@ -136,6 +170,7 @@ const Template = (args) => {
             <IconCheckbox
                 fieldKey="testKey"
                 style={{ marginBottom: '24px' }}
+                ariaLabel="test icon checkbox"
                 {...args}
             />
             <div style={{ display: 'flex', flexDirection: 'row', gap: '16px' }}>
@@ -154,7 +189,7 @@ const Template = (args) => {
             </div>
         </Form>
     );
-};
+}
 
 // Basic Demo
 export const Basic = Template.bind({});
@@ -165,7 +200,7 @@ Basic.args = {
 // Initial Value Demo
 export const InitialValue = Template.bind({});
 InitialValue.args = {
-    SvgIcon: Favorite,
+    SvgIcon:      Favorite,
     initialValue: true,
 };
 
@@ -173,21 +208,21 @@ InitialValue.args = {
 export const Labeled = Template.bind({});
 Labeled.args = {
     SvgIcon: Favorite,
-    label: 'Favorite',
+    label:   'Favorite',
 };
 
 // Customization Demo
 export const Customization = Template.bind({});
 Customization.args = {
-    SvgIcon: Aid,
-    color: '#f50a6c',
-    size: '60px',
+    SvgIcon: Check,
+    color:   '#f50a6c',
+    size:    '60px',
 };
 
 // Disabled Demo
 export const Disabled = Template.bind({});
 Disabled.args = {
-    SvgIcon: Favorite,
+    SvgIcon:  Favorite,
     disabled: true,
-    label: 'Favorite',
+    label:    'Favorite',
 };

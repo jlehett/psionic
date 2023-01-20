@@ -1,6 +1,5 @@
 import {
     setAsCategory,
-    setAsDisabled,
     prepareStoryForModal,
 } from '@unifire-js/storybook-utils';
 import Check from '@assets/check.svg';
@@ -19,14 +18,14 @@ setAsCategory(argTypes, 'Menu Options', [
 
 // Storybook default export
 export default {
-    title: 'floating actions/FloatingActionMenu',
+    title:     'floating actions/FloatingActionMenu',
     component: docs,
     argTypes,
 };
 
-const Template = (args) => {
-    return <FloatingActionMenu {...args}/>;
-};
+function Template(args) {
+    return <FloatingActionMenu {...args} aria-label="open floating menu" />;
+}
 
 // Basic Demo
 export const Basic = Template.bind({});
@@ -34,16 +33,18 @@ prepareStoryForModal(Basic, 300);
 Basic.args = {
     closedColor: '#0072E5',
     openedColor: '#0D0E12',
-    buttons: [
+    buttons:     [
         {
-            Icon: Check,
-            onClick: () => console.log('Clicked!'),
-            color: '#0072E5',
+            Icon:      Check,
+            onClick:   () => console.log('Clicked!'),
+            color:     '#0072E5',
+            ariaLabel: 'Test Label',
         },
         {
-            Icon: Check,
-            onClick: () => console.log('Clicked!'),
-            color: '#DD2222',
+            Icon:      Check,
+            onClick:   () => console.log('Clicked!'),
+            color:     '#DD2222',
+            ariaLabel: 'Test Label',
         },
     ],
 };

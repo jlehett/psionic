@@ -1,10 +1,11 @@
 import { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
-import { motion, AnimatePresence, m } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Menu from '@assets/menu.svg';
 import Close from '@assets/close.svg';
 import { FloatingActionMenuOpen, SetFloatingActionMenuOpen } from '@contexts';
+import { usePseudoSelectors } from '@hooks/interactions';
 import {
     getContrastingBWColor,
     getHoveredColor,
@@ -16,14 +17,15 @@ import localStyles from './floating-action-menu.module.scss';
  * An animated floating action menu that can be used to display a floating
  * list of buttons on the bottom right of the screen.
  */
-export const FloatingActionMenu = ({
+export function FloatingActionMenu({
     MenuIcon,
     openedColor,
     closedColor,
     buttons,
-}) => {
-
-    //#region Constants
+    // Pass-thru props
+    ...passThruProps
+}) {
+    // #region Constants
 
     /**
      * Various colors for the floating action menu.
@@ -38,9 +40,9 @@ export const FloatingActionMenu = ({
      */
     const animationDuration = 0.2;
 
-    //#endregion
+    // #endregion
 
-    //#region Context
+    // #region Context
 
     /**
      * Use the floating action menu open state from context.
@@ -52,28 +54,28 @@ export const FloatingActionMenu = ({
      */
     const setMenuOpen = useContext(SetFloatingActionMenuOpen);
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
     /**
-     * Track whether the floating action menu is hovered.
+     * Track the pseudo selectors for the floating action menu.
      */
-    const [isHovered, setIsHovered] = useState(false);
+    const [pseudoSelectorProps, pseudoSelectorStates] = usePseudoSelectors();
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
     /**
      * Toggles the menu being open.
      */
     const toggleMenu = () => {
-        setMenuOpen(prev => !prev);
+        setMenuOpen((prev) => !prev);
     };
 
     /**
@@ -81,52 +83,50 @@ export const FloatingActionMenu = ({
      *
      * @param {boolean} forOpenedButton Flag indicating if this is for the opened button
      */
-    const getAnimationControls = (forOpenedButton) => {
-        return {
-            initial: {
-                scale: 0,
-                opacity: 0,
-                rotate: -90,
-                background: forOpenedButton ? baseOpenedColor.string() : baseClosedColor.string(),
-            },
-            animate: {
-                opacity: 1,
-                scale: isHovered ? 1.05 : 1,
-                rotate: 0,
-                background:
+    const getAnimationControls = (forOpenedButton) => ({
+        initial: {
+            scale:      0,
+            opacity:    0,
+            rotate:     -90,
+            background: forOpenedButton ? baseOpenedColor.string() : baseClosedColor.string(),
+        },
+        animate: {
+            opacity: 1,
+            scale:   pseudoSelectorStates.isHovered ? 1.05 : 1,
+            rotate:  0,
+            background:
                     forOpenedButton
-                        ? isHovered
+                        ? pseudoSelectorStates.isHovered
                             ? baseOpenedColorLighter.string()
                             : baseOpenedColor.string()
-                        : isHovered
+                        : pseudoSelectorStates.isHovered
                             ? baseClosedColorLighter.string()
-                            : baseClosedColor.string()
+                            : baseClosedColor.string(),
+        },
+        exit: {
+            scale:      0,
+            opacity:    0,
+            rotate:     -90,
+            background: forOpenedButton ? baseOpenedColor.string() : baseClosedColor.string(),
+        },
+        transition: {
+            duration: animationDuration,
+            rotate:   {
+                type:      'spring',
+                stiffness: 200,
+                damping:   15,
             },
-            exit: {
-                scale: 0,
-                opacity: 0,
-                rotate: -90,
-                background: forOpenedButton ? baseOpenedColor.string() : baseClosedColor.string(),
+            scale: {
+                type:      'spring',
+                stiffness: 150,
+                damping:   20,
             },
-            transition: {
-                duration: animationDuration,
-                rotate: {
-                    type: 'spring',
-                    stiffness: 200,
-                    damping: 15,
-                },
-                scale: {
-                    type: 'spring',
-                    stiffness: 150,
-                    damping: 20,
-                }
-            },
-        };
-    };
+        },
+    });
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Render children.
@@ -141,7 +141,8 @@ export const FloatingActionMenu = ({
                     menuIndex={index}
                     SvgIcon={button.Icon}
                     color={button.color}
-                />
+                    ariaLabel={button.ariaLabel}
+                />,
             );
         }
         return renders;
@@ -157,17 +158,23 @@ export const FloatingActionMenu = ({
                 {menuOpen && (
                     <>
                         <motion.button
-                            className={localStyles.floatingActionMenu}
-                            style={{ background: baseOpenedColor }}
                             onClick={toggleMenu}
-                            onMouseEnter={() => setIsHovered(true)}
-                            onMouseLeave={() => setIsHovered(false)}
+                            {...pseudoSelectorProps}
                             {...getAnimationControls(true)}
+                            {...passThruProps}
+                            className={`
+                                ${localStyles.floatingActionMenu}
+                                ${passThruProps?.className}
+                            `}
+                            style={{
+                                background: baseClosedColor,
+                                ...(passThruProps?.style || {}),
+                            }}
                         >
                             <Close
                                 style={{
                                     stroke: getContrastingBWColor(baseOpenedColor),
-                                    fill: getContrastingBWColor(baseOpenedColor),
+                                    fill:   getContrastingBWColor(baseOpenedColor),
                                 }}
                             />
                         </motion.button>
@@ -179,17 +186,23 @@ export const FloatingActionMenu = ({
             <AnimatePresence>
                 {!menuOpen && (
                     <motion.button
-                        className={localStyles.floatingActionMenu}
-                        style={{ background: baseClosedColor }}
                         onClick={toggleMenu}
-                        onMouseEnter={() => setIsHovered(true)}
-                        onMouseLeave={() => setIsHovered(false)}
+                        {...pseudoSelectorProps}
                         {...getAnimationControls(false)}
+                        {...passThruProps}
+                        className={`
+                            ${localStyles.floatingActionMenu}
+                            ${passThruProps?.className}
+                        `}
+                        style={{
+                            background: baseClosedColor,
+                            ...(passThruProps?.style || {}),
+                        }}
                     >
                         <MenuIcon
                             style={{
                                 stroke: getContrastingBWColor(baseClosedColor),
-                                fill: getContrastingBWColor(baseClosedColor),
+                                fill:   getContrastingBWColor(baseClosedColor),
                             }}
                         />
                     </motion.button>
@@ -198,15 +211,15 @@ export const FloatingActionMenu = ({
         </>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 FloatingActionMenu.propTypes = {
     /**
      * The icon to use for the menu button when it is in a closed state.
      * Will display a hamburger menu icon, by default.
      */
-    MenuIcon: PropTypes.func,
+    MenuIcon:    PropTypes.func,
     /**
      * The color to use for the background of the button when it is in an
      * opened state.
@@ -220,32 +233,42 @@ FloatingActionMenu.propTypes = {
     /**
      * The buttons to display when the menu is open.
      */
-    buttons: PropTypes.arrayOf(PropTypes.shape({
-        Icon: PropTypes.func.isRequired,
-        onClick: PropTypes.func.isRequired,
-        color: PropTypes.string,
+    buttons:     PropTypes.arrayOf(PropTypes.shape({
+        Icon:      PropTypes.func.isRequired,
+        onClick:   PropTypes.func.isRequired,
+        color:     PropTypes.string,
+        ariaLabel: PropTypes.string.isRequired,
     })),
+    /**
+     * Any additional props to pass through to the internal div used for the
+     * sticky tooltip itself. The `content` gets rendered as a direct child of the
+     * HTML element these props are spread to.
+     *
+     * This is not a prop of `passThruProps` -- this is simply a representation of any
+     * additional props passed to the `StickyTooltip` component that aren't covered above.
+     */
+    '...passThruProps': PropTypes.any,
 };
 
 FloatingActionMenu.defaultProps = {
-    MenuIcon: Menu,
+    MenuIcon:    Menu,
     openedColor: '#0D0E12',
-    closedColor: '#0072E5'
+    closedColor: '#0072E5',
 };
 
 /**
  * Wraps the FloatingActionMenu component in the necessary context providers to handle the open state.
  */
-const FloatingActionMenuWrapper = (props) => {
+function FloatingActionMenuWrapper(props) {
     const [menuOpen, setMenuOpen] = useState(false);
 
     return (
         <FloatingActionMenuOpen.Provider value={menuOpen}>
             <SetFloatingActionMenuOpen.Provider value={setMenuOpen}>
-                <FloatingActionMenu {...props}/>
+                <FloatingActionMenu {...props} />
             </SetFloatingActionMenuOpen.Provider>
         </FloatingActionMenuOpen.Provider>
     );
-};
+}
 
 export default FloatingActionMenuWrapper;

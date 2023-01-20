@@ -1,15 +1,15 @@
-import { useContext, useMemo, useEffect, useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
 import { motion } from 'framer-motion';
-import { FormData, SetFormData } from '@contexts';
 import { useFormField } from '@hooks/forms';
+import { usePseudoSelectors } from '@hooks/interactions';
 import localStyles from './icon-checkbox.module.scss';
 
 /**
  * An icon checkbox that can be used in `@psionic/ui`'s `Form` component.
  */
-const IconCheckbox = ({
+function IconCheckbox({
     SvgIcon,
     initialValue,
     label,
@@ -17,14 +17,14 @@ const IconCheckbox = ({
     color,
     size,
     disabled,
+    ariaLabel,
     // Specific Component Props
     InputProps,
     LabelProps,
     // Pass Thru Props
     ...passThruProps
-}) => {
-
-    //#region Constants
+}) {
+    // #region Constants
 
     /**
      * Various colors for the checkbox.
@@ -36,16 +36,16 @@ const IconCheckbox = ({
      */
     const animationDuration = 0.1;
 
-    //#endregion
+    // #endregion
 
-    //#region Misc Hooks
+    // #region Misc Hooks
 
     /**
      * Use the form field hook.
      */
     const [
         formField,
-        onChange
+        onChange,
     ] = useFormField({
         fieldKey,
         initialValue,
@@ -53,22 +53,22 @@ const IconCheckbox = ({
         disabled,
     });
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
     /**
-     * Track whether the checkbox is being hovered or not.
+     * Use the pseudo selectors for the checkbox.
      */
-    const [isHovered, setIsHovered] = useState(false);
+    const [pseudoSelectorProps, pseudoSelectorStates] = usePseudoSelectors();
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
-    //#endregion
+    // #endregion
 
-    //#region Variables
+    // #region Variables
 
     /**
      * The value currently stored in input.
@@ -76,13 +76,13 @@ const IconCheckbox = ({
      */
     const currentValue = formField?.checked || false;
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
@@ -94,9 +94,7 @@ const IconCheckbox = ({
                 ${localStyles.checkbox}
                 ${passThruProps?.className}
             `}
-            onClick={onChange}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            {...pseudoSelectorProps}
             data-disabled={disabled}
         >
             <input
@@ -104,38 +102,47 @@ const IconCheckbox = ({
                 checked={currentValue}
                 onChange={onChange}
                 disabled={disabled}
+                aria-label={ariaLabel}
+                style={{ borderRadius: label ? 0 : '50%' }}
+                id={fieldKey}
                 {...InputProps}
             />
-            <label {...LabelProps}>
-                {label}
-            </label>
+            {
+                label
+                    ? (
+                        <label htmlFor={fieldKey} {...LabelProps}>
+                            {label}
+                        </label>
+                    )
+                    : null
+            }
             <div
                 className={localStyles.customCheckbox}
                 style={{
-                    width: size,
+                    width:  size,
                     height: size,
                 }}
             >
                 <div
                     className={localStyles.hoverCircle}
                     style={{
-                        background: isHovered && !disabled ? baseColor.fade(0.9) : 'none'
+                        background: pseudoSelectorStates.isHovered && !disabled ? baseColor.fade(0.9) : 'none',
                     }}
                 />
                 <motion.div
                     className={localStyles.waveSvg}
                     initial={{
-                        scale: initialValue ? 2 : 1,
+                        scale:   initialValue ? 2 : 1,
                         opacity: initialValue ? 0 : 1,
                     }}
                     animate={{
-                        scale: currentValue ? [null, 2] : [1, 1],
+                        scale:   currentValue ? [null, 2] : [1, 1],
                         opacity: currentValue ? [null, 0] : [null, 1],
                     }}
                     transition={{
                         duration: animationDuration,
-                        delay: currentValue ? animationDuration : 0,
-                        ease: 'linear',
+                        delay:    currentValue ? animationDuration : 0,
+                        ease:     'linear',
                     }}
                 >
                     <SvgIcon
@@ -143,8 +150,8 @@ const IconCheckbox = ({
                             stroke: disabled
                                 ? 'rgba(0, 0, 0, 0.26)'
                                 : currentValue
-                                ? baseColor
-                                : baseColor.fade(0.0),
+                                    ? baseColor
+                                    : baseColor.fade(0.0),
                             fill: 'transparent',
                         }}
                     />
@@ -155,17 +162,17 @@ const IconCheckbox = ({
                         scale: initialValue ? 1 : 0,
                     }}
                     animate={{
-                        scale: currentValue ? [null, 1] : [null, 0]
+                        scale: currentValue ? [null, 1] : [null, 0],
                     }}
                     transition={{
                         duration: animationDuration,
-                        ease: 'linear',
+                        ease:     'linear',
                     }}
                 >
                     <SvgIcon
                         style={{
                             stroke: disabled ? 'transparent' : baseColor,
-                            fill: disabled ? 'rgba(0, 0, 0, 0.26)' : baseColor,
+                            fill:   disabled ? 'rgba(0, 0, 0, 0.26)' : baseColor,
                         }}
                     />
                 </motion.div>
@@ -173,14 +180,14 @@ const IconCheckbox = ({
         </div>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 IconCheckbox.propTypes = {
     /**
      * The SVG icon component to use for the checkbox.
      */
-    SvgIcon: PropTypes.func.isRequired,
+    SvgIcon:      PropTypes.func.isRequired,
     /**
      * The initial value for the checkbox.
      */
@@ -188,49 +195,53 @@ IconCheckbox.propTypes = {
     /**
      * The label to display for the icon checkbox.
      */
-    label: PropTypes.string,
+    label:        PropTypes.string,
     /**
      * The key to use to represent this checkbox in the parent form. This should be unique
      * among all fields in the individual form.
      */
-    fieldKey: PropTypes.string.isRequired,
+    fieldKey:     PropTypes.string.isRequired,
     /**
      * The color to use for the checkbox. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
      */
-    color: PropTypes.string,
+    color:        PropTypes.string,
     /**
      * The size of the checkbox. Can be in any format accepted as a CSS value for `width` and `height`.
      */
-    size: PropTypes.oneOfType([
+    size:         PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,
     ]),
     /**
      * Flag indicating whether the icon checkbox is disabled.
      */
-    disabled: PropTypes.bool,
+    disabled:           PropTypes.bool,
+    /**
+     * The aria label to use for the checkbox.
+     */
+    ariaLabel:          PropTypes.string,
     /**
      * Any props to pass to the internal `input` HTML element.
      */
-    InputProps: PropTypes.object,
+    InputProps:         PropTypes.object,
     /**
      * Any props to pass to the internal `label` HTML element.
      */
-    LabelProps: PropTypes.object,
+    LabelProps:         PropTypes.object,
     /**
      * The remaining props to spread to the internal `div` HTML element that acts as a root container of the component.
      *
      * This is not a prop of `passThruProps` -- this is simply a representation of any additional props passed to the
      * `div` component that aren't covered above.
      */
-    "...passThruProps": PropTypes.any,
+    '...passThruProps': PropTypes.any,
 };
 
 IconCheckbox.defaultProps = {
     initialValue: false,
-    color: '#0072E5',
-    size: '28px',
-    disabled: false,
+    color:        '#0072E5',
+    size:         '28px',
+    disabled:     false,
 };
 
 export default IconCheckbox;

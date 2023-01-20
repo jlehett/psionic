@@ -1,23 +1,24 @@
 @import "@styles/colors.scss";
 
+.fieldSet {
+    outline: none;
+    border: none;
+    width: fit-content;
+}
+
 .radioGroup {
     display: flex;
     flex-direction: column;
     gap: 4px;
     width: fit-content;
+}
 
-    & > ul {
-        padding: 0;
-        margin: 0;
-    }
+.helperMessage {
+    font-size: 13px;
+    color: $error;
+    margin: 8px 0 0 12px;
 
-    .helperMessage {
-        font-size: 13px;
-        color: $error;
-        margin: 4px 0 0 12px;
-
-        &:empty {
-            height: 17px;
-        }
+    &:empty {
+        height: 17px;
     }
 }

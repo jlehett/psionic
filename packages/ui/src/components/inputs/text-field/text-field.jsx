@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { EditorContent, useEditor } from '@tiptap/react';
@@ -8,13 +8,12 @@ import Visibility from '@assets/visibility.svg';
 import VisibilityOff from '@assets/visibility-off.svg';
 import { useFormField } from '@hooks/forms';
 import localStyles from './text-field.module.scss';
-import { useEffect } from 'react';
 
 /**
  * A general text field with a label that can be used in `@psionic/ui`'s `Form`
  * component.
  */
-const TextField = ({
+function TextField({
     initialValue,
     label,
     fieldKey,
@@ -28,22 +27,21 @@ const TextField = ({
     LabelProps,
     // Pass Thru Props
     ...passThruProps
-}) => {
+}) {
+    // #region Constants
 
-    //#region Constants
+    // #endregion
 
-    //#endregion
-
-    //#region Refs
+    // #region Refs
 
     /**
      * Track a reference to the editor content element.
      */
     const editorContentRef = useRef();
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
     /**
      * Control whether any hidden text is being shown or not.
@@ -55,16 +53,16 @@ const TextField = ({
      */
     const [isFocused, setIsFocused] = useState(false);
 
-    //#endregion
+    // #endregion
 
-    //#region Misc Hooks
+    // #region Misc Hooks
 
     /**
      * Use the form field hook.
      */
     const [
         formField,
-        onChange
+        onChange,
     ] = useFormField({
         fieldKey,
         type,
@@ -78,19 +76,19 @@ const TextField = ({
      * Use the tiptap editor hook.
      */
     const editor = !multiline ? null : useEditor({
-        editable: !disabled,
-        content: formField?.value,
+        editable:   !disabled,
+        content:    formField?.value,
         extensions: [
             StarterKit,
         ],
-        onUpdate: ({ editor }) => {
-            onChange(editor.isEmpty ? null : editor.getJSON());
+        onUpdate: (context) => {
+            onChange(context.editor.isEmpty ? null : context.editor.getJSON());
         },
     });
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
     /**
      * Whenever the form field is updated, make sure the tiptap editor stays up-to-date.
@@ -110,9 +108,9 @@ const TextField = ({
         }
     }, [disabled]);
 
-    //#endregion
+    // #endregion
 
-    //#region Variables
+    // #region Variables
 
     /**
      * Value that is currently stored in the input.
@@ -146,13 +144,13 @@ const TextField = ({
      */
     const unmodifiedSinceLastSubmission = formField?.unmodifiedSinceLastSubmission;
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
@@ -175,8 +173,9 @@ const TextField = ({
                 animate={{ top: currentValue ? '0px' : '37px' }}
                 className={localStyles.labelWrapper}
             >
-                <label {...LabelProps}>
-                    {label}{required ? ' *' : null}
+                <label {...LabelProps} htmlFor={fieldKey}>
+                    {label}
+                    {required ? ' *' : null}
                 </label>
             </motion.div>
             <div className={localStyles.inputWrapper}>
@@ -189,7 +188,7 @@ const TextField = ({
                                 onFocus={() => setIsFocused(true)}
                                 onBlur={() => setIsFocused(false)}
                             >
-                                <EditorContent editor={editor}/>
+                                <EditorContent editor={editor} />
                             </div>
                         )
                         : (
@@ -200,6 +199,7 @@ const TextField = ({
                                 disabled={disabled}
                                 onFocus={() => setIsFocused(true)}
                                 onBlur={() => setIsFocused(false)}
+                                id={fieldKey}
                                 {...InputProps}
                             />
                         )
@@ -212,8 +212,8 @@ const TextField = ({
                                 content={showHiddenText ? 'Hide Password' : 'Show Password'}
                                 delay={1000}
                             >
-                                <button type="button" onClick={() => setShowHiddenText(prev => !prev)}>
-                                    { showHiddenText ? <Visibility/> : <VisibilityOff/> }
+                                <button type="button" onClick={() => setShowHiddenText((prev) => !prev)} aria-label="toggle visibility">
+                                    { showHiddenText ? <Visibility /> : <VisibilityOff /> }
                                 </button>
                             </StickyTooltip>
                         )
@@ -225,8 +225,8 @@ const TextField = ({
         </motion.div>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 TextField.propTypes = {
     /**
@@ -236,16 +236,16 @@ TextField.propTypes = {
     /**
      * The label to display above the text field.
      */
-    label: PropTypes.string.isRequired,
+    label:        PropTypes.string.isRequired,
     /**
      * The key to use to represent the field in the parent form. This should be unique
      * among all fields in the individual form.
      */
-    fieldKey: PropTypes.string.isRequired,
+    fieldKey:     PropTypes.string.isRequired,
     /**
      * The type of text field this is.
      */
-    type: PropTypes.oneOf([
+    type:         PropTypes.oneOf([
         'email',
         'password',
         'text',
@@ -254,16 +254,16 @@ TextField.propTypes = {
     /**
      * Flag indicating whether the text field is required or not.
      */
-    required: PropTypes.bool,
+    required:           PropTypes.bool,
     /**
      * Custom validation function that runs anytime the field updates, and displays
      * the returned string as a helper message underneath the text field.
      */
-    validator: PropTypes.func,
+    validator:          PropTypes.func,
     /**
      * Flag indicating whether the text field is disabled.
      */
-    disabled: PropTypes.bool,
+    disabled:           PropTypes.bool,
     /**
      * Flag indicating whether this TextField should support multiline input or not.
      * If this is set to true, the Tiptap editor will be used instead of a standard
@@ -272,15 +272,15 @@ TextField.propTypes = {
      *
      * The documentation for the Tiptap editor can be found here: https://tiptap.dev/api/editor#get-json
      */
-    multiline: PropTypes.bool,
+    multiline:          PropTypes.bool,
     /**
      * Any props to pass to the internal `input` HTML element.
      */
-    InputProps: PropTypes.object,
+    InputProps:         PropTypes.object,
     /**
      * Any props to pass to the internal `label` HTML element.
      */
-    LabelProps: PropTypes.object,
+    LabelProps:         PropTypes.object,
     /**
      * The remaining props to spread to the internal `div` HTML element that acts as the
      * root container of the component.
@@ -288,15 +288,15 @@ TextField.propTypes = {
      * This is not a prop of `passThruProps` -- this is simply a representation of any
      * additional props passed to the `div` component that aren't covered above.
      */
-    "...passThruProps": PropTypes.any,
+    '...passThruProps': PropTypes.any,
 };
 
 TextField.defaultProps = {
     initialValue: '',
-    type: 'text',
-    required: false,
-    disabled: false,
-    multiline: false,
+    type:         'text',
+    required:     false,
+    disabled:     false,
+    multiline:    false,
 };
 
 export default TextField;

@@ -1,4 +1,6 @@
-import { useState, useRef, useMemo, useEffect } from 'react';
+import {
+    useState, useRef, useMemo, useEffect,
+} from 'react';
 import PropTypes from 'prop-types';
 import { useMousePos } from '@hooks/interactions';
 import localStyles from './sticky-tooltip.module.scss';
@@ -11,7 +13,7 @@ import localStyles from './sticky-tooltip.module.scss';
  * tooltip will never extend beyond the viewport as the user's cursor moves, regardless
  * of the tooltip's offsets.
  */
-const StickyTooltip = ({
+function StickyTooltip({
     children,
     content,
     delay,
@@ -21,22 +23,21 @@ const StickyTooltip = ({
     marginY,
     // Pass-thru Props
     ...passThruProps
-}) => {
+}) {
+    // #region Constants
 
-    //#region Constants
+    // #endregion
 
-    //#endregion
-
-    //#region Misc Hooks
+    // #region Misc Hooks
 
     /**
      * Track the user's mouse position in state.
      */
     const [mouseX, mouseY] = useMousePos();
 
-    //#endregion
+    // #endregion
 
-    //#region Refs
+    // #region Refs
 
     /**
      * Use a ref to the tooltip component.
@@ -48,9 +49,9 @@ const StickyTooltip = ({
      */
     const delayTimeout = useRef();
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
     /**
      * Track whether the component is being hovered or not.
@@ -62,9 +63,9 @@ const StickyTooltip = ({
      */
     const [tooltipDisplayed, setTooltipDisplayed] = useState(false);
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
     /**
      * Whenever the `isHovered` state is set to `true`, create a timeout function
@@ -73,7 +74,7 @@ const StickyTooltip = ({
     useEffect(() => {
         // If the element is not longer being hovered, immediately turn the tooltip display off
         if (!isHovered) {
-            setTooltipDisplayed(false)
+            setTooltipDisplayed(false);
             // Clear the delay timeout if one exists as well
             clearDelayTimeout();
         }
@@ -94,24 +95,23 @@ const StickyTooltip = ({
         }
     }, [isHovered]);
 
-    //#endregion
+    // #endregion
 
-    //#region Memoized Values
+    // #region Memoized Values
 
     /**
      * Memoize the x position of the tooltip's left-hand side.
      */
     const tooltipLeftPos = useMemo(() => {
         if (
-            mouseX + xOffset - tooltipRef?.current?.offsetWidth / 2 >= marginX &&
-            mouseX + xOffset + tooltipRef?.current?.offsetWidth / 2 <= window.innerWidth - marginX * 2
+            mouseX + xOffset - (tooltipRef?.current?.offsetWidth || 0) / 2 >= marginX
+            && mouseX + xOffset + (tooltipRef?.current?.offsetWidth || 0) / 2 <= window.innerWidth - marginX * 2
         ) {
-            return mouseX + xOffset - tooltipRef?.current?.offsetWidth / 2;
-        } else if (mouseX + xOffset - tooltipRef?.current?.offsetWidth / 2 <= marginX) {
+            return mouseX + xOffset - (tooltipRef?.current?.offsetWidth || 0) / 2;
+        } if (mouseX + xOffset - (tooltipRef?.current?.offsetWidth || 0) / 2 <= marginX) {
             return marginX;
-        } else {
-            return window.innerWidth - marginX * 2 - tooltipRef?.current?.offsetWidth;
         }
+        return window.innerWidth - marginX * 2 - (tooltipRef?.current?.offsetWidth || 0);
     }, [mouseX, marginX]);
 
     /**
@@ -119,20 +119,19 @@ const StickyTooltip = ({
      */
     const tooltipTopPos = useMemo(() => {
         if (
-            mouseY + yOffset >= marginY &&
-            mouseY + yOffset + tooltipRef?.current?.offsetHeight <= window.innerHeight - marginY
+            mouseY + yOffset >= marginY
+            && mouseY + yOffset + (tooltipRef?.current?.offsetHeight || 0) <= window.innerHeight - marginY
         ) {
             return mouseY + yOffset;
-        } else if (mouseY + yOffset <= marginY) {
+        } if (mouseY + yOffset <= marginY) {
             return marginY;
-        } else {
-            return window.innerHeight - marginY - tooltipRef?.current?.offsetHeight;
         }
+        return window.innerHeight - marginY - (tooltipRef?.current?.offsetHeight || 0);
     }, [mouseY, marginY]);
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
     /**
      * Clears out the existing delay timeout function, if one exists.
@@ -143,9 +142,9 @@ const StickyTooltip = ({
         }
     };
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
@@ -169,7 +168,7 @@ const StickyTooltip = ({
                 `}
                 style={{
                     left: `${tooltipLeftPos}px`,
-                    top: `${tooltipTopPos}px`,
+                    top:  `${tooltipTopPos}px`,
                     ...(passThruProps?.style || {}),
                 }}
             >
@@ -178,51 +177,51 @@ const StickyTooltip = ({
         </>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 StickyTooltip.propTypes = {
     /**
      * The React component(s) to render w/ the sticky tooltip attached.
      */
-    children: PropTypes.any.isRequired,
+    children:           PropTypes.any.isRequired,
     /**
      * The content to render within the sticky tooltip itself. This could be a simple string
      * or a React component / fragment.
      */
-    content: PropTypes.any.isRequired,
+    content:            PropTypes.any.isRequired,
     /**
      * Optionally specify the amount of time (in milliseconds) to delay before the sticky
      * tooltip is shown when the React children are hovered. Note that this does NOT add a
      * delay to hiding the tooltip when the React children are no longer hovered.
      */
-    delay: PropTypes.number,
+    delay:              PropTypes.number,
     /**
      * Optionally specify a custom y-offset for where the sticky tooltip should be displayed
      * in relation to the user's cursor. As mentioned above, regardless of what this value is,
      * as long as the dimensions of the tooltip's content aren't larger than the size of the
      * user's viewport, the tooltip will never extend beyond the viewport.
      */
-    yOffset: PropTypes.number,
+    yOffset:            PropTypes.number,
     /**
      * Optionally specify a custom x-offset for where the sticky tooltip should be displayed
      * in relation to the user's cursor. As mentioned above, regardless of what this value is,
      * as long as the dimensions of the tooltip's content aren't larger than the size of the
      * user's viewport, the tooltip will never extend beyond the viewport.
      */
-    xOffset: PropTypes.number,
+    xOffset:            PropTypes.number,
     /**
      * The width of the viewport's horizontal margin in pixels to use. The tooltip will not extend past the viewport
      * w/ the given margin when the user moves their cursor, as long as the tooltip itself does not
      * exceed the viewport + margin dimensions.
      */
-    marginX: PropTypes.number,
+    marginX:            PropTypes.number,
     /**
      * The width of the viewport's vertical margin in pixels to use. The tooltip will not extend past the viewport
      * w/ the given margin when the user moves their cursor, as long as the tooltip itself does not
      * exceed the viewport + margin dimensions.
      */
-    marginY: PropTypes.number,
+    marginY:            PropTypes.number,
     /**
      * Any additional props to pass through to the internal div used for the
      * sticky tooltip itself. The `content` gets rendered as a direct child of the
@@ -231,11 +230,11 @@ StickyTooltip.propTypes = {
      * This is not a prop of `passThruProps` -- this is simply a representation of any
      * additional props passed to the `StickyTooltip` component that aren't covered above.
      */
-    "...passThruProps": PropTypes.any,
+    '...passThruProps': PropTypes.any,
 };
 
 StickyTooltip.defaultProps = {
-    delay: null,
+    delay:   null,
     yOffset: 20,
     xOffset: 0,
     marginX: 8,

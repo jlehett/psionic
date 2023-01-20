@@ -1,12 +1,12 @@
 import { useRef, useState } from 'react';
 
-//#region Hook
+// #region Hook
 
 /**
  * Hook for tracking whether the component is marked as visible, while considering
  * an optional reset delay for when the component is no longer visible.
  */
-export default function(resetDelay) {
+export default function (resetDelay) {
     // Ref to the reset delay timeout function
     const resetDelayTimeoutRef = useRef();
 
@@ -28,12 +28,10 @@ export default function(resetDelay) {
         if (!isVisible) {
             if (!resetDelay) {
                 setMarkedAsVisible(false);
-            } else {
-                if (resetDelay !== Infinity) {
-                    resetDelayTimeoutRef.current = setTimeout(() => {
-                        setMarkedAsVisible(false);
-                    }, resetDelay * 1000);
-                }
+            } else if (resetDelay !== Infinity) {
+                resetDelayTimeoutRef.current = setTimeout(() => {
+                    setMarkedAsVisible(false);
+                }, resetDelay * 1000);
             }
         }
     };
@@ -42,8 +40,8 @@ export default function(resetDelay) {
     return [markedAsVisible, onVisibilityChanged];
 }
 
-//#endregion
+// #endregion
 
-//#region Helper Functions
+// #region Helper Functions
 
-//#endregion
+// #endregion

@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
+import { usePseudoSelectors } from '@hooks/interactions';
 import { QuarterSpinner } from '@components/loaders';
 import localStyles from './icon-button.module.scss';
 
 /**
  * A button that is represented by a single SVG icon instead of text.
  */
-const IconButton = ({
+function IconButton({
     size,
     type,
     onClick,
@@ -18,9 +19,8 @@ const IconButton = ({
     paddingRatio,
     // Pass-thru Props
     ...passThruProps
-}) => {
-
-    //#region Constants
+}) {
+    // #region Constants
 
     /**
      * Various colors for the button.
@@ -29,9 +29,9 @@ const IconButton = ({
     const baseColorOpacity80 = baseColor.fade(0.8);
     const baseColorOpacity90 = baseColor.fade(0.9);
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
     /**
      * Track whether the button's `onClick` function is running or not.
@@ -39,22 +39,17 @@ const IconButton = ({
     const [onClickRunning, setOnClickRunning] = useState(false);
 
     /**
-     * Track whether the button is being hovered or not.
+     * Track the pseudo selectors for the button.
      */
-    const [isHovered, setIsHovered] = useState(false);
+    const [pseudoSelectorProps, pseudoSelectorStates] = usePseudoSelectors();
 
-    /**
-     * Track whether the button is being pressed or not.
-     */
-    const [isPressed, setIsPressed] = useState(false);
+    // #endregion
 
-    //#endregion
+    // #region Effects
 
-    //#region Effects
+    // #endregion
 
-    //#endregion
-
-    //#region Functions
+    // #region Functions
 
     /**
      * Augment the `onClick` function.
@@ -65,9 +60,9 @@ const IconButton = ({
         setOnClickRunning(false);
     };
 
-    //#endregion
+    // #endregion
 
-    //#region Variables
+    // #region Variables
 
     /**
      * Color to use for the background of the button, factoring in disabled and running states.
@@ -77,20 +72,20 @@ const IconButton = ({
             return 'none';
         }
 
-        if (!isHovered) {
+        if (!pseudoSelectorStates.isHovered) {
             return 'none';
         }
 
-        if (isPressed && isHovered) {
+        if (pseudoSelectorStates.isPressed && pseudoSelectorStates.isHovered) {
             return baseColorOpacity80;
         }
 
         return baseColorOpacity90;
     })();
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
@@ -99,21 +94,15 @@ const IconButton = ({
         <button
             type={type}
             onClick={allowMultipleClicks ? onClick : augmentedOnClick}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => {
-                setIsHovered(false);
-                setIsPressed(false);
-            }}
-            onMouseDown={() => setIsPressed(true)}
-            onMouseUp={() => setIsPressed(false)}
+            {...pseudoSelectorProps}
             {...passThruProps}
             className={`
                 ${localStyles.button}
                 ${passThruProps?.className}
             `}
             style={{
-                width: size + size * paddingRatio,
-                height: size + size * paddingRatio,
+                width:      size + size * paddingRatio,
+                height:     size + size * paddingRatio,
                 background: buttonBgColor,
                 ...(passThruProps?.style || {}),
             }}
@@ -130,39 +119,39 @@ const IconButton = ({
             <div className={onClickRunning ? localStyles.hidden : localStyles.ready}>
                 <SvgIcon
                     style={{
-                        width: size,
+                        width:  size,
                         height: size,
-                        fill: disabled ? '#888888' : baseColor.string(),
+                        fill:   disabled ? '#888888' : baseColor.string(),
                     }}
                 />
             </div>
         </button>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 IconButton.propTypes = {
     /**
      * The size of the button.
      */
-    size: PropTypes.number,
+    size:                PropTypes.number,
     /**
      * The type of the button.
      */
-    type: PropTypes.string,
+    type:                PropTypes.string,
     /**
      * The function to call when the button is clicked.
      */
-    onClick: PropTypes.func,
+    onClick:             PropTypes.func,
     /**
      * Whether the button is disabled or not.
      */
-    disabled: PropTypes.bool,
+    disabled:            PropTypes.bool,
     /**
      * The SVG icon to use for the button.
      */
-    SvgIcon: PropTypes.func.isRequired,
+    SvgIcon:             PropTypes.func.isRequired,
     /**
      * Flag indicating if the button should enter a "running" state that prevents another `onClick` event
      * from being fired until the current `onClick` callback has finished running (if it is async).
@@ -171,26 +160,26 @@ IconButton.propTypes = {
     /**
      * The color to use for the button. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
      */
-    color: PropTypes.string,
+    color:               PropTypes.string,
     /**
      * The amount of padding to add, as a ratio of the button's size.
      */
-    paddingRatio: PropTypes.number,
+    paddingRatio:        PropTypes.number,
     /**
      * Any additional props to pass through to the internal `button` element.
      *
      * This is not a prop of `passThruProps` -- this is simply a representation of any additional props passed to
      * the `IconButton` component that aren't covered above.
      */
-    '...passThruProps': PropTypes.any,
+    '...passThruProps':  PropTypes.any,
 };
 
 IconButton.defaultProps = {
-    size: 24,
-    type: 'button',
-    color: '#0072E5',
+    size:                24,
+    type:                'button',
+    color:               '#0072E5',
     allowMultipleClicks: false,
-    paddingRatio: 0.75,
+    paddingRatio:        0.75,
 };
 
 export default IconButton;

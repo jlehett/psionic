@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Color from 'color';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FloatingActionMenuOpen } from '@contexts';
+import { usePseudoSelectors } from '@hooks/interactions';
 import {
     getContrastingBWColor,
     getHoveredColor,
@@ -14,14 +15,14 @@ import localStyles from './floating-action-button.module.scss';
  * will automatically be created by the `FloatingActionMenu` component based upon its
  * `buttons` prop.
  */
-const FloatingActionButton = ({
+function FloatingActionButton({
     onClick,
     menuIndex,
     SvgIcon,
     color,
-}) => {
-
-    //#region Constants
+    ariaLabel,
+}) {
+    // #region Constants
 
     /**
      * Various colors for the floating action button.
@@ -39,35 +40,35 @@ const FloatingActionButton = ({
      */
     const buttonSpacing = 65;
 
-    //#endregion
+    // #endregion
 
-    //#region Context
+    // #region Context
 
     /**
      * Use the floating action menu open state from context.
      */
     const menuOpen = useContext(FloatingActionMenuOpen);
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
     /**
-     * Track whether the floating action menu is hovered.
+     * Track the pseudo selectors for the button.
      */
-    const [isHovered, setIsHovered] = useState(false);
+    const [pseudoSelectorProps, pseudoSelectorStates] = usePseudoSelectors();
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
@@ -76,53 +77,54 @@ const FloatingActionButton = ({
         <AnimatePresence>
             {menuOpen && (
                 <motion.button
+                    type="button"
                     className={localStyles.floatingActionButton}
                     style={{ background: baseColor }}
                     onClick={onClick}
-                    onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
+                    {...pseudoSelectorProps}
                     initial={{
-                        scale: 0,
-                        opacity: 0,
-                        y: 0,
-                        rotate: -90,
+                        scale:      0,
+                        opacity:    0,
+                        y:          0,
+                        rotate:     -90,
                         background: baseColor.string(),
                     }}
                     animate={{
-                        scale: isHovered ? 1.05 : 1,
-                        opacity: 1,
-                        y: -(menuIndex + 1) * buttonSpacing,
-                        rotate: 0,
-                        background: isHovered
+                        scale:      pseudoSelectorStates.isHovered ? 1.05 : 1,
+                        opacity:    1,
+                        y:          -(menuIndex + 1) * buttonSpacing,
+                        rotate:     0,
+                        background: pseudoSelectorStates.isHovered
                             ? baseColorLighter.string()
                             : baseColor.string(),
                     }}
                     exit={{
-                        scale: 0,
-                        opacity: 0,
-                        y: 0,
-                        rotate: -90,
+                        scale:      0,
+                        opacity:    0,
+                        y:          0,
+                        rotate:     -90,
                         background: baseColor.string(),
                     }}
                     transition={{
                         duration: animationDuration,
-                        delay: (animationDuration / 4) * menuIndex,
-                        y: {
-                            type: 'spring',
+                        delay:    (animationDuration / 4) * menuIndex,
+                        y:        {
+                            type:      'spring',
                             stiffness: 200,
-                            damping: 17,
+                            damping:   17,
                         },
                         rotate: {
-                            type: 'spring',
+                            type:      'spring',
                             stiffness: 200,
-                            damping: 15,
-                        }
+                            damping:   15,
+                        },
                     }}
+                    aria-label={ariaLabel}
                 >
                     <SvgIcon
                         style={{
                             stroke: getContrastingBWColor(baseColor),
-                            fill: getContrastingBWColor(baseColor),
+                            fill:   getContrastingBWColor(baseColor),
                         }}
                     />
                 </motion.button>
@@ -130,14 +132,14 @@ const FloatingActionButton = ({
         </AnimatePresence>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 FloatingActionButton.propTypes = {
     /**
      * The function to call when the button is clicked.
      */
-    onClick: PropTypes.func.isRequired,
+    onClick:   PropTypes.func.isRequired,
     /**
      * The index of the button in the floating action menu.
      */
@@ -145,11 +147,15 @@ FloatingActionButton.propTypes = {
     /**
      * The SVG icon to display in the button.
      */
-    SvgIcon: PropTypes.func.isRequired,
+    SvgIcon:   PropTypes.func.isRequired,
     /**
      * The color to use for the background of the button.
      */
-    color: PropTypes.string,
+    color:     PropTypes.string,
+    /**
+     * The aria label to use for the button.
+     */
+    ariaLabel: PropTypes.string,
 };
 
 FloatingActionButton.defaultProps = {
