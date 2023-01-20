@@ -21,20 +21,24 @@ setAsDisabled(argTypes, [
 
 // Storybook default export
 export default {
-    title: 'text animations/TypingReveal',
+    title:     'text animations/TypingReveal',
     component: TypingReveal,
     argTypes,
 };
 
-const Template = (args) => {
+function Template(args) {
     return (
-        <div style={{ width: 'fit-content', height: 'fit-content', padding: '20px', margin: '40px', borderRadius: '10px', background: 'white' }}>
-            <TypingReveal {...args}/>
+        <div
+            style={{
+                width: 'fit-content', height: 'fit-content', padding: '20px', margin: '40px', borderRadius: '10px', background: 'white',
+            }}
+        >
+            <TypingReveal {...args} />
             <div style={{ marginBottom: '1200px' }}>Scroll down to see more.</div>
-            <TypingReveal {...args}/>
+            <TypingReveal {...args} />
         </div>
     );
-};
+}
 
 // Basic Demo
 export const Basic = Template.bind({});
@@ -53,7 +57,7 @@ StyleOverride.args = {
         "when few word do trick...'",
     ],
     style: {
-        fontSize: '24px',
+        fontSize:   '24px',
         alignItems: 'center',
     },
 };

@@ -9,7 +9,7 @@ import localStyles from './letter-spacing-reveal.module.scss';
  *
  * The text reveal will only occur once the component is visible in the viewport.
  */
-const LetterSpacingReveal = ({
+function LetterSpacingReveal({
     children,
     animationSpeed,
     resetDelay,
@@ -17,50 +17,49 @@ const LetterSpacingReveal = ({
     endLetterSpacing,
     // Pass-thru props
     ...passThruProps
-}) => {
-
-    //#region Constants
+}) {
+    // #region Constants
 
     /**
      * The variants for the animation.
      */
     const animationVariants = {
         hidden: {
-            opacity: 0,
+            opacity:       0,
             letterSpacing: `${startLetterSpacing}px`,
-            transition: {
+            transition:    {
                 duration: 0,
             },
         },
         visible: {
-            opacity: 1,
+            opacity:       1,
             letterSpacing: `${endLetterSpacing}px`,
-            transition: {
+            transition:    {
                 duration: animationSpeed,
             },
         },
     };
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
     /**
      * Track the visibility of the component with a reset delay.
      */
     const [isVisible, onVisibilityChanged] = useVisibilitySensorWithResetDelay(resetDelay);
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
@@ -82,26 +81,26 @@ const LetterSpacingReveal = ({
         </VisibilitySensor>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 LetterSpacingReveal.propTypes = {
     /**
      * The children to render as part of the letter spacing reveal. Only text which doesn't have a letter spacing override
      * within children will be affected by the letter spacing reveal.
      */
-    children: PropTypes.any.isRequired,
+    children:           PropTypes.any.isRequired,
     /**
      * The number of seconds it should take the animation to complete.
      */
-    animationSpeed: PropTypes.number,
+    animationSpeed:     PropTypes.number,
     /**
      * The number of seconds to delay the reset of the text reveal when it is no longer visible. If the text
      * is visible again before the reset delay has elapsed, then the reset will be canceled. If this is set to
      * `0`, then the reset will happen immediately. If this is set to `Infinity`, then the reset will never
      * happen.
      */
-    resetDelay: PropTypes.number,
+    resetDelay:         PropTypes.number,
     /**
      * The starting letter spacing, in pixels, to use for the animation.
      */
@@ -109,21 +108,21 @@ LetterSpacingReveal.propTypes = {
     /**
      * The ending letter spacing, in pixels, to use for the animation.
      */
-    endLetterSpacing: PropTypes.number,
+    endLetterSpacing:   PropTypes.number,
     /**
      * Any additional props to pass through to the internal div used to wrap the children.
      *
      * This is not a prop of `passThruProps` -- this is simply a representation of any
      * additional props passed to the `LetterSpacingReveal` component that aren't covered above.
      */
-    "...passThruProps": PropTypes.any,
+    '...passThruProps': PropTypes.any,
 };
 
 LetterSpacingReveal.defaultProps = {
-    animationSpeed: 0.75,
-    resetDelay: Infinity,
+    animationSpeed:     0.75,
+    resetDelay:         Infinity,
     startLetterSpacing: -4,
-    endLetterSpacing: 1,
+    endLetterSpacing:   1,
 };
 
 export default LetterSpacingReveal;

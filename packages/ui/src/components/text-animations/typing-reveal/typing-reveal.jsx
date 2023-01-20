@@ -11,75 +11,72 @@ import localStyles from './typing-reveal.module.scss';
  *
  * The text reveal will only occur once the component is visible in the viewport.
  */
-const TypingReveal = ({
+function TypingReveal({
     lines,
     typingSpeed,
     fadeSpeed,
     resetDelay,
     // Pass-thru props
     ...passThruProps
-}) => {
-
-    //#region Constants
+}) {
+    // #region Constants
 
     /**
      * The variants for the individual letters in the sentence.
      */
     const letterVariants = {
         hidden: {
-            opacity: 0,
+            opacity:    0,
             transition: {
                 duration: 0,
             },
         },
         visible: {
-            opacity: 1,
+            opacity:    1,
             transition: {
                 duration: fadeSpeed,
             },
         },
     };
 
-    //#endregion
+    // #endregion
 
-    //#region Misc Hooks
+    // #region Misc Hooks
 
     /**
      * Track the visibility of the component with a reset delay.
      */
     const [isVisible, onVisibilityChanged] = useVisibilitySensorWithResetDelay(resetDelay);
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
-    //#endregion
+    // #endregion
 
-    //#region Memoized Values
+    // #region Memoized Values
 
     /**
      * Memoized total length of the text.
      */
-    const totalCharacters = useMemo(() => {
-        return lines.reduce(
-            (total, line) => total + line.length,
-            0
-        );
-    }, [lines]);
+    const totalCharacters = useMemo(() => lines.reduce(
+        (total, line) => total + line.length,
+        0,
+    ), [lines]);
 
     /**
      * The variants for the sentence as a whole.
      */
     const sentenceVariants = {
-        hidden: { opacity: 1 },
+        hidden:  { opacity: 1 },
         visible: {
-            opacity: 1,
+            opacity:    1,
             transition: {
-                delay: 0.5,
+                delay:           0.5,
                 staggerChildren: typingSpeed / totalCharacters,
             },
         },
@@ -88,33 +85,31 @@ const TypingReveal = ({
     /**
      * Memoized map of each letter in each line to its own `span` element to be animated.
      */
-    const lineSpans = useMemo(() => {
-        return lines.map((line, lineIndex) => {
-            const charSpans = line.split("").map((char, charIndex) => (
-                <motion.span
-                    key={`line-${lineIndex}-char-${charIndex}`}
-                    variants={letterVariants}
-                >
-                    {char}
-                </motion.span>
-            ));
+    const lineSpans = useMemo(() => lines.map((line, lineIndex) => {
+        const charSpans = line.split('').map((char, charIndex) => (
+            <motion.span
+                key={`line-${lineIndex}-char-${charIndex}`}
+                variants={letterVariants}
+            >
+                {char}
+            </motion.span>
+        ));
 
-            return (
-                <div key={`line-${lineIndex}`}>
-                    {charSpans}
-                    <br/>
-                </div>
-            );
-        });
-    }, [lines]);
+        return (
+            <div key={`line-${lineIndex}`}>
+                {charSpans}
+                <br />
+            </div>
+        );
+    }), [lines]);
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
@@ -136,29 +131,29 @@ const TypingReveal = ({
         </VisibilitySensor>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 TypingReveal.propTypes = {
     /**
      * The lines of text to display.
      */
-    lines: PropTypes.arrayOf(PropTypes.string).isRequired,
+    lines:              PropTypes.arrayOf(PropTypes.string).isRequired,
     /**
      * The number of seconds it should take to fully type out all of the lines.
      */
-    typingSpeed: PropTypes.number,
+    typingSpeed:        PropTypes.number,
     /**
      * The number of seconds it should take for each individual letter to fade in.
      */
-    fadeSpeed: PropTypes.number,
+    fadeSpeed:          PropTypes.number,
     /**
      * The number of seconds to delay the reset of the text reveal when it is no longer visible. If
      * the text is visible again before the reset delay has elapsed, then the reset will be canceled.
      * If this is set to `0`, then the reset will happen immediately. If this is set to `Infinity`,
      * then the reset will never happen.
      */
-    resetDelay: PropTypes.number,
+    resetDelay:         PropTypes.number,
     /**
      * Any additional props to pass through to the internal span used to wrap the individual character
      * spans of the text.
@@ -166,13 +161,13 @@ TypingReveal.propTypes = {
      * This is not a prop of `passThruProps` -- this is simply a representation of any
      * additional props passed to the `TypingReveal` component that aren't covered above.
      */
-    "...passThruProps": PropTypes.any,
+    '...passThruProps': PropTypes.any,
 };
 
 TypingReveal.defaultProps = {
     typingSpeed: 2.5,
-    fadeSpeed: 0.5,
-    resetDelay: Infinity,
+    fadeSpeed:   0.5,
+    resetDelay:  Infinity,
 };
 
 export default TypingReveal;
