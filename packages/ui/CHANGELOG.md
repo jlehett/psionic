@@ -7,8 +7,9 @@
 * 🛠️ Ran through an accessibility pass of all existing components.
     * 👁️ Focused elements will now have a pink outline to make their focus visible. This is a global style that can be overridden.
     * ⌨️ The `Dialog` component is now more accessible to keyboard-only users.
-    * 🔉 Various aria-labels have been added, as well as props to add custom aria-labels to components, to make the components more accessible to screen readers.
     * ⌨️ The `Radio` and `RadioGroup` components now operate like normal HTML radio group buttons, and can be navigated with the arrow keys.
+    * ⌨️ The `FloatingActionMenu` and `FloatingActionButton` components are now more accessible to keyboard-only users.
+    * 🔉 Various aria-labels have been added, as well as props to add custom aria-labels to components, to make the components more accessible to screen readers.
 
 ## 0.0.6
 
