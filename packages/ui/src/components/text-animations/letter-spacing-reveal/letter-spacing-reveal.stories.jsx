@@ -2,6 +2,7 @@ import {
     setAsCategory,
     setAsDisabled,
 } from '@unifire-js/storybook-utils';
+import { motion } from 'framer-motion';
 import LetterSpacingReveal from './letter-spacing-reveal';
 
 // Construct the argTypes object
@@ -38,6 +39,42 @@ function Template(args) {
         >
             <LetterSpacingReveal {...args} />
         </div>
+    );
+}
+
+function GroupTemplate(args) {
+    const variants = {
+        visible: {
+            transition: {
+                when:            'beforeChildren',
+                staggerChildren: 0.3,
+            },
+        },
+        hidden: {
+            transition: {
+                when:             'afterChildren',
+                staggerChildren:  0.3,
+                staggerDirection: -1,
+            },
+        },
+    };
+
+    return (
+        <motion.div
+            style={{
+                width: '500px', height: 'fit-content', padding: '20px', margin: '40px', borderRadius: '10px', background: 'white',
+            }}
+            variants={variants}
+            initial="hidden"
+            animate={args.activated ? 'visible' : 'hidden'}
+        >
+            <LetterSpacingReveal {...args} activated={undefined} />
+            <LetterSpacingReveal {...args} activated={undefined} />
+            <LetterSpacingReveal {...args} activated={undefined} />
+            <LetterSpacingReveal {...args} activated={undefined} />
+            <LetterSpacingReveal {...args} activated={undefined} />
+            <LetterSpacingReveal {...args} activated={undefined} />
+        </motion.div>
     );
 }
 
@@ -80,4 +117,11 @@ InvertLetterSpacingAnimation.args = {
     endLetterSpacing:   1,
     startLetterSpacing: 8,
     activated:          true,
+};
+
+// Group Demo
+export const Group = GroupTemplate.bind({});
+Group.args = {
+    children:  'Hello World',
+    activated: true,
 };

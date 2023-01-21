@@ -5,6 +5,12 @@ import localStyles from './slide-up.module.scss';
 /**
  * A wrapper that can be used to animate a slide up effect on a component. The `visible` and `hidden` Framer
  * Motion variants can be overridden with props to easily create other slide animations.
+ *
+ * This component utilizes the following variant names: `visible` (for when the component should be visible on the
+ * screen) and `hidden` (for when the component should be hidden off the screen). These variants can be used
+ * in parent components to support orchestration such as staggered animations. If you are going to be using these
+ * variants in parent components, you can simply leave the `activated` prop as `undefined` and the component will
+ * automatically sync with the parent component's variants (as long as they are named the same).
  */
 function SlideUp({
     children,

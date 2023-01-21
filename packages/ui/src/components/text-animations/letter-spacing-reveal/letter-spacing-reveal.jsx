@@ -4,6 +4,12 @@ import localStyles from './letter-spacing-reveal.module.scss';
 
 /**
  * A text reveal component which will fade in while increasing or decreasing the letter spacing.
+ *
+ * This component utilizes the following variant names: `visible` (for when the component should be visible on the
+ * screen) and `hidden` (for when the component should be hidden off the screen). These variants can be used
+ * in parent components to support orchestration such as staggered animations. If you are going to be using these
+ * variants in parent components, you can simply leave the `activated` prop as `undefined` and the component will
+ * automatically sync with the parent component's variants (as long as they are named the same).
  */
 function LetterSpacingReveal({
     children,
@@ -59,8 +65,12 @@ function LetterSpacingReveal({
                 ${passThruProps?.className}
             `}
             variants={animationVariants}
-            initial="hidden"
-            animate={activated ? 'visible' : 'hidden'}
+            initial={activated === undefined ? undefined : 'hidden'}
+            animate={
+                activated === undefined
+                    ? undefined
+                    : activated ? 'visible' : 'hidden'
+            }
         >
             {children}
         </motion.div>
@@ -102,7 +112,7 @@ LetterSpacingReveal.propTypes = {
 
 LetterSpacingReveal.defaultProps = {
     animationSpeed:     0.75,
-    activated:          false,
+    activated:          undefined,
     startLetterSpacing: -4,
     endLetterSpacing:   1,
 };
