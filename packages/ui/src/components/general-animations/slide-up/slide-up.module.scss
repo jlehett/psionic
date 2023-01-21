@@ -4,4 +4,8 @@
     display: block;
     overflow: hidden;
     width: fit-content;
+
+    & > div > * {
+        margin: 0;
+    }
 }

@@ -3,11 +3,14 @@ import { motion } from 'framer-motion';
 import localStyles from './slide-up.module.scss';
 
 /**
- * A wrapper that can be used to animate a slide up effect on a component.
+ * A wrapper that can be used to animate a slide up effect on a component. The `visible` and `hidden` Framer
+ * Motion variants can be overridden with props to easily create other slide animations.
  */
 function SlideUp({
     children,
     activated,
+    hiddenVariantOverride,
+    visibleVariantOverride,
     // Pass-thru props
     ...passThruProps
 }) {
@@ -17,20 +20,24 @@ function SlideUp({
      * The variants for the animation.
      */
     const variants = {
-        hidden: {
-            y:          '100%',
-            transition: {
-                duration: 0.65,
-                ease:     [0.25, 0.46, 0.45, 0.94],
-            },
-        },
-        visible: {
-            y:          '0%',
-            transition: {
-                duration: 0.65,
-                ease:     [0.25, 0.46, 0.45, 0.94],
-            },
-        },
+        hidden: hiddenVariantOverride === undefined
+            ? {
+                y:          '100%',
+                transition: {
+                    duration: 0.65,
+                    ease:     [0.25, 0.46, 0.45, 0.94],
+                },
+            }
+            : hiddenVariantOverride,
+        visible: visibleVariantOverride === undefined
+            ? {
+                y:          '0%',
+                transition: {
+                    duration: 0.65,
+                    ease:     [0.25, 0.46, 0.45, 0.94],
+                },
+            }
+            : visibleVariantOverride,
     };
 
     // #endregion
@@ -58,8 +65,12 @@ function SlideUp({
         >
             <motion.div
                 variants={variants}
-                initial="hidden"
-                animate={activated ? 'visible' : 'hidden'}
+                initial={activated === undefined ? undefined : 'hidden'}
+                animate={
+                    activated === undefined
+                        ? undefined
+                        : activated ? 'visible' : 'hidden'
+                }
             >
                 {children}
             </motion.div>
@@ -73,22 +84,32 @@ SlideUp.propTypes = {
     /**
      * The children to render with the animation.
      */
-    children:           PropTypes.any.isRequired,
+    children:               PropTypes.any.isRequired,
     /**
      * Flag indicating whether the animation should be activated or not.
      */
-    activated:          PropTypes.bool,
+    activated:              PropTypes.bool,
+    /**
+     * Override for the Framer Motion `hidden` variant that is used by this component.
+     */
+    hiddenVariantOverride:  PropTypes.object,
+    /**
+     * Override for the Framer Motion `visible` variant that is used by this component.
+     */
+    visibleVariantOverride: PropTypes.object,
     /**
      * Any additional props to pass through to the wrapping div.
      *
      * This is not a prop of `passThruProps` -- this is simply a representation of any additional props
      * passed to the `SlideUp` component that aren't covered above.
      */
-    '...passThruProps': PropTypes.any,
+    '...passThruProps':     PropTypes.any,
 };
 
 SlideUp.defaultProps = {
-    activated: false,
+    activated:              undefined,
+    hiddenVariantOverride:  undefined,
+    visibleVariantOverride: undefined,
 };
 
 export default SlideUp;
