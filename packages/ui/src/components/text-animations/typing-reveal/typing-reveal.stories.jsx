@@ -10,7 +10,9 @@ setAsCategory(argTypes, 'UI', [
     'lines',
     'typingSpeed',
     'fadeSpeed',
-    'resetDelay',
+]);
+setAsCategory(argTypes, 'Controls', [
+    'activated',
 ]);
 setAsCategory(argTypes, 'Pass Thru Props', [
     '...passThruProps',
@@ -34,8 +36,6 @@ function Template(args) {
             }}
         >
             <TypingReveal {...args} />
-            <div style={{ marginBottom: '1200px' }}>Scroll down to see more.</div>
-            <TypingReveal {...args} />
         </div>
     );
 }
@@ -47,6 +47,7 @@ Basic.args = {
         "'Why waste time say lot word",
         "when few word do trick...'",
     ],
+    activated: true,
 };
 
 // Style Override Demo
@@ -60,24 +61,5 @@ StyleOverride.args = {
         fontSize:   '24px',
         alignItems: 'center',
     },
-};
-
-// Reset Demo
-export const Reset = Template.bind({});
-Reset.args = {
-    lines: [
-        "'Why waste time say lot word",
-        "when few word do trick...'",
-    ],
-    resetDelay: 2,
-};
-
-// No Reset Delay Demo
-export const NoResetDelay = Template.bind({});
-NoResetDelay.args = {
-    lines: [
-        "'Why waste time say lot word",
-        "when few word do trick...'",
-    ],
-    resetDelay: 0,
+    activated: true,
 };

@@ -1,18 +1,14 @@
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
-import VisibilitySensor from 'react-visibility-sensor';
-import { useVisibilitySensorWithResetDelay } from '@hooks/interactions';
 import localStyles from './letter-spacing-reveal.module.scss';
 
 /**
  * A text reveal component which will fade in while increasing or decreasing the letter spacing.
- *
- * The text reveal will only occur once the component is visible in the viewport.
  */
 function LetterSpacingReveal({
     children,
     animationSpeed,
-    resetDelay,
+    activated,
     startLetterSpacing,
     endLetterSpacing,
     // Pass-thru props
@@ -28,7 +24,7 @@ function LetterSpacingReveal({
             opacity:       0,
             letterSpacing: `${startLetterSpacing}px`,
             transition:    {
-                duration: 0,
+                duration: animationSpeed,
             },
         },
         visible: {
@@ -39,15 +35,6 @@ function LetterSpacingReveal({
             },
         },
     };
-
-    // #endregion
-
-    // #region State
-
-    /**
-     * Track the visibility of the component with a reset delay.
-     */
-    const [isVisible, onVisibilityChanged] = useVisibilitySensorWithResetDelay(resetDelay);
 
     // #endregion
 
@@ -65,20 +52,18 @@ function LetterSpacingReveal({
      * Main render.
      */
     return (
-        <VisibilitySensor onChange={onVisibilityChanged}>
-            <motion.div
-                {...passThruProps}
-                className={`
-                    ${localStyles.letterSpacingReveal}
-                    ${passThruProps?.className}
-                `}
-                variants={animationVariants}
-                initial="hidden"
-                animate={isVisible ? 'visible' : 'hidden'}
-            >
-                {children}
-            </motion.div>
-        </VisibilitySensor>
+        <motion.div
+            {...passThruProps}
+            className={`
+                ${localStyles.letterSpacingReveal}
+                ${passThruProps?.className}
+            `}
+            variants={animationVariants}
+            initial="hidden"
+            animate={activated ? 'visible' : 'hidden'}
+        >
+            {children}
+        </motion.div>
     );
 
     // #endregion
@@ -95,12 +80,9 @@ LetterSpacingReveal.propTypes = {
      */
     animationSpeed:     PropTypes.number,
     /**
-     * The number of seconds to delay the reset of the text reveal when it is no longer visible. If the text
-     * is visible again before the reset delay has elapsed, then the reset will be canceled. If this is set to
-     * `0`, then the reset will happen immediately. If this is set to `Infinity`, then the reset will never
-     * happen.
+     * Flag indicating whether the animation should be activated.
      */
-    resetDelay:         PropTypes.number,
+    activated:          PropTypes.bool,
     /**
      * The starting letter spacing, in pixels, to use for the animation.
      */
@@ -120,7 +102,7 @@ LetterSpacingReveal.propTypes = {
 
 LetterSpacingReveal.defaultProps = {
     animationSpeed:     0.75,
-    resetDelay:         Infinity,
+    activated:          false,
     startLetterSpacing: -4,
     endLetterSpacing:   1,
 };

@@ -8,7 +8,9 @@ import SlideUp from './slide-up';
 const argTypes = {};
 setAsCategory(argTypes, 'UI', [
     'children',
-    'resetDelay',
+]);
+setAsCategory(argTypes, 'Controls', [
+    'activated',
 ]);
 setAsCategory(argTypes, 'Pass Thru Props', [
     '...passThruProps',
@@ -41,6 +43,7 @@ Basic.args = {
             THE LATEST
         </h2>
     ),
+    activated: true,
 };
 
 // Complex Demo
@@ -62,4 +65,5 @@ Complex.args = {
             />
         </>
     ),
+    activated: true,
 };

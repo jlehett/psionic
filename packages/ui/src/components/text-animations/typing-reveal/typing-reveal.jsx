@@ -1,21 +1,17 @@
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import VisibilitySensor from 'react-visibility-sensor';
 import { motion } from 'framer-motion';
-import { useVisibilitySensorWithResetDelay } from '@hooks/interactions';
 import localStyles from './typing-reveal.module.scss';
 
 /**
  * A text reveal component which will slowly type out the individual characters in the
  * given lines of text while fading them into view.
- *
- * The text reveal will only occur once the component is visible in the viewport.
  */
 function TypingReveal({
     lines,
     typingSpeed,
     fadeSpeed,
-    resetDelay,
+    activated,
     // Pass-thru props
     ...passThruProps
 }) {
@@ -28,7 +24,7 @@ function TypingReveal({
         hidden: {
             opacity:    0,
             transition: {
-                duration: 0,
+                duration: fadeSpeed,
             },
         },
         visible: {
@@ -38,15 +34,6 @@ function TypingReveal({
             },
         },
     };
-
-    // #endregion
-
-    // #region Misc Hooks
-
-    /**
-     * Track the visibility of the component with a reset delay.
-     */
-    const [isVisible, onVisibilityChanged] = useVisibilitySensorWithResetDelay(resetDelay);
 
     // #endregion
 
@@ -72,9 +59,13 @@ function TypingReveal({
      * The variants for the sentence as a whole.
      */
     const sentenceVariants = {
-        hidden:  { opacity: 1 },
+        hidden: {
+            transition: {
+                delay:           0.5,
+                staggerChildren: typingSpeed / totalCharacters,
+            },
+        },
         visible: {
-            opacity:    1,
             transition: {
                 delay:           0.5,
                 staggerChildren: typingSpeed / totalCharacters,
@@ -115,20 +106,18 @@ function TypingReveal({
      * Main render.
      */
     return (
-        <VisibilitySensor onChange={onVisibilityChanged}>
-            <motion.span
-                {...passThruProps}
-                className={`
-                    ${localStyles.typingReveal}
-                    ${passThruProps?.className}
-                `}
-                variants={sentenceVariants}
-                initial="hidden"
-                animate={isVisible ? 'visible' : 'hidden'}
-            >
-                {lineSpans}
-            </motion.span>
-        </VisibilitySensor>
+        <motion.span
+            {...passThruProps}
+            className={`
+                ${localStyles.typingReveal}
+                ${passThruProps?.className}
+            `}
+            variants={sentenceVariants}
+            initial="hidden"
+            animate={activated ? 'visible' : 'hidden'}
+        >
+            {lineSpans}
+        </motion.span>
     );
 
     // #endregion
@@ -148,12 +137,9 @@ TypingReveal.propTypes = {
      */
     fadeSpeed:          PropTypes.number,
     /**
-     * The number of seconds to delay the reset of the text reveal when it is no longer visible. If
-     * the text is visible again before the reset delay has elapsed, then the reset will be canceled.
-     * If this is set to `0`, then the reset will happen immediately. If this is set to `Infinity`,
-     * then the reset will never happen.
+     * Flag indicating whether the animation should be activated.
      */
-    resetDelay:         PropTypes.number,
+    activated:          PropTypes.bool,
     /**
      * Any additional props to pass through to the internal span used to wrap the individual character
      * spans of the text.
@@ -167,7 +153,7 @@ TypingReveal.propTypes = {
 TypingReveal.defaultProps = {
     typingSpeed: 2.5,
     fadeSpeed:   0.5,
-    resetDelay:  Infinity,
+    activated:   false,
 };
 
 export default TypingReveal;

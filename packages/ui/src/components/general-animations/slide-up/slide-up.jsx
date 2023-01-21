@@ -1,16 +1,13 @@
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
-import VisibilitySensor from 'react-visibility-sensor';
-import { useVisibilitySensorWithResetDelay } from '@hooks/interactions';
 import localStyles from './slide-up.module.scss';
 
 /**
- * A wrapper that can be used to animate a slide up effect on a component whenever it becomes
- * visible in the viewport.
+ * A wrapper that can be used to animate a slide up effect on a component.
  */
 function SlideUp({
     children,
-    resetDelay,
+    activated,
     // Pass-thru props
     ...passThruProps
 }) {
@@ -38,15 +35,6 @@ function SlideUp({
 
     // #endregion
 
-    // #region State
-
-    /**
-     * Track the visibility of the component with a reset delay.
-     */
-    const [isVisible, onVisibilityChanged] = useVisibilitySensorWithResetDelay(resetDelay);
-
-    // #endregion
-
     // #region Effects
 
     // #endregion
@@ -61,23 +49,21 @@ function SlideUp({
      * Main render.
      */
     return (
-        <VisibilitySensor onChange={onVisibilityChanged}>
-            <div
-                {...passThruProps}
-                className={`
-                    ${localStyles.slideUp}
-                    ${passThruProps?.className}
-                `}
+        <div
+            {...passThruProps}
+            className={`
+                ${localStyles.slideUp}
+                ${passThruProps?.className}
+            `}
+        >
+            <motion.div
+                variants={variants}
+                initial="hidden"
+                animate={activated ? 'visible' : 'hidden'}
             >
-                <motion.div
-                    variants={variants}
-                    initial="hidden"
-                    animate={isVisible ? 'visible' : 'hidden'}
-                >
-                    {children}
-                </motion.div>
-            </div>
-        </VisibilitySensor>
+                {children}
+            </motion.div>
+        </div>
     );
 
     // #endregion
@@ -89,12 +75,9 @@ SlideUp.propTypes = {
      */
     children:           PropTypes.any.isRequired,
     /**
-     * The number of seconds to delay the reset of the text reveal when it is no longer visible. If the content
-     * is visible again before the reset delay has elapsed, then the reset will be canceled. If this is set to
-     * `0`, then the reset will happen immediately. If this is set to `Infinity`, then the reset will never
-     * happen.
+     * Flag indicating whether the animation should be activated or not.
      */
-    resetDelay:         PropTypes.number,
+    activated:          PropTypes.bool,
     /**
      * Any additional props to pass through to the wrapping div.
      *
@@ -105,7 +88,7 @@ SlideUp.propTypes = {
 };
 
 SlideUp.defaultProps = {
-
+    activated: false,
 };
 
 export default SlideUp;

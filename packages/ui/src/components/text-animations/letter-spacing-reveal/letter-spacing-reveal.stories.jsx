@@ -9,9 +9,11 @@ const argTypes = {};
 setAsCategory(argTypes, 'UI', [
     'children',
     'animationSpeed',
-    'resetDelay',
     'startLetterSpacing',
     'endLetterSpacing',
+]);
+setAsCategory(argTypes, 'Controls', [
+    'activated',
 ]);
 setAsCategory(argTypes, 'Pass Thru Props', [
     '...passThruProps',
@@ -31,11 +33,9 @@ function Template(args) {
     return (
         <div
             style={{
-                width: 'fit-content', height: 'fit-content', padding: '20px', margin: '40px', borderRadius: '10px', background: 'white',
+                width: '500px', height: 'fit-content', padding: '20px', margin: '40px', borderRadius: '10px', background: 'white',
             }}
         >
-            <LetterSpacingReveal {...args} />
-            <div style={{ marginBottom: '1200px' }}>Scroll down to see more.</div>
             <LetterSpacingReveal {...args} />
         </div>
     );
@@ -44,7 +44,8 @@ function Template(args) {
 // Basic Demo
 export const Basic = Template.bind({});
 Basic.args = {
-    children: 'Hello World',
+    children:  'Hello World',
+    activated: true,
 };
 
 // Style Override Demo
@@ -54,20 +55,7 @@ StyleOverride.args = {
     style:    {
         fontSize: '24px',
     },
-};
-
-// Reset Demo
-export const Reset = Template.bind({});
-Reset.args = {
-    children:   'Hello World',
-    resetDelay: 2,
-};
-
-// No Reset Delay Demo
-export const NoResetDelay = Template.bind({});
-NoResetDelay.args = {
-    children:   'Hello World',
-    resetDelay: 0,
+    activated: true,
 };
 
 // Complex Children Demo
@@ -82,6 +70,7 @@ ComplexChildren.args = {
             <p>How are you today?</p>
         </>
     ),
+    activated: true,
 };
 
 // Invert Letter Spacing Animation Demo
@@ -90,4 +79,5 @@ InvertLetterSpacingAnimation.args = {
     children:           'Hello World',
     endLetterSpacing:   1,
     startLetterSpacing: 8,
+    activated:          true,
 };
