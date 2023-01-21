@@ -48,9 +48,9 @@ function GroupTemplate(args) {
         },
         hidden: {
             transition: {
-                when:            'afterChildren',
-                staggerChildren: 0.3,
-                reverse:         true,
+                when:             'afterChildren',
+                staggerChildren:  0.3,
+                staggerDirection: -1,
             },
         },
     };
@@ -64,16 +64,7 @@ function GroupTemplate(args) {
             initial="hidden"
             animate={args.activated ? 'visible' : 'hidden'}
         >
-            <SlideUp
-                hiddenVariantOverride={{
-                    y:          '100%',
-                    transition: {
-                        duration: 0.65,
-                        ease:     [0.25, 0.46, 0.45, 0.94],
-                        delay:    0.9,
-                    },
-                }}
-            >
+            <SlideUp>
                 <h2
                     style={{
                         fontFamily: 'Roboto', margin: 0, transform: 'translateY(20px) scaleY(1.3)', color: '#ff4655', fontSize: '56px', fontWeight: 800,
@@ -87,40 +78,13 @@ function GroupTemplate(args) {
                     alt="test"
                 />
             </SlideUp>
-            <SlideUp
-                hiddenVariantOverride={{
-                    y:          '100%',
-                    transition: {
-                        duration: 0.65,
-                        ease:     [0.25, 0.46, 0.45, 0.94],
-                        delay:    0.6,
-                    },
-                }}
-            >
+            <SlideUp>
                 <h2>Even more text!</h2>
             </SlideUp>
-            <SlideUp
-                hiddenVariantOverride={{
-                    y:          '100%',
-                    transition: {
-                        duration: 0.65,
-                        ease:     [0.25, 0.46, 0.45, 0.94],
-                        delay:    0.3,
-                    },
-                }}
-            >
+            <SlideUp>
                 <p>And even more!</p>
             </SlideUp>
-            <SlideUp
-                hiddenVariantOverride={{
-                    y:          '100%',
-                    transition: {
-                        duration: 0.65,
-                        ease:     [0.25, 0.46, 0.45, 0.94],
-                        delay:    0,
-                    },
-                }}
-            >
+            <SlideUp>
                 <p>
                     Really, this is quite ridiculous now.
                 </p>
