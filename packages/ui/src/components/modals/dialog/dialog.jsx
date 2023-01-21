@@ -5,6 +5,8 @@ import FocusTrap from 'focus-trap-react';
 import { useKeyEvents } from '@hooks/interactions';
 import localStyles from './dialog.module.scss';
 
+// #region Component
+
 /**
  * A basic dialog component that any content can be displayed within.
  */
@@ -76,6 +78,67 @@ function Dialog({
 
     // #endregion
 
+    // #region Animation Variants
+
+    const variants = {
+        backdrop: {
+            hidden: {
+                opacity:    0,
+                transition: {
+                    duration: 0.2,
+                    delay:    0.2,
+                },
+            },
+            visible: {
+                opacity:    0.4,
+                transition: {
+                    duration: 0.2,
+                },
+            },
+        },
+        modal: {
+            hidden: {
+                opacity:    0,
+                height:     '20px',
+                width:      '20px',
+                transition: {
+                    duration: 0.2,
+                    delay:    0.2,
+                },
+            },
+            visible: {
+                opacity:    [0, 1, 1],
+                height:     ['20px', '20px', `${childHeight || 20}px`],
+                width:      ['20px', `${childWidth || 20}px`, `${childWidth || 20}px`],
+                transition: {
+                    duration: 0.5,
+                },
+            },
+        },
+        modalContent: {
+            hidden: {
+                opacity:    0,
+                scale:      0.95,
+                transition: {
+                    duration: 0.3,
+                    opacity:  {
+                        duration: 0.2,
+                    },
+                },
+            },
+            visible: {
+                opacity:    1,
+                scale:      1,
+                transition: {
+                    delay:    0.4,
+                    duration: 0.35,
+                },
+            },
+        },
+    };
+
+    // #endregion
+
     // #region Render Functions
 
     /**
@@ -86,56 +149,38 @@ function Dialog({
             {
                 isOpen
                     ? (
-                        <>
-                            <motion.div
-                                className={localStyles.overlay}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 0.4 }}
-                                exit={{ opacity: 0 }}
-                                transition={{
-                                    duration: 0.2,
-                                }}
-                                onClick={() => (closeOnClickOutside ? setIsOpen(false) : null)}
-                            />
-                            <FocusTrap>
+                        <FocusTrap>
+                            <div>
+                                <motion.div
+                                    className={localStyles.overlay}
+                                    variants={variants.backdrop}
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="hidden"
+                                    onClick={() => (closeOnClickOutside ? setIsOpen(false) : null)}
+                                />
                                 <motion.div
                                     {...passThruProps}
                                     className={`
                                         ${localStyles.dialog}
                                         ${passThruProps?.className}
                                     `}
-                                    initial={{
-                                        opacity: 0,
-                                        height:  '20px',
-                                        width:   '20px',
-                                    }}
-                                    animate={{
-                                        opacity: [0, 1, 1],
-                                        height:  ['20px', '20px', `${childHeight || 20}px`],
-                                        width:   ['20px', `${childWidth || 20}px`, `${childWidth || 20}px`],
-                                    }}
-                                    exit={{
-                                        opacity:    0,
-                                        height:     '20px',
-                                        width:      '20px',
-                                        transition: {
-                                            duration: 0.2,
-                                        },
-                                    }}
-                                    transition={{
-                                        duration: 0.5,
-                                    }}
+                                    variants={variants.modal}
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="hidden"
                                     tabIndex={-1}
                                     role="dialog"
                                 >
-                                    <div
+                                    <motion.div
+                                        variants={variants.modalContent}
                                         ref={childRef}
                                     >
                                         {children}
-                                    </div>
+                                    </motion.div>
                                 </motion.div>
-                            </FocusTrap>
-                        </>
+                            </div>
+                        </FocusTrap>
                     )
                     : null
             }
@@ -175,5 +220,7 @@ Dialog.propTypes = {
 Dialog.defaultProps = {
     closeOnClickOutside: true,
 };
+
+// #endregion
 
 export default Dialog;

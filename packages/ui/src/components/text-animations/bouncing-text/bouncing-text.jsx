@@ -7,7 +7,7 @@ import localStyles from './bouncing-text.module.scss';
  * A text animation that will bounce the individual characters in the given lines of text in a
  * wave-like pattern.
  */
-const BouncingText = ({
+function BouncingText({
     lines,
     bounceSpeed,
     waveGranularity,
@@ -15,45 +15,42 @@ const BouncingText = ({
     frequency,
     // Pass Thru Props
     ...passThruProps
-}) => {
-
-    //#region Constants
+}) {
+    // #region Constants
 
     /**
      * The variants for the individual letters in the sentence.
      */
     const letterVariants = {
         active: {
-            y: ['0px', `-${amplitude}px`, '0px'],
+            y:          ['0px', `-${amplitude}px`, '0px'],
             transition: {
-                duration: bounceSpeed,
-                repeat: Infinity,
+                duration:    bounceSpeed,
+                repeat:      Infinity,
                 repeatDelay: waveGranularity * frequency,
             },
         },
     };
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
-    //#endregion
+    // #endregion
 
-    //#region Memoized Values
+    // #region Memoized Values
 
     /**
      * Memoized total length of the text.
      */
-    const totalCharacters = useMemo(() => {
-        return lines.reduce(
-            (total, line) => total + line.length,
-            0
-        );
-    }, [lines]);
+    const totalCharacters = useMemo(() => lines.reduce(
+        (total, line) => total + line.length,
+        0,
+    ), [lines]);
 
     /**
      * The variants for the sentence as a whole.
@@ -69,34 +66,32 @@ const BouncingText = ({
     /**
      * Memoized map of each letter in each line to its own `span` element to be animated.
      */
-    const lineSpans = useMemo(() => {
-        return lines.map((line, lineIndex) => {
-            const charSpans = line.split("").map((char, charIndex) => (
-                <motion.span
-                    key={`line-${lineIndex}-char-${charIndex}`}
-                    variants={letterVariants}
-                    className={char === ' ' ? localStyles.spaceChar : localStyles.nonSpaceChar}
-                >
-                    {char}
-                </motion.span>
-            ));
+    const lineSpans = useMemo(() => lines.map((line, lineIndex) => {
+        const charSpans = line.split('').map((char, charIndex) => (
+            <motion.span
+                key={`line-${lineIndex}-char-${charIndex}`}
+                variants={letterVariants}
+                className={char === ' ' ? localStyles.spaceChar : localStyles.nonSpaceChar}
+            >
+                {char}
+            </motion.span>
+        ));
 
-            return (
-                <div key={`line-${lineIndex}`}>
-                    {charSpans}
-                    <br/>
-                </div>
-            );
-        });
-    }, [lines]);
+        return (
+            <div key={`line-${lineIndex}`}>
+                {charSpans}
+                <br />
+            </div>
+        );
+    }), [lines]);
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
@@ -120,31 +115,31 @@ const BouncingText = ({
         </motion.span>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 BouncingText.propTypes = {
     /**
      * The lines of text to display as part of the animation.
      */
-    lines: PropTypes.arrayOf(PropTypes.string).isRequired,
+    lines:              PropTypes.arrayOf(PropTypes.string).isRequired,
     /**
      * The number of seconds it takes an individual letter to bounce up and down during a wave.
      */
-    bounceSpeed: PropTypes.number,
+    bounceSpeed:        PropTypes.number,
     /**
      * The granularity of the wave -- the higher the number, the more granular the wave (i.e., the characters'
      * heights will have more variance between them).
      */
-    waveGranularity: PropTypes.number,
+    waveGranularity:    PropTypes.number,
     /**
      * The height at which the letters will bounce, in pixels.
      */
-    amplitude: PropTypes.number,
+    amplitude:          PropTypes.number,
     /**
      * The number of waves that will run at once.
      */
-    frequency: PropTypes.number,
+    frequency:          PropTypes.number,
     /**
      * Any additional props to pass through to the internal span used to wrap the individual character
      * spans of the text.
@@ -152,14 +147,14 @@ BouncingText.propTypes = {
      * This is not a prop of `passThruProps` -- this is simply a representation of any
      * additional props passed to the `BouncingText` component that aren't covered above.
      */
-    "...passThruProps": PropTypes.any,
+    '...passThruProps': PropTypes.any,
 };
 
 BouncingText.defaultProps = {
-    bounceSpeed: 0.5,
+    bounceSpeed:     0.5,
     waveGranularity: 0.75,
-    amplitude: 8,
-    frequency: 1.0,
+    amplitude:       8,
+    frequency:       1.0,
 };
 
 export default BouncingText;

@@ -1,5 +1,29 @@
 # @psionic/ui
 
+## 1.0.0
+
+<i>January 21, 2023</i>
+
+### !!!BREAKING CHANGES!!!
+
+* 🛠️ `LetterSpacingReveal` component now uses an `activated` prop to determine when to play the animation instead of auto-playing based on the component's visibility in the viewport. This should make it more broadly applicable and customizable.
+* 🛠️ `TypingReveal` component now uses an `activated` prop to determine when to play the animation instead of auto-playing based on the component's visibility in the viewport. This should make it more broadly applicable and customizable.
+
+### New Features
+
+* 🚀 New `IconLink` component!
+* 🚀 New `SlideUp` animation component!
+* 🚀 New `TintOverlay` animation component!
+
+### Other Changes
+
+* 🎥 Added better animations to the `Dialog` component.
+* 🛠️ Roboto font family included in the text animation components' styles.
+
+### Bug Fixes
+
+* 🛠️ Fixed issue causing the `Dialog` component to not close when clicking outside of it, even if the `closeOnClickOutside` prop was set to `true`.
+
 ## 0.0.7
 
 <i>January 20, 2023</i>
