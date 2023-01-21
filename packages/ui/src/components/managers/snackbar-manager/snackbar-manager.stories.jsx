@@ -30,28 +30,48 @@ setAsCategory(argTypes, 'UI', [
 
 // Storybook default export
 export default {
-    title: 'managers/SnackbarManager',
-    component: docs,
+    title:      'managers/SnackbarManager',
+    component:  docs,
     argTypes,
     parameters: {
         docs: {
             page: () => (
                 <>
                     <div className="storybookWrapper">
-                        <Title/>
-                        <Subtitle/>
+                        <Title />
+                        <Subtitle />
                         <p>
-                            The <Code>SnackbarManager</Code> component provides a wrapper component that can be
+                            The
+                            {' '}
+                            <Code>SnackbarManager</Code>
+                            {' '}
+                            component provides a wrapper component that can be
                             included near the root of your app to allow you to imperatively add snackbars to an
                             animated snackbar display in the bottom left of the user's screen.
                         </p>
                         <p>
-                            Once the <Code>SnackbarManager</Code> is included in your app, any child components
-                            of <Code>SnackbarManager</Code> will be able to make use of the <Code>useSnackbar</Code> hook
+                            Once the
+                            {' '}
+                            <Code>SnackbarManager</Code>
+                            {' '}
+                            is included in your app, any child components
+                            of
+                            {' '}
+                            <Code>SnackbarManager</Code>
+                            {' '}
+                            will be able to make use of the
+                            {' '}
+                            <Code>useSnackbar</Code>
+                            {' '}
+                            hook
                             which will return a function that can be used to add a new snackbar to the display.
                         </p>
                         <p>
-                            The function returned from the <Code>useSnackbar</Code> hook takes the following params:
+                            The function returned from the
+                            {' '}
+                            <Code>useSnackbar</Code>
+                            {' '}
+                            hook takes the following params:
                         </p>
                         <table>
                             <tr>
@@ -75,7 +95,11 @@ export default {
                                 <td style={{ lineHeight: '22px' }}>
                                     The component to render as a snackbar in the snackbar manager. This component will
                                     automatically be animated in and out via the manager. This component will also be
-                                    passed a <Code>removeSnackbar</Code> function as a prop to allow the component to
+                                    passed a
+                                    {' '}
+                                    <Code>removeSnackbar</Code>
+                                    {' '}
+                                    function as a prop to allow the component to
                                     remove itself from the snackbar manager early, if desired.
                                 </td>
                             </tr>
@@ -96,11 +120,15 @@ export default {
                             The component you choose to display can be anything you'd like, as shown in the demos.
                         </p>
                         <p>
-                            Here's an example of how to use the <Code>useSnackbar</Code> hook:
+                            Here's an example of how to use the
+                            {' '}
+                            <Code>useSnackbar</Code>
+                            {' '}
+                            hook:
                         </p>
                         <CodeBlock>
                             {
-`import { SnackbarManager, useSnackbar } from '@psionic/ui';
+                                `import { SnackbarManager, useSnackbar } from '@psionic/ui';
 import SomeCoolSvgIcon from 'some-cool-svg-icon';
 
 // Make sure that the SnackbarManager is included in your app
@@ -155,16 +183,16 @@ const MyComponent = () => {
                             }
                         </CodeBlock>
                     </div>
-                    <Primary/>
-                    <ArgsTable story={PRIMARY_STORY}/>
-                    <Stories/>
+                    <Primary />
+                    <ArgsTable story={PRIMARY_STORY} />
+                    <Stories />
                 </>
             ),
         },
     },
 };
 
-const AddSnackbarButtons = () => {
+function AddSnackbarButtons() {
     const snackbarAPI = useContext(SnackbarAPI);
 
     return (
@@ -178,7 +206,7 @@ const AddSnackbarButtons = () => {
                             text="This is a new snackbar"
                             removeSnackbar={removeSnackbar}
                         />
-                    ))
+                    ));
                 }}
             >
                 Add Snackbar
@@ -193,7 +221,7 @@ const AddSnackbarButtons = () => {
                         >
                             See, Snackbars can be anything!
                         </Button>
-                    ))
+                    ));
                 }}
             >
                 Add Custom Snackbar
@@ -206,24 +234,24 @@ const AddSnackbarButtons = () => {
                             style={{ width: '50px', height: '50px' }}
                             src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/383px-PNG_Test.png?20221031130701"
                         />
-                    ))
+                    ));
                 }}
             >
                 Add Ridiculous Snackbar
             </Button>
         </div>
-    )
+    );
 }
 
-const Template = (args) => {
+function Template(args) {
     return (
         <SnackbarManager {...args}>
             <div style={{ margin: '40px' }}>
-                <AddSnackbarButtons/>
+                <AddSnackbarButtons />
             </div>
         </SnackbarManager>
     );
-};
+}
 
 // Basic Demo
 export const Basic = Template.bind({});

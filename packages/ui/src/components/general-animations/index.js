@@ -1,0 +1,1 @@
+export { default as SlideUp } from './slide-up/slide-up';
