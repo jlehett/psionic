@@ -59,5 +59,6 @@ module.exports = {
         'react/destructuring-assignment':    'off',
         'consistent-return':                 'off',
         'react/no-array-index-key':          'off',
+        'linebreak-style':                   'off',
     },
 };
