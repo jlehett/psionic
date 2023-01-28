@@ -9,6 +9,7 @@ function TintOverlay({
     children,
     color,
     activated,
+    animationSpeed,
     // Pass-thru props
     ...passThruProps
 }) {
@@ -51,6 +52,7 @@ function TintOverlay({
                 className={localStyles.overlay}
                 style={{
                     background: baseColor.string(),
+                    transition: `transform ${animationSpeed}s cubic-bezier(.215, .61, .355, 1)`,
                 }}
             />
             {children}
@@ -73,6 +75,10 @@ TintOverlay.propTypes = {
      * Flag indicating whether the tint overlay should be activated.
      */
     activated:          PropTypes.bool,
+    /**
+     * The number of seconds it should take the animation to complete.
+     */
+    animationSpeed:     PropTypes.number,
     /**
      * Any additional props to pass through to the wrapping div.
      *

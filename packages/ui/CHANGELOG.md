@@ -1,5 +1,12 @@
 # @psionic/ui
 
+## 1.1.0
+
+<i>???</i>
+
+* 🚀 New `ScrambleReveal` text animation component!
+* 🛠️ Added an `animationSpeed` prop to the `TintOverlay` component that can be used to customize the speed of its animation.
+
 ## 1.0.0
 
 <i>January 21, 2023</i>

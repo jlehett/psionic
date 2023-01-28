@@ -60,5 +60,7 @@ module.exports = {
         'consistent-return':                 'off',
         'react/no-array-index-key':          'off',
         'linebreak-style':                   'off',
+        'no-plusplus':                       'off',
+        'no-minusminus':                     'off',
     },
 };

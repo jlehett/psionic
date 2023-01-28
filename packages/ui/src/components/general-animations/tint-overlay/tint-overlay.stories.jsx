@@ -9,6 +9,7 @@ const argTypes = {};
 setAsCategory(argTypes, 'UI', [
     'children',
     'color',
+    'animationSpeed',
 ]);
 setAsCategory(argTypes, 'Controls', [
     'activated',
@@ -61,4 +62,18 @@ Colored.args = {
     ),
     activated: true,
     color:     'red',
+};
+
+// Animation Speed Demo
+export const AnimationSpeed = Template.bind({});
+AnimationSpeed.args = {
+    children: (
+        <img
+            style={{ width: '390px', height: '220px' }}
+            src="https://images.contentstack.io/v3/assets/bltb6530b271fddd0b1/blt87ef4a8d56e3aced/63c1e9c9ca4ee4418bab9432/Val_Banner_PatchNotes_6_01_16x9.jpg?auto=webp&disable=upscale&width=390"
+            alt="test"
+        />
+    ),
+    activated:      true,
+    animationSpeed: 2.0,
 };
