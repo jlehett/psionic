@@ -1,5 +1,11 @@
 # @psionic/ui
 
+## 1.2.1
+
+<i>January 30, 2023</i>
+
+* 🛠️ Fixed some missing accessibility outlines.
+
 ## 1.2.0
 
 <i>January 30, 2023</i>
