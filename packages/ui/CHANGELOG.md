@@ -1,5 +1,11 @@
 # @psionic/ui
 
+## 1.2.2
+
+<i>January 30, 2023</i>
+
+* 🛠️ Fix issue where the `Form` component would never become unmarked as "submitting" if the form was invalid at the time it was submitted.
+
 ## 1.2.1
 
 <i>January 30, 2023</i>
