@@ -3,7 +3,7 @@ import {
 } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
-import { Theme } from '@contexts';
+import { Theme, FormSubmitting } from '@contexts';
 import { getContrastingBWColor } from '@utils/colors';
 import { usePseudoSelectors } from '@hooks/interactions';
 import { QuarterSpinner } from '@components/loaders';
@@ -23,6 +23,7 @@ function Button({
     color,
     variant,
     rounded,
+    disabledOnFormSubmitting,
     // Pass-thru Props
     ...passThruProps
 }) {
@@ -32,6 +33,11 @@ function Button({
      * Use the theme from context.
      */
     const theme = useContext(Theme);
+
+    /**
+     * Use the form submitting flag from context.
+     */
+    const formSubmitting = useContext(FormSubmitting);
 
     // #endregion
 
@@ -87,12 +93,35 @@ function Button({
 
     // #endregion
 
+    // #region Functions
+
+    /**
+     * Augment the `onClick` function.
+     */
+    const augmentedOnClick = async () => {
+        setOnClickRunning(true);
+        await onClick?.();
+        setOnClickRunning(false);
+    };
+
+    /**
+     * Get whether the button is a submit button and the form is submitting.
+     */
+    const getIsSubmitAndRunning = () => Boolean(!allowMultipleClicks && type === 'submit' && formSubmitting);
+
+    /**
+     * Get whether the form is submitting and the button should be disabled.
+     */
+    const getIsDisabledBecauseFormSubmitting = () => Boolean(disabledOnFormSubmitting && formSubmitting);
+
+    // #endregion
+
     // #region Memoized Values
 
     /**
      * Memoized color to use in the SCSS, factoring in disabled and running states.
      */
-    const colorToUse = useMemo(() => (onClickRunning || disabled ? '#888888' : baseColor), [onClickRunning, disabled, baseColor]);
+    const colorToUse = useMemo(() => (onClickRunning || disabled || getIsDisabledBecauseFormSubmitting() || getIsSubmitAndRunning() ? '#888888' : baseColor), [onClickRunning, disabled, baseColor, formSubmitting]);
 
     /**
      * Memoized color to use for the spinner, depending on the `variant` of the button.
@@ -119,7 +148,7 @@ function Button({
         switch (variant) {
             case 'text':
                 background = (() => {
-                    if (onClickRunning || disabled) {
+                    if (onClickRunning || disabled || getIsSubmitAndRunning() || getIsDisabledBecauseFormSubmitting()) {
                         return 'none';
                     }
 
@@ -138,11 +167,11 @@ function Button({
                     outline: 'none',
                     border:  'none',
                     background,
-                    color:   colorToUse,
+                    color:   onClickRunning || disabled || getIsDisabledBecauseFormSubmitting() ? '#888888' : colorToUse,
                 };
             case 'contained':
                 background = (() => {
-                    if (onClickRunning || disabled) {
+                    if (onClickRunning || disabled || getIsSubmitAndRunning() || getIsDisabledBecauseFormSubmitting()) {
                         return '#cccccc';
                     }
 
@@ -161,11 +190,11 @@ function Button({
                     outline: 'none',
                     border:  'none',
                     background,
-                    color:   textColor,
+                    color:   onClickRunning || disabled || getIsDisabledBecauseFormSubmitting() ? '#444444' : textColor,
                 };
             case 'outlined':
                 background = (() => {
-                    if (onClickRunning || disabled || !pseudoSelectorStates.isHovered) {
+                    if (onClickRunning || disabled || !pseudoSelectorStates.isHovered || getIsSubmitAndRunning() || getIsDisabledBecauseFormSubmitting()) {
                         return 'none';
                     }
 
@@ -181,7 +210,7 @@ function Button({
                     borderWidth: '1px',
                     borderStyle: 'solid',
                     borderColor: colorToUse,
-                    color:       colorToUse,
+                    color:       onClickRunning || disabled || getIsDisabledBecauseFormSubmitting() ? '#888888' : colorToUse,
                     background,
                 };
             default:
@@ -213,19 +242,6 @@ function Button({
 
     // #endregion
 
-    // #region Functions
-
-    /**
-     * Augment the `onClick` function.
-     */
-    const augmentedOnClick = async () => {
-        setOnClickRunning(true);
-        await onClick?.();
-        setOnClickRunning(false);
-    };
-
-    // #endregion
-
     // #region Render Functions
 
     /**
@@ -248,8 +264,8 @@ function Button({
                 ...(stylesToUse || {}),
                 ...(passThruProps?.style || {}),
             }}
-            data-running={onClickRunning}
-            disabled={onClickRunning || disabled}
+            data-running={onClickRunning || getIsSubmitAndRunning()}
+            disabled={onClickRunning || disabled || getIsSubmitAndRunning() || getIsDisabledBecauseFormSubmitting()}
             tabIndex={0}
         >
             {/* RUNNING STATE */}
@@ -296,34 +312,40 @@ Button.propTypes = {
     /**
      * The internal `button` element's `type` attribute.
      */
-    type:                PropTypes.string,
+    type:                     PropTypes.string,
     /**
      * The callback to run when the button is clicked.
      */
-    onClick:             PropTypes.func,
+    onClick:                  PropTypes.func,
     /**
      * Flag indicating whether the button is in a disabled state. Will prevent `onClick` events
      * from being fired.
      */
-    disabled:            PropTypes.bool,
+    disabled:                 PropTypes.bool,
     /**
      * Any children to render within the button.
      */
-    children:            PropTypes.any.isRequired,
+    children:                 PropTypes.any.isRequired,
     /**
      * Flag indicating if the button should enter a "running" state that prevents another `onClick` event
      * from being fired until the current `onClick` callback has finished running (if it is async).
      */
-    allowMultipleClicks: PropTypes.bool,
+    allowMultipleClicks:      PropTypes.bool,
+    /**
+     * Flag indicating whether the button should be disabled while the parent `Form` component is submitting or not.
+     * If this is the "submit" button on the `Form`, then this flag will be ignored, and the condition will be based on
+     * whether the `allowMultipleClicks` flag is set to `true` or not.
+     */
+    disabledOnFormSubmitting: PropTypes.bool,
     /**
      * The color to use for the button. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
      * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
-    color:               PropTypes.string,
+    color:                    PropTypes.string,
     /**
      * The variant of the button to render. Only impacts the visual appearance of the button.
      */
-    variant:             PropTypes.oneOf([
+    variant:                  PropTypes.oneOf([
         'outlined',
         'contained',
         'text',
@@ -343,13 +365,14 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
-    type:                'button',
-    color:               'primary',
-    disabled:            false,
-    allowMultipleClicks: false,
-    variant:             'outlined',
-    rounded:             false,
-    onClick:             () => {},
+    type:                     'button',
+    color:                    'primary',
+    disabled:                 false,
+    allowMultipleClicks:      false,
+    variant:                  'outlined',
+    rounded:                  false,
+    onClick:                  () => {},
+    disabledOnFormSubmitting: false,
 };
 
 export default Button;

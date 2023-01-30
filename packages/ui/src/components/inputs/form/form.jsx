@@ -1,7 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { cloneDeep } from 'lodash';
-import { FormData, SetFormData } from '@contexts';
+import {
+    FormData, SetFormData, FormSubmitting, SetFormSubmitting,
+} from '@contexts';
 import localStyles from './form.module.scss';
 
 /**
@@ -40,6 +42,11 @@ export function Form({
      */
     const setFormData = useContext(SetFormData);
 
+    /**
+     * Use the set form submitting API from context.
+     */
+    const setFormSubmitting = useContext(SetFormSubmitting);
+
     // #endregion
 
     // #region State
@@ -64,9 +71,12 @@ export function Form({
      *
      * @param {Event} event The DOM Event from the submit event
      */
-    const submitHandler = (event) => {
+    const submitHandler = async (event) => {
         // Prevent whatever default logic the event has
         event.preventDefault();
+
+        // Mark the form as submitting
+        setFormSubmitting(true);
 
         // Mark all of the fields in the form as unmodified since last submission
         setFormData((prev) => {
@@ -86,7 +96,10 @@ export function Form({
 
         // Call the passed-in `onSubmit` callback while passing through the form's data from context.
         // We have to deep clone the form data to ensure that modifications to the form don't affect the handler.
-        onSubmit(cloneDeep(formData));
+        await onSubmit(cloneDeep(formData));
+
+        // Mark the form as no longer submitting
+        setFormSubmitting(false);
     };
 
     /**
@@ -200,13 +213,18 @@ Form.defaultProps = {
  */
 function FormWrapper(props) {
     const [formData, setFormData] = useState({});
+    const [formSubmitting, setFormSubmitting] = useState(false);
 
     return (
-        <FormData.Provider value={formData}>
-            <SetFormData.Provider value={setFormData}>
-                <Form {...props} />
-            </SetFormData.Provider>
-        </FormData.Provider>
+        <FormSubmitting.Provider value={formSubmitting}>
+            <SetFormSubmitting.Provider value={setFormSubmitting}>
+                <FormData.Provider value={formData}>
+                    <SetFormData.Provider value={setFormData}>
+                        <Form {...props} />
+                    </SetFormData.Provider>
+                </FormData.Provider>
+            </SetFormSubmitting.Provider>
+        </FormSubmitting.Provider>
     );
 }
 

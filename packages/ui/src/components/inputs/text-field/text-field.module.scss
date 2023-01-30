@@ -57,13 +57,12 @@
             resize: none;
 
             &:focus-visible {
-                outline: none !important;
+                outline: none;
             }
         }
 
         button {
             cursor: pointer;
-            outline: none;
             border: none;
             background: none;
             padding: 4px;

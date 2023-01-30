@@ -7,6 +7,7 @@ import {
     Subtitle,
     Title,
 } from '@storybook/addon-docs';
+import delay from 'delay';
 import {
     setAsCategory,
 } from '@unifire-js/storybook-utils';
@@ -386,7 +387,8 @@ const ExampleForm = () => {
 
 function Template(args) {
     // Submit handler
-    const onSubmit = useCallback((formData) => {
+    const onSubmit = useCallback(async (formData) => {
+        await delay(3000);
         console.log('Form Data:', formData);
     }, []);
 
@@ -459,6 +461,7 @@ function Template(args) {
                 <Button
                     variant="contained"
                     type="reset"
+                    disabledOnFormSubmitting
                 >
                     Reset Form
                 </Button>
