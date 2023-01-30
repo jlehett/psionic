@@ -91,7 +91,10 @@ export function Form({
 
         // If any of the fields in the form are marked as invalid (and are not disabled) don't continue with the submission
         for (const [fieldKey, fieldInfo] of Object.entries(formData)) {
-            if (!fieldInfo.valid && !fieldInfo.disabled) return;
+            if (!fieldInfo.valid && !fieldInfo.disabled) {
+                setFormSubmitting(false);
+                return;
+            }
         }
 
         // Call the passed-in `onSubmit` callback while passing through the form's data from context.
