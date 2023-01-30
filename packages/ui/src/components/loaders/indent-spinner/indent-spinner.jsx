@@ -1,45 +1,55 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
+import { Theme } from '@contexts';
 import localStyles from './indent-spinner.module.scss';
 
 /**
  * A spinner that appears to be indented into the element it is positioned on top of.
  */
-const IndentSpinner = ({
+function IndentSpinner({
     color,
     backgroundColor,
     coloredIndent,
     size,
     speed,
-}) => {
+}) {
+    // #region Context
 
-    //#region Constants
+    /**
+     * Use the theme from context.
+     */
+    const theme = useContext(Theme);
+
+    // #endregion
+
+    // #region Constants
 
     /**
      * Various colors for the indent spinner
      */
-    const baseColor = Color(color);
+    const baseColor = Color(theme[color] || color);
     const baseColorOpacity60 = baseColor.fade(0.6);
     const baseColorOpacity70 = baseColor.fade(0.7);
     const baseColorOpacity80 = baseColor.fade(0.9);
 
     const baseBackgroundColor = Color(backgroundColor);
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
@@ -49,9 +59,9 @@ const IndentSpinner = ({
             className={localStyles.outerCircle}
             style={{
                 background: `linear-gradient(145deg, ${coloredIndent ? baseColorOpacity70.string() : '#00000020'}, ${coloredIndent ? baseColorOpacity80.string() : '#00000010'})`,
-                boxShadow: `inset 2px 2px 4px 0px ${coloredIndent ? baseColorOpacity60.string() : '#00000030'}`,
-                width: `${size}px`,
-                height: `${size}px`,
+                boxShadow:  `inset 2px 2px 4px 0px ${coloredIndent ? baseColorOpacity60.string() : '#00000030'}`,
+                width:      `${size}px`,
+                height:     `${size}px`,
             }}
         >
             <div
@@ -59,7 +69,7 @@ const IndentSpinner = ({
                 style={{
                     boxShadow: coloredIndent
                         ? `${baseColorOpacity60.string()} 2px 2px 4px 0`
-                        : `rgba(0, 0, 0, 0.145) 2px 2px 4px 0px`,
+                        : 'rgba(0, 0, 0, 0.145) 2px 2px 4px 0px',
                     background: baseBackgroundColor.string(),
                 }}
             />
@@ -75,40 +85,42 @@ const IndentSpinner = ({
         </div>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 IndentSpinner.propTypes = {
     /**
      * The color of the spinner. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
-    color: PropTypes.string,
+    color:           PropTypes.string,
     /**
      * The background color of the element this spinner will be displayed on.
      * Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
     backgroundColor: PropTypes.string,
     /**
      * Flag indicating whether the indent should be colored with the same color as
      * the `color` prop, or if it should be simple grayscale.
      */
-    coloredIndent: PropTypes.bool,
+    coloredIndent:   PropTypes.bool,
     /**
      * The size, in pixels, that the spinner should be.
      */
-    size: PropTypes.number,
+    size:            PropTypes.number,
     /**
      * The speed at which the spinner makes a full rotation in seconds.
      */
-    speed: PropTypes.number,
+    speed:           PropTypes.number,
 };
 
 IndentSpinner.defaultProps = {
     backgroundColor: '#fff',
-    color: '#878787',
-    coloredIndent: false,
-    size: 60,
-    speed: 1,
+    color:           '#878787',
+    coloredIndent:   false,
+    size:            60,
+    speed:           1,
 };
 
 export default IndentSpinner;

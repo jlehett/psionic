@@ -1,44 +1,54 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
 import { motion } from 'framer-motion';
+import { Theme } from '@contexts';
 import localStyles from './pulse-loader.module.scss';
 
 /**
  * A loader displaying 3 dots, pulsing in size.
  */
-const PulseLoader = ({
+function PulseLoader({
     size,
     color,
     speed,
-}) => {
+}) {
+    // #region Context
 
-    //#region Constants
+    /**
+     * Use the theme from context.
+     */
+    const theme = useContext(Theme);
+
+    // #endregion
+
+    // #region Constants
 
     /**
      * Various colors for the pulse loader.
      */
-    const baseColor = Color(color);
+    const baseColor = Color(theme[color] || color);
 
     /**
      * The size of the gap between each circle.
      */
     const gapSize = size / 2;
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Main render.
@@ -48,7 +58,7 @@ const PulseLoader = ({
             className={localStyles.pulseLoader}
             style={{
                 width: size * 3 + gapSize * 2,
-                gap: gapSize,
+                gap:   gapSize,
             }}
         >
             <motion.span
@@ -59,14 +69,14 @@ const PulseLoader = ({
                     scale: [0, 1],
                 }}
                 transition={{
-                    duration: speed,
-                    repeat: Infinity,
+                    duration:   speed,
+                    repeat:     Infinity,
                     repeatType: 'reverse',
-                    delay: speed * 2 / 7 * 0,
+                    delay:      speed * 2 / 7 * 0,
                 }}
                 style={{
-                    width: size,
-                    height: size,
+                    width:      size,
+                    height:     size,
                     background: baseColor.string(),
                 }}
             />
@@ -78,14 +88,14 @@ const PulseLoader = ({
                     scale: [0, 1],
                 }}
                 transition={{
-                    duration: speed,
-                    repeat: Infinity,
+                    duration:   speed,
+                    repeat:     Infinity,
                     repeatType: 'reverse',
-                    delay: speed * 2 / 7 * 1,
+                    delay:      speed * 2 / 7 * 1,
                 }}
                 style={{
-                    width: size,
-                    height: size,
+                    width:      size,
+                    height:     size,
                     background: baseColor.string(),
                 }}
             />
@@ -97,30 +107,31 @@ const PulseLoader = ({
                     scale: [0, 1],
                 }}
                 transition={{
-                    duration: speed,
-                    repeat: Infinity,
+                    duration:   speed,
+                    repeat:     Infinity,
                     repeatType: 'reverse',
-                    delay: speed * 2 / 7 * 2,
+                    delay:      speed * 2 / 7 * 2,
                 }}
                 style={{
-                    width: size,
-                    height: size,
+                    width:      size,
+                    height:     size,
                     background: baseColor.string(),
                 }}
             />
         </div>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 PulseLoader.propTypes = {
     /**
      * The size of the loader in arbitrary units.
      */
-    size: PropTypes.number,
+    size:  PropTypes.number,
     /**
      * The color of the loader.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
     color: PropTypes.string,
     /**
@@ -130,8 +141,8 @@ PulseLoader.propTypes = {
 };
 
 PulseLoader.defaultProps = {
-    color: '#0072E5',
-    size: 16,
+    color: 'primary',
+    size:  16,
     speed: 0.4,
 };
 

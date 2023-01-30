@@ -15,6 +15,9 @@ setAsCategory(argTypes, 'UI', [
 setAsCategory(argTypes, 'Menu Options', [
     'buttons',
 ]);
+setAsCategory(argTypes, 'Pass Thru Props', [
+    '...passThruProps',
+]);
 
 // Storybook default export
 export default {
@@ -31,9 +34,7 @@ function Template(args) {
 export const Basic = Template.bind({});
 prepareStoryForModal(Basic, 300);
 Basic.args = {
-    closedColor: '#0072E5',
-    openedColor: '#0D0E12',
-    buttons:     [
+    buttons: [
         {
             Icon:      Check,
             onClick:   () => console.log('Clicked!'),

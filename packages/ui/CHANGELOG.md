@@ -2,10 +2,12 @@
 
 ## 1.1.0
 
-<i>???</i>
+<i>January 29, 2023</i>
 
+* 🎨 New `theme` prop added to the `StyleManager` component. This allows you to uniformly update the colors of all `@psionic/ui` components in your app. See the `StyleManager` component's documentation for more details.
 * 🚀 New `ScrambleReveal` text animation component!
 * 🛠️ Added an `animationSpeed` prop to the `TintOverlay` component that can be used to customize the speed of its animation.
+* 🛠️ Added a `color` prop to the `TextField` component which allows the user to customize the color of the text field's focus outline.
 
 ## 1.0.0
 

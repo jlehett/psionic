@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
+import { Theme } from '@contexts';
 import { usePseudoSelectors } from '@hooks/interactions';
 import { QuarterSpinner } from '@components/loaders';
 import localStyles from './icon-button.module.scss';
@@ -20,12 +21,21 @@ function IconButton({
     // Pass-thru Props
     ...passThruProps
 }) {
+    // #region Context
+
+    /**
+     * Use the theme from context.
+     */
+    const theme = useContext(Theme);
+
+    // #endregion
+
     // #region Constants
 
     /**
      * Various colors for the button.
      */
-    const baseColor = Color(color);
+    const baseColor = Color(theme[color] || color);
     const baseColorOpacity80 = baseColor.fade(0.8);
     const baseColorOpacity90 = baseColor.fade(0.9);
 
@@ -159,6 +169,7 @@ IconButton.propTypes = {
     allowMultipleClicks: PropTypes.bool,
     /**
      * The color to use for the button. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
     color:               PropTypes.string,
     /**
@@ -177,7 +188,7 @@ IconButton.propTypes = {
 IconButton.defaultProps = {
     size:                24,
     type:                'button',
-    color:               '#0072E5',
+    color:               'primary',
     allowMultipleClicks: false,
     paddingRatio:        0.75,
 };

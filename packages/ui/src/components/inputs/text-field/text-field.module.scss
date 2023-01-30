@@ -13,7 +13,6 @@
 
         label {
             font-size: 16px;
-            color: $mediumEmphasisTransparent;
         }
     }
 
@@ -97,48 +96,6 @@
 
         &:empty {
             height: 17px;
-        }
-    }
-
-    @include hoverIfSupported {
-
-        .inputWrapper {
-            box-shadow: 0 0 0 1px black;
-        }
-    }
-
-    &[data-display-error="true"] {
-
-        .inputWrapper {
-            box-shadow: 0 0 0 1px $error;
-        }
-
-        .labelWrapper {
-
-            label {
-                color: $error;
-            }
-        }
-
-        &[data-is-focused="true"] {
-
-            .inputWrapper {
-                box-shadow: 0 0 0 2px $error;
-            }
-        }
-    }
-
-    &[data-is-focused="true"][data-display-error="false"] {
-
-        .inputWrapper {
-            box-shadow: 0 0 0 2px $focus;
-        }
-
-        .labelWrapper {
-
-            label {
-                color: $focus;
-            }
         }
     }
 

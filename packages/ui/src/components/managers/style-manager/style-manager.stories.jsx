@@ -6,21 +6,28 @@ import StyleManager from './style-manager';
 
 // Construct the argTypes object
 const argTypes = {};
+setAsCategory(argTypes, 'UI', [
+    'children',
+    'theme',
+]);
 
 // Storybook default export
 export default {
-    title: 'managers/StyleManager',
+    title:     'managers/StyleManager',
     component: StyleManager,
     argTypes,
 };
 
-const Template = (args) => {
+function Template(args) {
     return (
-        <div style={{ margin: '40px', background: 'white', padding: '20px', borderRadius: '8px', width: 'fit-content', height: 'fit-content' }}>
-            <StyleManager {...args}/>
+        <div style={{
+            margin: '40px', background: 'white', padding: '20px', borderRadius: '8px', width: 'fit-content', height: 'fit-content',
+        }}
+        >
+            <StyleManager {...args} />
         </div>
     );
-};
+}
 
 // Basic Demo
 export const Basic = Template.bind({});

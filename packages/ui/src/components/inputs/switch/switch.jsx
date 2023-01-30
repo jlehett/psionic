@@ -1,6 +1,8 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
 import { motion } from 'framer-motion';
+import { Theme } from '@contexts';
 import { useFormField } from '@hooks/forms';
 import localStyles from './switch.module.scss';
 
@@ -22,12 +24,21 @@ function Switch({
     // Pass Thru Props
     ...passThruProps
 }) {
+    // #region Context
+
+    /**
+     * Use the theme from context.
+     */
+    const theme = useContext(Theme);
+
+    // #endregion
+
     // #region Constants
 
     /**
      * Various colors for the switch.
      */
-    const baseColor = Color(color);
+    const baseColor = Color(theme[color] || color);
 
     /**
      * The border size of the switch.
@@ -174,6 +185,7 @@ Switch.propTypes = {
     fieldKey:           PropTypes.string.isRequired,
     /**
      * The color to use for the checkbox. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
     color:              PropTypes.string,
     /**
@@ -212,7 +224,7 @@ Switch.propTypes = {
 
 Switch.defaultProps = {
     initialValue: false,
-    color:        '#0072E5',
+    color:        'primary',
     disabled:     false,
     width:        42,
     height:       24,

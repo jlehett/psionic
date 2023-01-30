@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
 import { motion } from 'framer-motion';
-import { RadioGroupContext } from '@contexts';
+import { RadioGroupContext, Theme } from '@contexts';
 import { useFormField } from '@hooks/forms';
 import { usePseudoSelectors } from '@hooks/interactions';
 import localStyles from './radio-group.module.scss';
@@ -23,12 +23,21 @@ function RadioGroup({
     // Pass-thru props
     ...passThruProps
 }) {
+    // #region Context
+
+    /**
+     * Use the theme from context.
+     */
+    const theme = useContext(Theme);
+
+    // #endregion
+
     // #region Constants
 
     /**
      * Various colors for the radio group.
      */
-    const baseColor = Color(color);
+    const baseColor = Color(theme[color] || color);
 
     // #endregion
 
@@ -181,6 +190,7 @@ RadioGroup.propTypes = {
     disabled:           PropTypes.bool,
     /**
      * The color to use for the radio group. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
     color:              PropTypes.string,
     /**
@@ -211,7 +221,7 @@ RadioGroup.propTypes = {
 };
 
 RadioGroup.defaultProps = {
-    color:    '#0072E5',
+    color:    'primary',
     disabled: false,
     required: false,
 };

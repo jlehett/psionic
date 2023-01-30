@@ -1,42 +1,52 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import Color from 'color';
+import { Theme } from '@contexts';
 import localStyles from './draw-loader.module.scss';
 
 /**
  * Loader which draws and then undraws a given SVG.
  */
-const DrawLoader = ({
+function DrawLoader({
     size,
     color,
     speed,
     svg,
     paths,
     progress,
-}) => {
+}) {
+    // #region Context
 
-    //#region Constants
+    /**
+     * Use the theme from context.
+     */
+    const theme = useContext(Theme);
+
+    // #endregion
+
+    // #region Constants
 
     /**
      * Various colors for the draw loader.
      */
-    const baseColor = Color(color);
+    const baseColor = Color(theme[color] || color);
 
-    //#endregion
+    // #endregion
 
-    //#region State
+    // #region State
 
-    //#endregion
+    // #endregion
 
-    //#region Effects
+    // #region Effects
 
-    //#endregion
+    // #endregion
 
-    //#region Functions
+    // #region Functions
 
-    //#endregion
+    // #endregion
 
-    //#region Render Functions
+    // #region Render Functions
 
     /**
      * Render all of the paths in the SVG.
@@ -51,20 +61,20 @@ const DrawLoader = ({
                     fill={baseColor.fade(0.75).string()}
                     stroke={baseColor.string()}
                     initial={{
-                        opacity: 0.15,
+                        opacity:    0.15,
                         pathLength: 0,
                     }}
                     animate={{
-                        opacity: [0.15, 1],
+                        opacity:    [0.15, 1],
                         pathLength: progress === undefined ? [0, 1] : progress,
                     }}
                     transition={{
-                        duration: speed,
-                        repeat: progress === undefined ? Infinity : 0,
+                        duration:   speed,
+                        repeat:     progress === undefined ? Infinity : 0,
                         repeatType: 'reverse',
-                        ease: progress === undefined ? 'easeInOut' : 'linear',
+                        ease:       progress === undefined ? 'easeInOut' : 'linear',
                     }}
-                />
+                />,
             );
         }
         return pathRenders;
@@ -77,7 +87,7 @@ const DrawLoader = ({
         <div
             className={localStyles.drawLoader}
             style={{
-                width: size,
+                width:  size,
                 height: size,
             }}
         >
@@ -87,30 +97,31 @@ const DrawLoader = ({
         </div>
     );
 
-    //#endregion
-};
+    // #endregion
+}
 
 DrawLoader.propTypes = {
     /**
      * The size of the loader, in pixels.
      */
-    size: PropTypes.number,
+    size:     PropTypes.number,
     /**
      * The color of the loader.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
-    color: PropTypes.string,
+    color:    PropTypes.string,
     /**
      * The speed of the animation, in seconds.
      */
-    speed: PropTypes.number,
+    speed:    PropTypes.number,
     /**
      * The props to pass to the internal SVG element.
      */
-    svg: PropTypes.object.isRequired,
+    svg:      PropTypes.object.isRequired,
     /**
      * An array containing the props to pass to each individual internal `path` element.
      */
-    paths: PropTypes.arrayOf(PropTypes.object).isRequired,
+    paths:    PropTypes.arrayOf(PropTypes.object).isRequired,
     /**
      * If specified, this loader will display the given portion of the path. Can be used
      * to make the `DrawLoader` act as a definite progress indicator instead of an indefinite progress
@@ -122,8 +133,8 @@ DrawLoader.propTypes = {
 };
 
 DrawLoader.defaultProps = {
-    color: '#0072E5',
-    size: 120,
+    color: 'primary',
+    size:  120,
     speed: 2.5,
 };
 

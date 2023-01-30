@@ -1,5 +1,7 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
+import { Theme } from '@contexts';
 import Close from '@assets/close.svg';
 import { IconButton } from '@components/buttons';
 import localStyles from './snackbar.module.scss';
@@ -16,12 +18,21 @@ function Snackbar({
     // Pass Thru Props
     ...passThruProps
 }) {
+    // #region Context
+
+    /**
+     * Use the theme from context.
+     */
+    const theme = useContext(Theme);
+
+    // #endregion
+
     // #region Constants
 
     /**
      * Various colors for the snackbar.
      */
-    const baseColor = Color(color);
+    const baseColor = Color(theme[color] || color);
 
     // #endregion
 
@@ -80,6 +91,7 @@ function Snackbar({
 Snackbar.propTypes = {
     /**
      * The accent color of the snackbar.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
     color:              PropTypes.string,
     /**
@@ -104,7 +116,7 @@ Snackbar.propTypes = {
 };
 
 Snackbar.defaultProps = {
-    color: '#0072E5',
+    color: 'primary',
 };
 
 export default Snackbar;

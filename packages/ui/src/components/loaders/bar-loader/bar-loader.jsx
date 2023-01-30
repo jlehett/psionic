@@ -1,6 +1,8 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
 import { motion } from 'framer-motion';
+import { Theme } from '@contexts';
 import localStyles from './bar-loader.module.scss';
 
 /**
@@ -13,12 +15,21 @@ function BarLoader({
     height,
     progress,
 }) {
+    // #region Context
+
+    /**
+     * Use the theme from context.
+     */
+    const theme = useContext(Theme);
+
+    // #endregion
+
     // #region Constants
 
     /**
      * Various colors for the bar loader.
      */
-    const baseColor = Color(color);
+    const baseColor = Color(theme[color] || color);
     const baseColorFaded = baseColor.fade(0.75);
 
     // #endregion
@@ -79,6 +90,7 @@ function BarLoader({
 BarLoader.propTypes = {
     /**
      * The color of the bar loader.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
     color:    PropTypes.string,
     /**
@@ -107,7 +119,7 @@ BarLoader.defaultProps = {
     speed:  2.5,
     width:  100,
     height: 4,
-    color:  '#0072E5',
+    color:  'primary',
 };
 
 export default BarLoader;

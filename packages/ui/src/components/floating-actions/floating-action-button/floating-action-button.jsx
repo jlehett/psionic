@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FloatingActionMenuOpen } from '@contexts';
+import { FloatingActionMenuOpen, Theme } from '@contexts';
 import { usePseudoSelectors } from '@hooks/interactions';
 import {
     getContrastingBWColor,
@@ -22,12 +22,26 @@ function FloatingActionButton({
     color,
     ariaLabel,
 }) {
+    // #region Context
+
+    /**
+     * Use the theme from context.
+     */
+    const theme = useContext(Theme);
+
+    /**
+     * Use the floating action menu open state from context.
+     */
+    const menuOpen = useContext(FloatingActionMenuOpen);
+
+    // #endregion
+
     // #region Constants
 
     /**
      * Various colors for the floating action button.
      */
-    const baseColor = Color(color);
+    const baseColor = Color(theme[color] || color);
     const baseColorLighter = getHoveredColor(baseColor);
 
     /**
@@ -39,15 +53,6 @@ function FloatingActionButton({
      * Spacing between all of the floating action buttons.
      */
     const buttonSpacing = 65;
-
-    // #endregion
-
-    // #region Context
-
-    /**
-     * Use the floating action menu open state from context.
-     */
-    const menuOpen = useContext(FloatingActionMenuOpen);
 
     // #endregion
 
@@ -150,6 +155,7 @@ FloatingActionButton.propTypes = {
     SvgIcon:   PropTypes.func.isRequired,
     /**
      * The color to use for the background of the button.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
     color:     PropTypes.string,
     /**
@@ -159,7 +165,7 @@ FloatingActionButton.propTypes = {
 };
 
 FloatingActionButton.defaultProps = {
-    color: '#0072E5',
+    color: 'primary',
 };
 
 export default FloatingActionButton;

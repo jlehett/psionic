@@ -1,8 +1,9 @@
 import {
-    useState, useEffect, useRef, useMemo,
+    useState, useEffect, useRef, useMemo, useContext,
 } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
+import { Theme } from '@contexts';
 import { getContrastingBWColor } from '@utils/colors';
 import { usePseudoSelectors } from '@hooks/interactions';
 import { QuarterSpinner } from '@components/loaders';
@@ -25,12 +26,21 @@ function Button({
     // Pass-thru Props
     ...passThruProps
 }) {
+    // #region Context
+
+    /**
+     * Use the theme from context.
+     */
+    const theme = useContext(Theme);
+
+    // #endregion
+
     // #region Constants
 
     /**
      * Various colors for the button.
      */
-    const baseColor = Color(color);
+    const baseColor = Color(theme[color] || color);
     const baseColorDark = baseColor.darken(0.15);
     const baseColorDarker = baseColor.darken(0.25);
     const baseColorOpacity80 = baseColor.fade(0.8);
@@ -82,7 +92,7 @@ function Button({
     /**
      * Memoized color to use in the SCSS, factoring in disabled and running states.
      */
-    const colorToUse = useMemo(() => (onClickRunning || disabled ? '#888888' : color), [onClickRunning, disabled, color]);
+    const colorToUse = useMemo(() => (onClickRunning || disabled ? '#888888' : baseColor), [onClickRunning, disabled, baseColor]);
 
     /**
      * Memoized color to use for the spinner, depending on the `variant` of the button.
@@ -307,6 +317,7 @@ Button.propTypes = {
     allowMultipleClicks: PropTypes.bool,
     /**
      * The color to use for the button. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
     color:               PropTypes.string,
     /**
@@ -333,7 +344,7 @@ Button.propTypes = {
 
 Button.defaultProps = {
     type:                'button',
-    color:               '#0072E5',
+    color:               'primary',
     disabled:            false,
     allowMultipleClicks: false,
     variant:             'outlined',

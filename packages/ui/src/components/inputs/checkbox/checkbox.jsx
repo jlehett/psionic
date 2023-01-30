@@ -1,6 +1,8 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
 import { motion } from 'framer-motion';
+import { Theme } from '@contexts';
 import Check from '@assets/check.svg';
 import { getContrastingBWColor } from '@utils/colors';
 import { useFormField } from '@hooks/forms';
@@ -24,12 +26,21 @@ function Checkbox({
     // Pass Thru Props
     ...passThruProps
 }) {
+    // #region Context
+
+    /**
+     * Use the theme from context.
+     */
+    const theme = useContext(Theme);
+
+    // #endregion
+
     // #region Constants
 
     /**
      * Various colors for the checkbox.
      */
-    const baseColor = Color(color);
+    const baseColor = Color(theme[color] || color);
     const iconColor = getContrastingBWColor(baseColor);
 
     // #endregion
@@ -172,6 +183,7 @@ Checkbox.propTypes = {
     requiredMessage:    PropTypes.string,
     /**
      * The color to use for the checkbox. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
     color:              PropTypes.string,
     /**
@@ -204,7 +216,7 @@ Checkbox.defaultProps = {
     initialValue:    false,
     required:        false,
     requiredMessage: 'This field is required',
-    color:           '#0072E5',
+    color:           'primary',
     disabled:        false,
 };
 

@@ -1,8 +1,12 @@
-import { useState, useRef, useEffect } from 'react';
+import {
+    useState, useRef, useEffect, useContext,
+} from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
+import Color from 'color';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import { Theme } from '@contexts';
 import { StickyTooltip } from '@components/accessibility';
 import Visibility from '@assets/visibility.svg';
 import VisibilityOff from '@assets/visibility-off.svg';
@@ -23,13 +27,28 @@ function TextField({
     validator,
     disabled,
     multiline,
+    color,
     // Specific Component Props
     InputProps,
     LabelProps,
     // Pass Thru Props
     ...passThruProps
 }) {
+    // #region Context
+
+    /**
+     * Use the theme from context.
+     */
+    const theme = useContext(Theme);
+
+    // #endregion
+
     // #region Constants
+
+    /**
+     * Various colors for the text field.
+     */
+    const baseColor = Color(theme[color] || color);
 
     // #endregion
 
@@ -149,6 +168,57 @@ function TextField({
 
     // #region Functions
 
+    /**
+     * Determine the styling for the input wrapper, based on state.
+     */
+    const getInputWrapperStyle = () => {
+        if (pseudoSelectorStates.isFocused && !(!currentValidity && unmodifiedSinceLastSubmission)) {
+            return {
+                boxShadow: `0 0 0 2px ${baseColor}`,
+            };
+        }
+        if (!currentValidity && unmodifiedSinceLastSubmission) {
+            if (pseudoSelectorStates.isFocused) {
+                return {
+                    boxShadow: '0 0 0 2px rgb(211, 47, 47)',
+                };
+            }
+            return {
+                boxShadow: '0 0 0 1px rgb(211, 47, 47)',
+            };
+        }
+        if (pseudoSelectorStates.isHovered) {
+            return {
+                boxShadow: '0 0 0 1px black',
+            };
+        }
+        return {};
+    };
+
+    /**
+     * Determine the styling for the input label, based on state.
+     */
+    const getInputLabelStyle = () => {
+        if (pseudoSelectorStates.isFocused && !(!currentValidity && unmodifiedSinceLastSubmission)) {
+            return {
+                color: baseColor,
+            };
+        }
+        if (!currentValidity && unmodifiedSinceLastSubmission) {
+            return {
+                color: 'rgb(211, 47, 47)',
+            };
+        }
+        if (disabled) {
+            return {
+                color: 'rgba(0, 0, 0, 0.4)',
+            };
+        }
+        return {
+            color: 'rgba(0, 0, 0, 0.6)',
+        };
+    };
+
     // #endregion
 
     // #region Render Functions
@@ -174,12 +244,22 @@ function TextField({
                 animate={{ top: currentValue ? '0px' : '37px' }}
                 className={localStyles.labelWrapper}
             >
-                <label {...LabelProps} htmlFor={fieldKey}>
+                <label
+                    {...LabelProps}
+                    htmlFor={fieldKey}
+                    style={{
+                        ...getInputLabelStyle(),
+                        ...(LabelProps?.style || {}),
+                    }}
+                >
                     {label}
                     {required ? ' *' : null}
                 </label>
             </motion.div>
-            <div className={localStyles.inputWrapper}>
+            <div
+                className={localStyles.inputWrapper}
+                style={getInputWrapperStyle()}
+            >
                 {
                     multiline
                         ? (
@@ -264,6 +344,11 @@ TextField.propTypes = {
      */
     disabled:           PropTypes.bool,
     /**
+     * The color to use for the text field. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
+     */
+    color:              PropTypes.string,
+    /**
      * Flag indicating whether this TextField should support multiline input or not.
      * If this is set to true, the Tiptap editor will be used instead of a standard
      * `input` element. This also means the value stored in the form will be in JSON format,
@@ -296,6 +381,7 @@ TextField.defaultProps = {
     required:     false,
     disabled:     false,
     multiline:    false,
+    color:        'primary',
 };
 
 export default TextField;

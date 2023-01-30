@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
-import { RadioGroupContext } from '@contexts';
+import { RadioGroupContext, Theme } from '@contexts';
 import localStyles from './radio.module.scss';
 
 /**
@@ -15,6 +15,11 @@ function Radio({
     ...passThruProps
 }) {
     // #region Context
+
+    /**
+     * Use the theme from context.
+     */
+    const theme = useContext(Theme);
 
     /**
      * Use the radio group context.
@@ -34,7 +39,7 @@ function Radio({
     /**
      * Various colors for the radio button.
      */
-    const baseColor = Color(color);
+    const baseColor = Color(theme[color] || color);
 
     // #endregion
 

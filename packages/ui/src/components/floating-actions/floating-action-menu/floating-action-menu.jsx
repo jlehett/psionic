@@ -6,7 +6,7 @@ import Color from 'color';
 import { motion, AnimatePresence } from 'framer-motion';
 import Menu from '@assets/menu.svg';
 import Close from '@assets/close.svg';
-import { FloatingActionMenuOpen, SetFloatingActionMenuOpen } from '@contexts';
+import { FloatingActionMenuOpen, SetFloatingActionMenuOpen, Theme } from '@contexts';
 import { usePseudoSelectors } from '@hooks/interactions';
 import {
     getContrastingBWColor,
@@ -27,24 +27,12 @@ export function FloatingActionMenu({
     // Pass-thru props
     ...passThruProps
 }) {
-    // #region Constants
-
-    /**
-     * Various colors for the floating action menu.
-     */
-    const baseOpenedColor = Color(openedColor);
-    const baseClosedColor = Color(closedColor);
-    const baseOpenedColorLighter = getHoveredColor(baseOpenedColor);
-    const baseClosedColorLighter = getHoveredColor(baseClosedColor);
-
-    /**
-     * The duration of the open / close animation.
-     */
-    const animationDuration = 0.2;
-
-    // #endregion
-
     // #region Context
+
+    /**
+     * Use the theme from context.
+     */
+    const theme = useContext(Theme);
 
     /**
      * Use the floating action menu open state from context.
@@ -55,6 +43,23 @@ export function FloatingActionMenu({
      * Use the set floating action menu open API from context.
      */
     const setMenuOpen = useContext(SetFloatingActionMenuOpen);
+
+    // #endregion
+
+    // #region Constants
+
+    /**
+     * Various colors for the floating action menu.
+     */
+    const baseOpenedColor = Color(theme[openedColor] || openedColor);
+    const baseClosedColor = Color(theme[closedColor] || closedColor);
+    const baseOpenedColorLighter = getHoveredColor(baseOpenedColor);
+    const baseClosedColorLighter = getHoveredColor(baseClosedColor);
+
+    /**
+     * The duration of the open / close animation.
+     */
+    const animationDuration = 0.2;
 
     // #endregion
 
@@ -263,11 +268,13 @@ FloatingActionMenu.propTypes = {
     /**
      * The color to use for the background of the button when it is in an
      * opened state.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
     openedColor: PropTypes.string,
     /**
      * The color to use for the background of the button when it is in a
      * closed state.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
     closedColor: PropTypes.string,
     /**
@@ -293,7 +300,7 @@ FloatingActionMenu.propTypes = {
 FloatingActionMenu.defaultProps = {
     MenuIcon:    Menu,
     openedColor: '#0D0E12',
-    closedColor: '#0072E5',
+    closedColor: 'primary',
 };
 
 /**

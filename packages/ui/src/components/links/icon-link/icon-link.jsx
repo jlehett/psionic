@@ -1,7 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Color from 'color';
+import { Theme } from '@contexts';
 import { usePseudoSelectors } from '@hooks/interactions';
 import localStyles from './icon-link.module.scss';
 
@@ -18,12 +19,21 @@ function IconLink({
     // Pass-thru props
     ...passThruProps
 }) {
+    // #region Context
+
+    /**
+     * Use the theme from context.
+     */
+    const theme = useContext(Theme);
+
+    // #endregion
+
     // #region Constants
 
     /**
      * Various colors for the icon link.
      */
-    const baseColor = Color(color);
+    const baseColor = Color(theme[color] || color);
     const inactiveColor = Color('#757575');
 
     // #endregion
@@ -69,7 +79,11 @@ function IconLink({
      */
     return (
         <LinkComponent
-            className={localStyles.iconLink}
+            {...passThruProps}
+            className={`
+                ${localStyles.iconLink}
+                ${passThruProps?.iconLink}
+            `}
             {...pseudoSelectorProps}
             {...linkComponentProps}
         >
@@ -113,6 +127,7 @@ IconLink.propTypes = {
     href:               PropTypes.string,
     /**
      * The color to use for the icon link. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
     color:              PropTypes.string,
     /**
@@ -126,7 +141,7 @@ IconLink.propTypes = {
 };
 
 IconLink.defaultProps = {
-    color: '#0072E5',
+    color: 'primary',
 };
 
 export default IconLink;
