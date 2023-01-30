@@ -31,7 +31,7 @@ export default {
             name:     'index',
         },
         rollupOptions: {
-            external: ['react', 'react-dom', 'react-docgen'],
+            external: ['react', 'react-dom', 'react-docgen', 'react-router', 'react-router-dom'],
         },
         modulePreload: false,
     },
