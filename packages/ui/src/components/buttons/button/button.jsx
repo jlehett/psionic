@@ -164,10 +164,9 @@ function Button({
                 })();
 
                 return {
-                    outline: 'none',
-                    border:  'none',
+                    border: 'none',
                     background,
-                    color:   onClickRunning || disabled || getIsDisabledBecauseFormSubmitting() ? '#888888' : colorToUse,
+                    color:  onClickRunning || disabled || getIsDisabledBecauseFormSubmitting() ? '#888888' : colorToUse,
                 };
             case 'contained':
                 background = (() => {
@@ -187,10 +186,9 @@ function Button({
                 })();
 
                 return {
-                    outline: 'none',
-                    border:  'none',
+                    border: 'none',
                     background,
-                    color:   onClickRunning || disabled || getIsDisabledBecauseFormSubmitting() ? '#444444' : textColor,
+                    color:  onClickRunning || disabled || getIsDisabledBecauseFormSubmitting() ? '#444444' : textColor,
                 };
             case 'outlined':
                 background = (() => {
@@ -206,7 +204,6 @@ function Button({
                 })();
 
                 return {
-                    outline:     'none',
                     borderWidth: '1px',
                     borderStyle: 'solid',
                     borderColor: colorToUse,
