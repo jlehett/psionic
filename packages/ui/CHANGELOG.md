@@ -1,5 +1,11 @@
 # @psionic/ui
 
+## 1.1.2
+
+<i>January 30, 2023</i>
+
+* 🛠️ Add `react-router` and `react-router-dom` to the rollup `externals` to fix an issue where the `IconLink` component was causing crashes.
+
 ## 1.1.1
 
 <i>January 30, 2023</i>
