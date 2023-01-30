@@ -1,5 +1,12 @@
 # @psionic/ui
 
+## 1.2.0
+
+<i>January 30, 2023</i>
+
+* 🚀 Updated the `Button` component to support tracking a parent form's `submitting` state in order to easily disable buttons while a form is submitting.
+* 🛠️ Fixed accessibility styling to not use the `!important` flag.
+
 ## 1.1.2
 
 <i>January 30, 2023</i>
