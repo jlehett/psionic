@@ -8,7 +8,7 @@ import { Button } from '../dist';
 const delayTime = 1000;
 
 test('tracks the "running" state properly whenever an async `onClick` callback is passed and `allowMultipleClicks` is set to `false`', async () => {
-    const ButtonWrapper = () => {
+    function ButtonWrapper() {
         return (
             <Button
                 onClick={async () => {
@@ -19,9 +19,9 @@ test('tracks the "running" state properly whenever an async `onClick` callback i
                 Click Me
             </Button>
         );
-    };
+    }
 
-    render(<ButtonWrapper/>);
+    render(<ButtonWrapper />);
 
     const button = screen.getByTestId('button');
 
@@ -39,7 +39,7 @@ test('tracks the "running" state properly whenever an async `onClick` callback i
 });
 
 test('Does not track the "running" state for async `onClick` callbacks if `allowMultipleClicks` is set to `true`', async () => {
-    const ButtonWrapper = () => {
+    function ButtonWrapper() {
         return (
             <Button
                 onClick={async () => {
@@ -51,9 +51,9 @@ test('Does not track the "running" state for async `onClick` callbacks if `allow
                 Click Me
             </Button>
         );
-    };
+    }
 
-    render(<ButtonWrapper/>);
+    render(<ButtonWrapper />);
 
     const button = screen.getByTestId('button');
 
@@ -73,7 +73,7 @@ test('Does not track the "running" state for async `onClick` callbacks if `allow
 test('Users cannot click buttons while they are in the "running" state.', async () => {
     let counter = 0;
 
-    const ButtonWrapper = () => {
+    function ButtonWrapper() {
         return (
             <Button
                 onClick={async () => {
@@ -85,9 +85,9 @@ test('Users cannot click buttons while they are in the "running" state.', async 
                 Click Me
             </Button>
         );
-    };
+    }
 
-    render(<ButtonWrapper/>);
+    render(<ButtonWrapper />);
 
     const button = screen.getByTestId('button');
 
