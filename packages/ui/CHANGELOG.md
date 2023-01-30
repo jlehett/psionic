@@ -1,5 +1,11 @@
 # @psionic/ui
 
+## 1.1.1
+
+<i>January 30, 2023</i>
+
+* 🛠️ Fix missing exports of some components.
+
 ## 1.1.0
 
 <i>January 29, 2023</i>
