@@ -337,6 +337,13 @@ TextField.propTypes = {
     /**
      * Custom validation function that runs anytime the field updates, and displays
      * the returned string as a helper message underneath the text field.
+     *
+     * This function should take in 2 args:
+     * - `string` The new value of the field
+     * - `Object` The form data object representing the form's current state before the most recent update
+     *
+     * This function should return either a string to display as a helper message (which also indicates
+     * that the validation failed), or null (which indicates that the validation passed).
      */
     validator:          PropTypes.func,
     /**

@@ -182,7 +182,7 @@ export default function (
         if (required && !value) {
             return requiredMessage || 'This field is required';
         } if (validator) {
-            return validator(value);
+            return validator(value, formData);
         }
         return null;
     };

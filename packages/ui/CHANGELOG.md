@@ -1,5 +1,11 @@
 # @psionic/ui
 
+## 1.3.0
+
+<i>January 30, 2023</i>
+
+* 🚀 The `TextField` component's `validator` callback prop now takes in an additional argument representing the form's current data.
+
 ## 1.2.2
 
 <i>January 30, 2023</i>

@@ -279,7 +279,7 @@ Validator.args = {
     label:     'Password',
     type:      'password',
     required:  true,
-    validator: (value) => {
+    validator: (value, formData) => {
         if (value.length < 8) {
             return 'Password must contain at least 8 characters';
         }
