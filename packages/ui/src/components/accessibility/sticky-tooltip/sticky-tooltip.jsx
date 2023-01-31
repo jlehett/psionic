@@ -1,6 +1,7 @@
 import {
     useState, useRef, useMemo, useEffect,
 } from 'react';
+import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import {
     useMousePos,
@@ -160,22 +161,30 @@ function StickyTooltip({
             >
                 {children}
             </div>
-            <div
-                ref={tooltipRef}
-                data-is-hovered={tooltipDisplayed}
-                {...passThruProps}
-                className={`
-                    ${localStyles.tooltip}
-                    ${passThruProps?.className}
-                `}
-                style={{
-                    left: `${tooltipLeftPos}px`,
-                    top:  `${tooltipTopPos}px`,
-                    ...(passThruProps?.style || {}),
-                }}
-            >
-                {content}
-            </div>
+            {
+                createPortal(
+                    (
+                        <div
+                            ref={tooltipRef}
+                            data-is-hovered={tooltipDisplayed}
+                            {...passThruProps}
+                            className={`
+                                ${localStyles.tooltip}
+                                ${passThruProps?.className}
+                            `}
+                            style={{
+                                left: `${tooltipLeftPos}px`,
+                                top:  `${tooltipTopPos}px`,
+                                ...(passThruProps?.style || {}),
+                            }}
+                        >
+                            {content}
+                        </div>
+                    ),
+                    document.body,
+                )
+            }
+
         </>
     );
 

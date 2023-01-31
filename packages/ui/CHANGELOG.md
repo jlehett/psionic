@@ -1,5 +1,10 @@
 # @psionic/ui
 
+## 1.3.1
+
+* 🛠️ Update the `StickyTooltip` component to utilize ReactDOM portal's to render the tooltip in a way that is less likely to cause
+issues in parent components.
+
 ## 1.3.0
 
 <i>January 30, 2023</i>

@@ -1,15 +1,26 @@
 @import "@styles/colors.scss";
 @import "@styles/common-mixins.scss";
 
+.wrapper {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
 .dialog {
     @include hideScrollbar;
 
-    position: fixed;
+    box-sizing: border-box;
+    position: relative;
     overflow: scroll;
     background: white;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     border-radius: 4px;
     z-index: 9999999;
     font-family: Roboto;

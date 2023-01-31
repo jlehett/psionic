@@ -16,6 +16,7 @@
     padding: 4px 8px;
     border-radius: 4px;
     font-family: Roboto;
+    z-index: 999999999999;
 
     &[data-is-hovered="true"] {
         opacity: 1;

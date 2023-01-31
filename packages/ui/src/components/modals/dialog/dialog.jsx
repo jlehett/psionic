@@ -150,7 +150,7 @@ function Dialog({
                 isOpen
                     ? (
                         <FocusTrap>
-                            <div>
+                            <div className={localStyles.wrapper}>
                                 <motion.div
                                     className={localStyles.overlay}
                                     variants={variants.backdrop}
