@@ -1,5 +1,11 @@
 # @psionic/ui
 
+## 1.3.4
+
+<i>January 31, 2023</i>
+
+* 🛠️ Update the `Dialog` component to used `fixed` positioning instead of `absolute`. This should fix an issue where the dialog would not be centered on the screen when the page was scrolled down.
+
 ## 1.3.3
 
 <i>January 31, 2023</i>

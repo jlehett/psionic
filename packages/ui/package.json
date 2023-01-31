@@ -1,6 +1,6 @@
 {
     "name": "@psionic/ui",
-    "version": "1.3.2",
+    "version": "1.3.3",
     "description": "A set of highly-customizable UI solutions built with SCSS and React.",
     "main": "dist/index.js",
     "directories": {
