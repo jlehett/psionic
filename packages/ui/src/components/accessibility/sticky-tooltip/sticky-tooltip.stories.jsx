@@ -17,6 +17,7 @@ setAsCategory(argTypes, 'UI', [
     'marginY',
 ]);
 setAsCategory(argTypes, 'Pass Thru Props', [
+    'TooltipProps',
     '...passThruProps',
 ]);
 setAsDisabled(argTypes, [

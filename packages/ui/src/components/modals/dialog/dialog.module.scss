@@ -17,7 +17,6 @@
 .dialog {
     @include hideScrollbar;
 
-    box-sizing: border-box;
     position: relative;
     overflow: scroll;
     background: white;

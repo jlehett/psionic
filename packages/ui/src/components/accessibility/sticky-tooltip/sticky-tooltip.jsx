@@ -26,6 +26,7 @@ function StickyTooltip({
     marginX,
     marginY,
     // Pass-thru Props
+    TooltipProps,
     ...passThruProps
 }) {
     // #region Constants
@@ -156,7 +157,11 @@ function StickyTooltip({
     return (
         <>
             <div
-                className={localStyles.wrapper}
+                {...passThruProps}
+                className={`
+                    ${localStyles.wrapper}
+                    ${passThruProps?.className}
+                `}
                 {...pseudoSelectorProps}
             >
                 {children}
@@ -167,15 +172,15 @@ function StickyTooltip({
                         <div
                             ref={tooltipRef}
                             data-is-hovered={tooltipDisplayed}
-                            {...passThruProps}
+                            {...TooltipProps}
                             className={`
                                 ${localStyles.tooltip}
-                                ${passThruProps?.className}
+                                ${TooltipProps?.className}
                             `}
                             style={{
                                 left: `${tooltipLeftPos}px`,
                                 top:  `${tooltipTopPos}px`,
-                                ...(passThruProps?.style || {}),
+                                ...(TooltipProps?.style || {}),
                             }}
                         >
                             {content}
@@ -234,9 +239,16 @@ StickyTooltip.propTypes = {
      */
     marginY:            PropTypes.number,
     /**
-     * Any additional props to pass through to the internal div used for the
-     * sticky tooltip itself. The `content` gets rendered as a direct child of the
-     * HTML element these props are spread to.
+     * Any additional props to pass through to the internal div used for the sticky tooltip itself. The `content` gets
+     * rendered as a direct child of the HTML element these props are spread to.
+     *
+     * This is not a prop of `passThruProps` -- this is simply a representation of any additional props passed to the
+     * `StickyTooltip` component that aren't covered above.
+     */
+    TooltipProps:       PropTypes.any,
+    /**
+     * Any additional props to pass through to the wrapping div surrounding the element that owns the tooltip itself.
+     * The `content` gets rendered as a direct child of the HTML element these props are spread to.
      *
      * This is not a prop of `passThruProps` -- this is simply a representation of any
      * additional props passed to the `StickyTooltip` component that aren't covered above.

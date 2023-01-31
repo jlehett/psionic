@@ -1,6 +1,14 @@
 # @psionic/ui
 
+## 1.3.2
+
+<i>January 30, 2023</i>
+
+* 🛠️ Added a separate `TooltipProps` prop for customizing the `StickyTooltip` component. `...passThruProps` will now be passed to the internally wrapped component which owns the tooltip, instead.
+
 ## 1.3.1
+
+<i>January 30, 2023</i>
 
 * 🛠️ Update the `StickyTooltip` component to utilize ReactDOM portal's to render the tooltip in a way that is less likely to cause
 issues in parent components.
