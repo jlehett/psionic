@@ -1,5 +1,11 @@
 # @psionic/ui
 
+## 1.3.3
+
+<i>January 31, 2023</i>
+
+* 🛠️ Update the `Dialog` component to not reset its height back to 0 whenever the height of its content changes. This was causing the dialog to jump around when the content was updated.
+
 ## 1.3.2
 
 <i>January 30, 2023</i>

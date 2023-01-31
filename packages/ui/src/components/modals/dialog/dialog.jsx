@@ -43,6 +43,11 @@ function Dialog({
      */
     const [childWidth, setChildWidth] = useState(null);
 
+    /**
+     * Track the visible state.
+     */
+    const [visibleState, setVisibleState] = useState(isOpen ? 'visible' : 'hidden');
+
     // #endregion
 
     // #region Effects
@@ -60,6 +65,29 @@ function Dialog({
             setChildWidth(newChildWidth);
         }
     });
+
+    /**
+     * When the `visibleState` updates to "visible", start a timeout to set the state to "staticVisible".
+     */
+    useEffect(() => {
+        if (visibleState === 'visible') {
+            const timeout = setTimeout(() => {
+                setVisibleState('staticVisible');
+            }, 500);
+            return () => clearTimeout(timeout);
+        }
+    }, [visibleState]);
+
+    /**
+     * When the `isOpen` prop changes, update the `visibleState` state.
+     */
+    useEffect(() => {
+        if (isOpen) {
+            setVisibleState('visible');
+        } else {
+            setVisibleState('hidden');
+        }
+    }, [isOpen]);
 
     // #endregion
 
@@ -95,6 +123,12 @@ function Dialog({
                     duration: 0.2,
                 },
             },
+            staticVisible: {
+                opacity:    0.4,
+                transition: {
+                    duration: 0.0,
+                },
+            },
         },
         modal: {
             hidden: {
@@ -112,6 +146,14 @@ function Dialog({
                 width:      ['20px', `${childWidth || 20}px`, `${childWidth || 20}px`],
                 transition: {
                     duration: 0.5,
+                },
+            },
+            staticVisible: {
+                opacity:    1,
+                height:     `${childHeight || 20}px`,
+                width:      `${childWidth || 20}px`,
+                transition: {
+                    duration: 0.25,
                 },
             },
         },
@@ -132,6 +174,13 @@ function Dialog({
                 transition: {
                     delay:    0.4,
                     duration: 0.35,
+                },
+            },
+            staticVisible: {
+                opacity:    1,
+                scale:      1,
+                transition: {
+                    duration: 0.0,
                 },
             },
         },
@@ -155,7 +204,7 @@ function Dialog({
                                     className={localStyles.overlay}
                                     variants={variants.backdrop}
                                     initial="hidden"
-                                    animate="visible"
+                                    animate={visibleState}
                                     exit="hidden"
                                     onClick={() => (closeOnClickOutside ? setIsOpen(false) : null)}
                                 />
@@ -167,7 +216,7 @@ function Dialog({
                                     `}
                                     variants={variants.modal}
                                     initial="hidden"
-                                    animate="visible"
+                                    animate={visibleState}
                                     exit="hidden"
                                     tabIndex={-1}
                                     role="dialog"
