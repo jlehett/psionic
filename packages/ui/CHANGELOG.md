@@ -1,5 +1,11 @@
 # @psionic/ui
 
+## 1.3.5
+
+<i>February 2, 2023</i>
+
+* 🛠️ Fix issue with the `Dialog` component occasionally overwriting the padding of its content.
+
 ## 1.3.4
 
 <i>January 31, 2023</i>
