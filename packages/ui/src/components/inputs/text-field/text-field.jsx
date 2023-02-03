@@ -71,7 +71,7 @@ function TextField({
     /**
      * Track the pseudo selectors for the text field.
      */
-    const [pseudoSelectorProps, pseudoSelectorStates] = usePseudoSelectors();
+    const [pseudoSelectorProps, pseudoSelectorStates] = usePseudoSelectors(true);
 
     // #endregion
 

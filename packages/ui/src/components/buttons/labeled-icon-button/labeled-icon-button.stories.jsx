@@ -3,7 +3,7 @@ import {
     setAsDisabled,
 } from '@unifire-js/storybook-utils';
 import Favorite from '@assets/favorite.svg';
-import IconLink from './icon-link';
+import LabeledIconButton from './labeled-icon-button';
 
 // Construct the argTypes object
 const argTypes = {};
@@ -14,8 +14,7 @@ setAsCategory(argTypes, 'UI', [
     'inactiveColor',
 ]);
 setAsCategory(argTypes, 'Controls', [
-    'href',
-    'to',
+    'onClick',
 ]);
 setAsCategory(argTypes, 'Pass Thru Props', [
     '...passThruProps',
@@ -23,8 +22,8 @@ setAsCategory(argTypes, 'Pass Thru Props', [
 
 // Storybook default export
 export default {
-    title:     'links/IconLink',
-    component: IconLink,
+    title:     'buttons/LabeledIconButton',
+    component: LabeledIconButton,
     argTypes,
 };
 
@@ -35,7 +34,7 @@ function Template(args) {
                 width: 'fit-content', padding: '20px', margin: '40px', background: 'white', borderRadius: '8px',
             }}
         >
-            <IconLink {...args} />
+            <LabeledIconButton {...args} />
         </div>
     );
 }
@@ -45,7 +44,7 @@ export const Basic = Template.bind({});
 Basic.args = {
     SvgIcon: Favorite,
     label:   'Favorites',
-    to:      '/?path=/story/links-iconlink--colored',
+    onClick: () => console.log('Clicked!'),
 };
 
 // Colored Demo
@@ -53,15 +52,7 @@ export const Colored = Template.bind({});
 Colored.args = {
     SvgIcon:       Favorite,
     label:         'Favorites',
-    to:            '/?path=/story/links-iconlink--basic',
+    onClick:       () => console.log('Clicked!'),
     color:         'red',
     inactiveColor: 'blue',
-};
-
-// href Demo
-export const Href = Template.bind({});
-Href.args = {
-    SvgIcon: Favorite,
-    label:   'Favorites',
-    href:    'https://www.google.com',
 };

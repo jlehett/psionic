@@ -1,20 +1,17 @@
-import { useMemo, useContext } from 'react';
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import Color from 'color';
 import { Theme } from '@contexts';
 import { usePseudoSelectors } from '@hooks/interactions';
-import localStyles from './icon-link.module.scss';
+import localStyles from './labeled-icon-button.module.scss';
 
 /**
- * A link that is represented by both an SVG icon and a label. This link
- * can be used in either a relative router link or an absolute link.
+ * Replace this with a comment describing the component.
  */
-function IconLink({
+function LabeledIconButton({
     SvgIcon,
     label,
-    to,
-    href,
+    onClick,
     color,
     inactiveColor,
     // Pass-thru props
@@ -32,7 +29,7 @@ function IconLink({
     // #region Constants
 
     /**
-     * Various colors for the icon link.
+     * Various colors for the icon button.
      */
     const baseColor = Color(theme[color] || color);
     const baseInactiveColor = Color(theme[inactiveColor] || inactiveColor);
@@ -42,30 +39,13 @@ function IconLink({
     // #region State
 
     /**
-     * Use the pseudo selectors for the icon link.
+     * Use the pseudo selectors for the icon button.
      */
     const [pseudoSelectorProps, pseudoSelectorStates] = usePseudoSelectors();
 
     // #endregion
 
     // #region Effects
-
-    // #endregion
-
-    // #region Memoized Values
-
-    /**
-     * Memoize the link component to use, and the nav prop to pass to it, based on whether a `to` prop was
-     * passed or an `href` prop was passed.
-     */
-    const [LinkComponent, linkComponentProps] = useMemo(() => {
-        if (to) {
-            return [Link, { to }];
-        } if (href) {
-            return ['a', { href }];
-        }
-        throw new Error('Either a `to` or `href` prop must be passed to the `IconLink` component.');
-    }, [to, href]);
 
     // #endregion
 
@@ -79,14 +59,15 @@ function IconLink({
      * Main render.
      */
     return (
-        <LinkComponent
+        <button
+            type="button"
+            onClick={onClick}
             {...passThruProps}
-            className={`
-                ${localStyles.iconLink}
-                ${passThruProps?.iconLink}
-            `}
             {...pseudoSelectorProps}
-            {...linkComponentProps}
+            className={`
+                ${localStyles.labeledIconButton}
+                ${passThruProps?.className}
+            `}
         >
             <SvgIcon
                 style={{
@@ -100,56 +81,48 @@ function IconLink({
             >
                 {label}
             </span>
-        </LinkComponent>
+        </button>
     );
 
     // #endregion
 }
 
-IconLink.propTypes = {
+LabeledIconButton.propTypes = {
     /**
-     * The SVG icon to use for the icon link.
+     * The SVG icon to use for the labeled icon button.
      */
     SvgIcon:            PropTypes.func.isRequired,
     /**
-     * The label to display for the icon link.
+     * The label to display for the labeled icon button.
      */
     label:              PropTypes.string.isRequired,
     /**
-     * The relative URL to navigate to when the icon link is clicked. This prop is mutually exclusive with the
-     * `href` prop. If neither prop is passed, an error will be thrown.
-     * See https://reactrouter.com/web/api/Link
-     */
-    to:                 PropTypes.string,
-    /**
-     * The absolute URL to navigate to when the icon link is clicked. This prop is mutually exclusive with the
-     * `to` prop. If neither prop is passed, an error will be thrown.
-     */
-    href:               PropTypes.string,
-    /**
-     * The color to use for the icon link. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
+     * The color to use for the labeled icon button. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
      * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
     color:              PropTypes.string,
     /**
-     * The color to use for the icon link when it is inactive.
+     * The callback function to call when the labeled icon button is clicked.
+     */
+    onClick:            PropTypes.func.isRequired,
+    /**
+     * The color to use for the labeled icon button when it is inactive.
      * Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
      * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
     inactiveColor:      PropTypes.string,
     /**
-     * Any additional props to pass to the internal `Link` or `a` element (depending on whether the `to` or `href` prop
-     * is used, respectively).
+     * Any additional props to pass to the internal `button` element.
      *
      * This is not a prop of `passThruProps` -- this is simply a representation of any additional props spread to
-     * the `IconLink` component.
+     * the `LabeledIconButton` component.
      */
     '...passThruProps': PropTypes.any,
 };
 
-IconLink.defaultProps = {
+LabeledIconButton.defaultProps = {
     color:         'primary',
     inactiveColor: '#757575',
 };
 
-export default IconLink;
+export default LabeledIconButton;

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useFocusVisible } from 'react-aria';
 
 // #region Typedefs
 
@@ -36,13 +37,15 @@ import { useState } from 'react';
 
 /**
  * Hook for tracking the pseudo selector states of an HTML element.
+ * @param {boolean} isTextInput Flag indicating whether the HTML element is a text input
  * @returns {[PseudoSelectorProps, PseudoSelectorStates]} The hook API
  */
-export default function () {
+export default function (isTextInput) {
     // Track all of the pseudo selector states in React state
     const [isHovered, setIsHovered] = useState(false);
-    const [isFocused, setIsFocused] = useState(false);
     const [isPressed, setIsPressed] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
+    const { isFocusVisible } = useFocusVisible(isTextInput);
 
     // Return the hook API
     return [
@@ -59,7 +62,7 @@ export default function () {
         },
         {
             isHovered,
-            isFocused,
+            isFocused: isTextInput ? isFocused : isFocusVisible && isFocused,
             isPressed,
         },
     ];

@@ -2,12 +2,16 @@
 
 $transitionDuration: 0.2s;
 
-.iconLink {
+.labeledIconButton {
     text-decoration: none;
     font-family: Roboto;
     align-items: center;
     display: flex;
     gap: 8px;
+    background: unset;
+    outline: unset;
+    border: unset;
+    cursor: pointer;
 
     svg {
         transition: fill $transitionDuration;
