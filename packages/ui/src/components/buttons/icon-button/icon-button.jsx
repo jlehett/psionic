@@ -64,9 +64,9 @@ function IconButton({
     /**
      * Augment the `onClick` function.
      */
-    const augmentedOnClick = async () => {
+    const augmentedOnClick = async (event) => {
         setOnClickRunning(true);
-        await onClick?.();
+        await onClick?.(event);
         setOnClickRunning(false);
     };
 

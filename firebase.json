@@ -2,7 +2,7 @@
     "hosting": [
         {
             "target": "psionic-7d025",
-            "public": "public/docs/psionic/0.0.1",
+            "public": "public/docs/psionic/0.1.0",
             "rewrites": [
                 {
                     "source": "**",
