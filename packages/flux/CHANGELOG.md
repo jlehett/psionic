@@ -1,5 +1,11 @@
 # @psionic/flux
 
+## 0.1.0
+
+<i>February 3, 2023</i>
+
+* 🚀 Added a new `autofetchOnStale` config property to the `FluxCache` class / constructor. When set to `true`, the cache will automatically fetch new data when the cache is marked as stale.
+
 ## 0.0.6
 
 <i>December 17, 2022</i>

@@ -72,6 +72,13 @@ class FluxCache {
     #staleAfter;
 
     /**
+     * Flag indicating whether or not the cache should automatically fetch new data when the cache gets marked as stale.
+     * @private
+     * @type {boolean}
+     */
+    #autofetchOnStale;
+
+    /**
      * The function to call to cancel the active stale setter timer.
      * @private
      * @type {function}
@@ -92,13 +99,16 @@ class FluxCache {
      * data does not already exist in the cache
      * @param {Number} [config.staleAfter] The amount of time to wait before declaring the data in the cache as stale; if this value is
      * not passed, then the cache will not be marked stale in response to the age of the data in the cache
+     * @param {boolean} [config.autofetchOnStale] Whether or not to automatically fetch new data when the cache gets marked as stale
      */
     constructor({
         id,
         fetch,
         staleAfter,
+        autofetchOnStale,
     }) {
         this.#id = id;
+        this.#autofetchOnStale = autofetchOnStale;
         // We want to make sure this fetch function is async so we can treat all potential fetch operations identically
         this.#fetch = async () => {
             return fetch();
@@ -457,7 +467,8 @@ class FluxCache {
     }
 
     /**
-     * Marks the cache as stale, while canceling any stale timer that may have otherwise been set.
+     * Marks the cache as stale, while canceling any stale timer that may have otherwise been set. If the `autofetchOnStale` flag
+     * is set to true, this will also initiate a new fetch of the data.
      * @private
      */
     #markStale() {
@@ -477,6 +488,11 @@ class FluxCache {
 
         // Emit the stale data event
         emit(`_FLUX_${this.#id}-markedStale`);
+
+        // If the `autofetchOnStale` flag is enabled, start a new fetch of the data
+        if (this.#autofetchOnStale) {
+            this.get();
+        }
     }
 
     /**
@@ -580,6 +596,8 @@ class FluxCache {
  * Flux objects' values change or become marked as stale, then this cache will also become marked as stale
  * @param {Number} [config.staleAfter] The amount of time to wait before declaring the data in the cache as stale; if this value is
  * not passed, then the cache will not be marked stale in response to the age of the data in the cache
+ * @param {boolean} [config.autofetchOnStale=false] If set to true, then when the cache is marked as stale, the cache will automatically
+ * fetch new data to replace the stale data
  * @returns {FluxState | FluxCache} The created Flux object, or the old Flux object with the given ID
  */
 function createFluxCache({
@@ -587,12 +605,14 @@ function createFluxCache({
     fetch,
     dependsOn=[],
     staleAfter,
+    autofetchOnStale=false,
 }) {
     return FluxManager.getOrCreateFluxObject(
         new FluxCache({
             id,
             fetch,
             staleAfter,
+            autofetchOnStale,
         }),
         dependsOn,
     );

@@ -300,4 +300,39 @@ describe('FluxCache', () => {
         expect(readings).to.deep.equal([{ name: 'Roni' }, { name: 'Roni' }]);
     });
 
+    it('is able to configure an autofetch on stale behavior', async () => {
+        let numTimesFetched = 0;
+
+        const userIDState = createFluxState({
+            id: 'userIDState',
+            value: 'John',
+        });
+
+        const userCache = createFluxCache({
+            id: 'userCache',
+            fetch: async () => {
+                numTimesFetched += 1;
+                return { name: 'John' };
+            },
+            dependsOn: [userIDState],
+            autofetchOnStale: true,
+        });
+
+        await delay(delayTime);
+
+        userIDState.set('Test');
+
+        await delay(delayTime);
+
+        userIDState.set('Test Again');
+
+        await delay(delayTime);
+
+        userCache.setStale(true);
+
+        await delay(delayTime);
+
+        expect(numTimesFetched).to.equal(3);
+    });
+
 });
