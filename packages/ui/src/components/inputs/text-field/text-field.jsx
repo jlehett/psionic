@@ -28,6 +28,7 @@ function TextField({
     disabled,
     multiline,
     color,
+    darkMode,
     // Specific Component Props
     InputProps,
     LabelProps,
@@ -211,11 +212,11 @@ function TextField({
         }
         if (disabled) {
             return {
-                color: 'rgba(0, 0, 0, 0.4)',
+                color: darkMode ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.4)',
             };
         }
         return {
-            color: 'rgba(0, 0, 0, 0.6)',
+            color: darkMode ? 'rgba(255, 255, 255, 0.6' : 'rgba(0, 0, 0, 0.6)',
         };
     };
 
@@ -259,6 +260,7 @@ function TextField({
             <div
                 className={localStyles.inputWrapper}
                 style={getInputWrapperStyle()}
+                data-is-dark-mode={darkMode}
             >
                 {
                     multiline
@@ -365,6 +367,10 @@ TextField.propTypes = {
      */
     multiline:          PropTypes.bool,
     /**
+     * Flag indicating whether dark mode should be used or not.
+     */
+    darkMode:           PropTypes.bool,
+    /**
      * Any props to pass to the internal `input` HTML element.
      */
     InputProps:         PropTypes.object,
@@ -389,6 +395,7 @@ TextField.defaultProps = {
     disabled:     false,
     multiline:    false,
     color:        'primary',
+    darkMode:     false,
 };
 
 export default TextField;

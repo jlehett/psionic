@@ -20,11 +20,26 @@
         border-radius: 4px;
         width: 100%;
         box-sizing: border-box;
-        border: 1px solid rgba(0, 0, 0, 0.25);
-        background: white;
         display: flex;
         flex-direction: row;
         align-items: center;
+
+        &[data-is-dark-mode="true"] {
+            background: unset;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+
+            input {
+                color: white;
+            }
+        }
+        &[data-is-dark-mode="false"] {
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.25);
+
+            input {
+                color: black;
+            }
+        }
 
         .textBlock {
             position: relative;
@@ -103,10 +118,21 @@
         .inputWrapper {
             border: 1px solid rbga(0, 0, 0, 0.1);
             box-shadow: none;
-            background: #ebebeb;
 
-            input {
-                color: rgba(0, 0, 0, 0.4);
+            &[data-is-dark-mode="true"] {
+                background: #151515;
+
+                input {
+                    color: rgba(255, 255, 255, 0.4);
+                }
+            }
+
+            &[data-is-dark-mode="false"] {
+                background: #ebebeb;
+
+                input {
+                    color: rgba(0, 0, 0, 0.4);
+                }
             }
         }
 

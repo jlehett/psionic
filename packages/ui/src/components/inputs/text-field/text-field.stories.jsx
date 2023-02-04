@@ -20,6 +20,7 @@ const argTypes = {};
 setAsCategory(argTypes, 'UI', [
     'label',
     'color',
+    'darkMode',
 ]);
 setAsCategory(argTypes, 'Controls', [
     'fieldKey',
@@ -306,4 +307,11 @@ export const Colored = Template.bind({});
 Colored.args = {
     label: 'Email',
     color: '#00aa00',
+};
+
+// Dark Mode Demo
+export const DarkMode = Template.bind({});
+DarkMode.args = {
+    label:    'Email',
+    darkMode: true,
 };

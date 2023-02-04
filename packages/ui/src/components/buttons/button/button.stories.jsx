@@ -14,6 +14,7 @@ setAsCategory(argTypes, 'UI', [
     'rounded',
     'width',
     'height',
+    'darkMode',
 ]);
 setAsCategory(argTypes, 'Controls', [
     'type',
@@ -39,7 +40,7 @@ export default {
 function Template(args) {
     return (
         <div style={{
-            margin: '40px', padding: '20px', background: '#fff', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 'fit-content',
+            margin: '40px', padding: '20px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 'fit-content',
         }}
         >
             <Button
@@ -84,4 +85,12 @@ SetDimensions.args = {
     style:    {
         fontSize: '32px',
     },
+};
+
+// Dark Mode Demo
+export const DarkMode = Template.bind({});
+DarkMode.args = {
+    children: 'Submit',
+    variant:  'contained',
+    darkMode: true,
 };
