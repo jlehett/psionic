@@ -1,4 +1,6 @@
-import { useContext, useEffect, useState } from 'react';
+import {
+    useContext, useEffect, useState, useImperativeHandle, forwardRef,
+} from 'react';
 import PropTypes from 'prop-types';
 import { cloneDeep } from 'lodash';
 import {
@@ -19,13 +21,13 @@ import localStyles from './form.module.scss';
  * The form can be submitted like a normal React HTML form with a
  * `<button type="submit">` HTML element.
  */
-export function Form({
+export const Form = forwardRef(({
     children,
     onSubmit,
     onChange,
     // Pass-thru Props
     ...passThruProps
-}) {
+}, ref) => {
     // #region Constants
 
     // #endregion
@@ -61,6 +63,21 @@ export function Form({
     useEffect(() => {
         onChange?.(cloneDeep(formData));
     }, [formData]);
+
+    // #endregion
+
+    // #region Imperative Handle
+
+    /**
+     * Create an imperative handle for updating the form data directly.
+     */
+    useImperativeHandle(
+        ref,
+        () => ({
+            // Function for updating the form data
+            setFormData,
+        }),
+    );
 
     // #endregion
 
@@ -172,7 +189,7 @@ export function Form({
     );
 
     // #endregion
-}
+});
 
 Form.propTypes = {
     /**
