@@ -29,6 +29,9 @@ const argTypes = {};
 setAsCategory(argTypes, 'UI', [
     'children',
 ]);
+setAsCategory(argTypes, 'Data', [
+    'initialFormData',
+]);
 setAsCategory(argTypes, 'Callbacks', [
     'onSubmit',
     'onChange',

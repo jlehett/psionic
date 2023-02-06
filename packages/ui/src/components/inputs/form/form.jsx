@@ -6,6 +6,9 @@ import { cloneDeep } from 'lodash';
 import {
     FormData, SetFormData, FormSubmitting, SetFormSubmitting,
 } from '@contexts';
+import {
+    CircularSpinner,
+} from '@components/loaders';
 import localStyles from './form.module.scss';
 
 /**
@@ -25,6 +28,7 @@ export const Form = forwardRef(({
     children,
     onSubmit,
     onChange,
+    initialFormData,
     // Pass-thru Props
     ...passThruProps
 }, ref) => {
@@ -56,6 +60,15 @@ export const Form = forwardRef(({
     // #endregion
 
     // #region Effects
+
+    /**
+     * When the component first mounts, load the initial form data.
+     */
+    useEffect(() => {
+        if (initialFormData) {
+            setFormData(initialFormData);
+        }
+    }, []);
 
     /**
      * Whenever the form data changes, call the `onChange` callback, if one was provided.
@@ -215,6 +228,11 @@ Form.propTypes = {
      * this library, such as TextField) to the values they held at the time the form updated.
      */
     onChange:           PropTypes.func,
+    /**
+     * The initial data to populate the form with. This should be of the same format as the argument that
+     * the `onChange` prop takes in.
+     */
+    initialFormData:    PropTypes.object,
     /**
      * The remaining props to spread to the internal `form` HTML element.
      *
