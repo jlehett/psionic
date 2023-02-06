@@ -2,7 +2,7 @@ import {
     useContext, useEffect, useState, useImperativeHandle, forwardRef,
 } from 'react';
 import PropTypes from 'prop-types';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, initial } from 'lodash';
 import {
     FormData, SetFormData, FormSubmitting, SetFormSubmitting,
 } from '@contexts';
@@ -57,6 +57,11 @@ export const Form = forwardRef(({
 
     // #region State
 
+    /**
+     * Track whether the form's initial data has loaded yet.
+     */
+    const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+
     // #endregion
 
     // #region Effects
@@ -68,14 +73,18 @@ export const Form = forwardRef(({
         if (initialFormData) {
             setFormData(initialFormData);
         }
+        setInitialDataLoaded(true);
     }, []);
 
     /**
      * Whenever the form data changes, call the `onChange` callback, if one was provided.
      */
     useEffect(() => {
+        // If the initial data hasn't loaded yet, don't do anything
+        if (!initialDataLoaded) return;
+
         onChange?.(cloneDeep(formData));
-    }, [formData]);
+    }, [formData, initialDataLoaded]);
 
     // #endregion
 
