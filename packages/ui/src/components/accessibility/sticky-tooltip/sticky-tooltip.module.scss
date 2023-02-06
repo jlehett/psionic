@@ -4,6 +4,10 @@
     width: fit-content;
     height: fit-content;
     font-family: Roboto;
+
+    *[disabled] {
+        pointer-events: none;
+    }
 }
 
 .tooltip {

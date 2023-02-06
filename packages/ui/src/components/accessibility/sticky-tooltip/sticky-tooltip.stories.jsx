@@ -44,9 +44,11 @@ export const Basic = Template.bind({});
 prepareStoryForModal(Basic, 500);
 Basic.args = {
     children: (
-        <button style={{
-            width: '200px', height: '100px', cursor: 'pointer', background: 'white', outline: 'none', border: '1px solid black',
-        }}
+        <button
+            style={{
+                width: '200px', height: '100px', cursor: 'pointer', background: 'white', outline: 'none', border: '1px solid black',
+            }}
+            disabled
         >
             Submit
         </button>
