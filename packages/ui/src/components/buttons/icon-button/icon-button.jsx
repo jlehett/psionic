@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
-import { Theme } from '@contexts';
+import { Theme, FormSubmitting } from '@contexts';
 import { usePseudoSelectors } from '@hooks/interactions';
 import { QuarterSpinner } from '@components/loaders';
 import localStyles from './icon-button.module.scss';
@@ -18,6 +18,7 @@ function IconButton({
     allowMultipleClicks,
     color,
     paddingRatio,
+    disabledOnFormSubmitting,
     // Pass-thru Props
     ...passThruProps
 }) {
@@ -27,6 +28,11 @@ function IconButton({
      * Use the theme from context.
      */
     const theme = useContext(Theme);
+
+    /**
+     * Use the form submitting flag from context.
+     */
+    const formSubmitting = useContext(FormSubmitting);
 
     // #endregion
 
@@ -69,6 +75,16 @@ function IconButton({
         await onClick?.(event);
         setOnClickRunning(false);
     };
+
+    /**
+     * Get whether the button is a submit button and the form is submitting.
+     */
+    const getIsSubmitAndRunning = () => Boolean(!allowMultipleClicks && type === 'submit' && formSubmitting);
+
+    /**
+     * Get whether the form is submitting and the button should be disabled.
+     */
+    const getIsDisabledBecauseFormSubmitting = () => Boolean(disabledOnFormSubmitting && formSubmitting);
 
     // #endregion
 
@@ -116,17 +132,17 @@ function IconButton({
                 background: buttonBgColor,
                 ...(passThruProps?.style || {}),
             }}
-            disabled={onClickRunning || disabled}
+            disabled={onClickRunning || disabled || getIsSubmitAndRunning() || getIsDisabledBecauseFormSubmitting()}
         >
             {/* RUNNING STATE */}
-            <div className={onClickRunning ? localStyles.running : localStyles.hidden}>
+            <div className={onClickRunning || getIsSubmitAndRunning() ? localStyles.running : localStyles.hidden}>
                 <QuarterSpinner
                     size={size}
                     color={disabled ? '#888888' : baseColor.string()}
                 />
             </div>
             {/* READY STATE */}
-            <div className={onClickRunning ? localStyles.hidden : localStyles.ready}>
+            <div className={onClickRunning || getIsSubmitAndRunning() ? localStyles.hidden : localStyles.ready}>
                 <SvgIcon
                     style={{
                         width:  size,
@@ -145,52 +161,59 @@ IconButton.propTypes = {
     /**
      * The size of the button.
      */
-    size:                PropTypes.number,
+    size:                     PropTypes.number,
     /**
      * The type of the button.
      */
-    type:                PropTypes.string,
+    type:                     PropTypes.string,
     /**
      * The function to call when the button is clicked.
      */
-    onClick:             PropTypes.func,
+    onClick:                  PropTypes.func,
     /**
      * Whether the button is disabled or not.
      */
-    disabled:            PropTypes.bool,
+    disabled:                 PropTypes.bool,
     /**
      * The SVG icon to use for the button.
      */
-    SvgIcon:             PropTypes.func.isRequired,
+    SvgIcon:                  PropTypes.func.isRequired,
     /**
      * Flag indicating if the button should enter a "running" state that prevents another `onClick` event
      * from being fired until the current `onClick` callback has finished running (if it is async).
      */
-    allowMultipleClicks: PropTypes.bool,
+    allowMultipleClicks:      PropTypes.bool,
+    /**
+     * Flag indicating whether the button should be disabled while the parent `Form` component is submitting or not.
+     * If this is the "submit" button on the `Form`, then this flag will be ignored, and the condition will be based on
+     * whether the `allowMultipleClicks` flag is set to `true` or not.
+     */
+    disabledOnFormSubmitting: PropTypes.bool,
     /**
      * The color to use for the button. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
      * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
-    color:               PropTypes.string,
+    color:                    PropTypes.string,
     /**
      * The amount of padding to add, as a ratio of the button's size.
      */
-    paddingRatio:        PropTypes.number,
+    paddingRatio:             PropTypes.number,
     /**
      * Any additional props to pass through to the internal `button` element.
      *
      * This is not a prop of `passThruProps` -- this is simply a representation of any additional props passed to
      * the `IconButton` component that aren't covered above.
      */
-    '...passThruProps':  PropTypes.any,
+    '...passThruProps':       PropTypes.any,
 };
 
 IconButton.defaultProps = {
-    size:                24,
-    type:                'button',
-    color:               'primary',
-    allowMultipleClicks: false,
-    paddingRatio:        0.75,
+    size:                     24,
+    type:                     'button',
+    color:                    'primary',
+    allowMultipleClicks:      false,
+    paddingRatio:             0.75,
+    disabledOnFormSubmitting: false,
 };
 
 export default IconButton;

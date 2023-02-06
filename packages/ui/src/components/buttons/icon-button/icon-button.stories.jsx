@@ -18,6 +18,7 @@ setAsCategory(argTypes, 'Controls', [
     'onClick',
     'disabled',
     'allowMultipleClicks',
+    'disabledOnFormSubmitting',
 ]);
 setAsCategory(argTypes, 'Pass Thru Props', [
     '...passThruProps',
