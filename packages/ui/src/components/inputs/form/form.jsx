@@ -231,7 +231,7 @@ Form.defaultProps = {
 /**
  * Wraps the Form component in the necessary context providers to handle the form values internally.
  */
-function FormWrapper(props) {
+const FormWrapper = forwardRef((props, ref) => {
     const [formData, setFormData] = useState({});
     const [formSubmitting, setFormSubmitting] = useState(false);
 
@@ -240,12 +240,12 @@ function FormWrapper(props) {
             <SetFormSubmitting.Provider value={setFormSubmitting}>
                 <FormData.Provider value={formData}>
                     <SetFormData.Provider value={setFormData}>
-                        <Form {...props} />
+                        <Form ref={ref} {...props} />
                     </SetFormData.Provider>
                 </FormData.Provider>
             </SetFormSubmitting.Provider>
         </FormSubmitting.Provider>
     );
-}
+});
 
 export default FormWrapper;

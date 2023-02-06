@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import {
     ArgsTable,
     Primary,
@@ -392,8 +392,13 @@ function Template(args) {
         console.log('Form Data:', formData);
     }, []);
 
+    const formRef = useRef();
+
+    console.log(formRef.current);
+
     return (
         <Form
+            ref={formRef}
             onSubmit={onSubmit}
             style={{
                 margin: '40px', display: 'flex', flexDirection: 'column', gap: '16px',
