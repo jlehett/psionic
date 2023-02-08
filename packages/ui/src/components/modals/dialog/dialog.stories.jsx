@@ -40,8 +40,13 @@ function Template(args) {
                 isOpen={dialogIsOpen}
                 setIsOpen={setDialogIsOpen}
                 {...args}
+                style={{ background: 'white', borderRadius: '4px' }}
             >
-                <div style={{ padding: '16px 24px', maxWidth: '600px' }}>
+                <div
+                    style={{
+                        padding: '16px 24px', maxWidth: '600px',
+                    }}
+                >
                     <h1 style={{
                         color: 'rgba(0, 0, 0, 0.87)', fontSize: '20px', fontWeight: '500', margin: 0,
                     }}
