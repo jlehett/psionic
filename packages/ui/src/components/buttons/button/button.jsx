@@ -1,5 +1,5 @@
 import {
-    useState, useEffect, useRef, useMemo, useContext,
+    useState, useEffect, useRef, useMemo, useContext, forwardRef,
 } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
@@ -12,7 +12,7 @@ import localStyles from './button.module.scss';
 /**
  * Replace this with a comment describing the component.
  */
-function Button({
+const Button = forwardRef(({
     width,
     height,
     type,
@@ -26,7 +26,7 @@ function Button({
     disabledOnFormSubmitting,
     // Pass-thru Props
     ...passThruProps
-}) {
+}, ref) => {
     // #region Context
 
     /**
@@ -246,6 +246,7 @@ function Button({
      */
     return (
         <button
+            ref={ref}
             type={type}
             onClick={allowMultipleClicks ? onClick : augmentedOnClick}
             {...pseudoSelectorProps}
@@ -286,7 +287,7 @@ function Button({
     );
 
     // #endregion
-}
+});
 
 Button.propTypes = {
     /**
