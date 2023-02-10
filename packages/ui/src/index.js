@@ -13,3 +13,4 @@ export * from '@components/text-animations';
 
 export * from '@hooks/forms';
 export * from '@hooks/imperative-displays';
+export * from '@hooks/interactions';
