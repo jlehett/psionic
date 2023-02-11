@@ -39,9 +39,10 @@ export default {
 
 function Template(args) {
     return (
-        <div style={{
-            margin: '40px', padding: '20px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 'fit-content',
-        }}
+        <div
+            style={{
+                margin: '40px', padding: '20px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 'fit-content',
+            }}
         >
             <Button
                 onClick={async () => {

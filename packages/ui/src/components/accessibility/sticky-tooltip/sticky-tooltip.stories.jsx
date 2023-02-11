@@ -48,7 +48,6 @@ Basic.args = {
             style={{
                 width: '200px', height: '100px', cursor: 'pointer', background: 'white', outline: 'none', border: '1px solid black',
             }}
-            disabled
         >
             Submit
         </button>

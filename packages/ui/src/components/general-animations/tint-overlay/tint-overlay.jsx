@@ -89,8 +89,9 @@ TintOverlay.propTypes = {
 };
 
 TintOverlay.defaultProps = {
-    color:     '#0072E5',
-    activated: false,
+    color:          '#0072E5',
+    activated:      false,
+    animationSpeed: 0.6,
 };
 
 export default TintOverlay;

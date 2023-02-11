@@ -50,8 +50,8 @@ export default function (isTextInput) {
     // Return the hook API
     return [
         {
-            onMouseEnter: () => setIsHovered(true),
-            onMouseLeave: () => {
+            onPointerEnter: () => setIsHovered(true),
+            onPointerLeave: () => {
                 setIsHovered(false);
                 setIsPressed(false);
             },

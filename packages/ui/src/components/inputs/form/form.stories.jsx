@@ -397,8 +397,6 @@ function Template(args) {
 
     const formRef = useRef();
 
-    console.log(formRef.current);
-
     return (
         <Form
             ref={formRef}

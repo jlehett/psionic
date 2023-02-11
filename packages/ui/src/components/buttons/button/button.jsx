@@ -24,6 +24,7 @@ const Button = forwardRef(({
     variant,
     rounded,
     disabledOnFormSubmitting,
+    darkMode,
     // Pass-thru Props
     ...passThruProps
 }, ref) => {
@@ -131,7 +132,7 @@ const Button = forwardRef(({
             case 'text':
                 return baseColor.string();
             case 'contained':
-                return '#444444';
+                return darkMode ? '#cccccc' : '#444444';
             case 'outlined':
                 return '#888888';
             default:
@@ -171,7 +172,7 @@ const Button = forwardRef(({
             case 'contained':
                 background = (() => {
                     if (onClickRunning || disabled || getIsSubmitAndRunning() || getIsDisabledBecauseFormSubmitting()) {
-                        return '#cccccc';
+                        return darkMode ? '#444444' : '#cccccc';
                     }
 
                     if (!pseudoSelectorStates.isHovered) {
@@ -188,7 +189,9 @@ const Button = forwardRef(({
                 return {
                     border: 'none',
                     background,
-                    color:  onClickRunning || disabled || getIsDisabledBecauseFormSubmitting() ? '#444444' : textColor,
+                    color:  onClickRunning || disabled || getIsDisabledBecauseFormSubmitting()
+                        ? darkMode ? '#cccccc' : '#444444'
+                        : textColor,
                 };
             case 'outlined':
                 background = (() => {
@@ -354,6 +357,10 @@ Button.propTypes = {
      */
     rounded:            PropTypes.bool,
     /**
+     * Flag indicating whether the button should be rendered in dark mode or not.
+     */
+    darkMode:           PropTypes.bool,
+    /**
      * Any additional props to pass through to the internal `button` element.
      *
      * This is not a prop of `passThruProps` -- this is simply a representation of any additional props passed to
@@ -371,6 +378,7 @@ Button.defaultProps = {
     rounded:                  false,
     onClick:                  () => {},
     disabledOnFormSubmitting: false,
+    darkMode:                 false,
 };
 
 export default Button;
