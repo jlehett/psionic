@@ -2,6 +2,8 @@
 
 ## 1.4.0
 
+<i>February 11, 2023</i>
+
 * 🚀 New `LabeledIconButton` component!
 * 🚀 Add `disabledOnFormSubmitting` property to the `IconButton` component to allow the user to easily disable this button while its parent form (if it has one) is submitting.
 * 🚀 Add an imperative handle to the `Form` component as a backup to more directly control the `Form`'s state. See the `Form` component's documentation for more details.
