@@ -378,6 +378,62 @@ const ExampleForm = () => {
                                 </td>
                             </tr>
                         </table>
+                        <h2>
+                            React Imperative Handle
+                        </h2>
+                        <p>
+                            The
+                            {' '}
+                            <Code>Form</Code>
+                            {' '}
+                            component provides an imperative handle as a fallback for when you need direct access to the ability to set the form's
+                            data. This is useful when you need to set the form's data based on some external event, such as a user clicking on a button
+                            to edit a form field's value.
+                        </p>
+                        <p>
+                            The imperative handle can be accessed using the standard React ref imperative handle pattern:
+                        </p>
+                        <CodeBlock>
+                            {
+                                `function TestComponent({ someFormData }) {
+    const formRef = useRef();
+
+    // We can access the \`setFormData\` function by using the ref now like so:
+    formRef.current.setFormData(someFormData);
+
+    return (
+        <Form ref={formRef} />
+    );
+}`
+                            }
+                        </CodeBlock>
+                        <p>
+                            The imperative handle provides the following:
+                        </p>
+                        <table>
+                            <tr>
+                                <th>
+                                    Property
+                                </th>
+                                <th>
+                                    Type
+                                </th>
+                                <th>
+                                    Description
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>setFormData</b>
+                                </td>
+                                <td>
+                                    <Code>function</Code>
+                                </td>
+                                <td>
+                                    A function that takes in a single param which is the new data object to set for the form.
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                     <Primary />
                     <ArgsTable story={PRIMARY_STORY} />

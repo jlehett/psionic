@@ -1,5 +1,23 @@
 # @psionic/ui
 
+## 1.4.0
+
+* 🚀 New `LabeledIconButton` component!
+* 🚀 Add `disabledOnFormSubmitting` property to the `IconButton` component to allow the user to easily disable this button while its parent form (if it has one) is submitting.
+* 🚀 Add an imperative handle to the `Form` component as a backup to more directly control the `Form`'s state. See the `Form` component's documentation for more details.
+* 🚀 Add support for an `initialFormData` property for the `Form` component which allows the user to set the initial form data for the form.
+* 🚀 Adds `forwardRef` support to the `Button` component.
+* 🚀 Adds new "interactions" hooks exported from the package.
+* 🎨 Update the `IconLink` component to support an `inactiveColor` property that allows the user to customize the color of the component when the link is not active.
+* 🎨 Add `darkMode` property to various UI components to better support sites / apps that are using a dark mode theme.
+* 🎨 Make the `Dialog` component more customizable by not enforcing a background or border radius style.
+* 🛠️ Fix `TextField` component's pseudo selector states not updating properly.
+* 🛠️ Fix issue with dependencies caused by the `tiptap` set of packages.
+* 🛠️ Properly pass the default HTML `event` object to the `onClick` callback for the `IconButton` component.
+* 🛠️ Fix issue with the `StickyTooltip` component breaking when wrapping a disabled HTML element.
+* 🛠️ Fix issue with the `TintOverlay` component not animating properly unless an `animationSpeed` property was defined.
+* 🛠️ Fix issue with various pseudo selectors (`hover`, `focus`, and `pressed`) not updating properly if used in conjunction with disabled HTML elements.
+
 ## 1.3.5
 
 <i>February 2, 2023</i>
