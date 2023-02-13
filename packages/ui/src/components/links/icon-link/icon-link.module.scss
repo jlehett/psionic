@@ -18,3 +18,12 @@ $transitionDuration: 0.2s;
         font-size: 16px;
     }
 }
+
+.disabledIconLink {
+    font-family: Roboto;
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    cursor: default;
+    user-select: none;
+}

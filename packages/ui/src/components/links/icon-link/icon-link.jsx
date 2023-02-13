@@ -17,6 +17,8 @@ function IconLink({
     href,
     color,
     inactiveColor,
+    disabledColor,
+    disabled,
     // Pass-thru props
     ...passThruProps
 }) {
@@ -36,6 +38,7 @@ function IconLink({
      */
     const baseColor = Color(theme[color] || color);
     const baseInactiveColor = Color(theme[inactiveColor] || inactiveColor);
+    const baseDisabledColor = Color(theme[disabledColor] || disabledColor);
 
     // #endregion
 
@@ -74,6 +77,28 @@ function IconLink({
     // #endregion
 
     // #region Render Functions
+
+    /**
+     * If the `disabled` prop is set, we don't want to render a link component.
+     */
+    if (disabled) {
+        return (
+            <span className={localStyles.disabledIconLink}>
+                <SvgIcon
+                    style={{
+                        fill: baseDisabledColor,
+                    }}
+                />
+                <span
+                    style={{
+                        color: baseDisabledColor,
+                    }}
+                >
+                    {label}
+                </span>
+            </span>
+        );
+    }
 
     /**
      * Main render.
@@ -127,6 +152,10 @@ IconLink.propTypes = {
      */
     href:               PropTypes.string,
     /**
+     * Flag indicating whether the icon link is disabled. A disabled icon link will not be clickable.
+     */
+    disabled:           PropTypes.bool,
+    /**
      * The color to use for the icon link. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
      * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
@@ -137,6 +166,12 @@ IconLink.propTypes = {
      * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
     inactiveColor:      PropTypes.string,
+    /**
+     * The color to use for the icon link when it is disabled.
+     * Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
+     * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
+     */
+    disabledColor:      PropTypes.string,
     /**
      * Any additional props to pass to the internal `Link` or `a` element (depending on whether the `to` or `href` prop
      * is used, respectively).
@@ -150,6 +185,7 @@ IconLink.propTypes = {
 IconLink.defaultProps = {
     color:         'primary',
     inactiveColor: '#757575',
+    disabledColor: '#454545',
 };
 
 export default IconLink;

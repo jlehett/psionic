@@ -1,5 +1,12 @@
 # @psionic/ui
 
+## 1.5.0
+
+<i>February 13, 2023</i>
+
+* 🚀 Added new `disabled` and `disabledColor` properties to the `IconLink` component.
+* 🚀 Added new `active` property to the `StickyTooltip` component.
+
 ## 1.4.0
 
 <i>February 11, 2023</i>

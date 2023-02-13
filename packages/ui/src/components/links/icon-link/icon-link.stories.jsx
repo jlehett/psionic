@@ -12,6 +12,8 @@ setAsCategory(argTypes, 'UI', [
     'label',
     'color',
     'inactiveColor',
+    'disabled',
+    'disabledColor',
 ]);
 setAsCategory(argTypes, 'Controls', [
     'href',
@@ -64,4 +66,13 @@ Href.args = {
     SvgIcon: Favorite,
     label:   'Favorites',
     href:    'https://www.google.com',
+};
+
+// Disabled Demo
+export const Disabled = Template.bind({});
+Disabled.args = {
+    SvgIcon:  Favorite,
+    label:    'Favorites',
+    href:     'https://www.google.com',
+    disabled: true,
 };

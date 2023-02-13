@@ -15,6 +15,7 @@ setAsCategory(argTypes, 'UI', [
     'yOffset',
     'marginX',
     'marginY',
+    'active',
 ]);
 setAsCategory(argTypes, 'Pass Thru Props', [
     'TooltipProps',
@@ -117,4 +118,21 @@ ComplexContent.args = {
             />
         </div>
     ),
+};
+
+// Inactive Demo
+export const Inactive = Template.bind({});
+prepareStoryForModal(Inactive, 500);
+Inactive.args = {
+    children: (
+        <button
+            style={{
+                width: '200px', height: '100px', cursor: 'pointer', background: 'white', outline: 'none', border: '1px solid black',
+            }}
+        >
+            Submit
+        </button>
+    ),
+    content: 'This is a really cool button!',
+    active:  false,
 };

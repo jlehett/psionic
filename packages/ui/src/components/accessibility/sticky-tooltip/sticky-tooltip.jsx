@@ -25,6 +25,7 @@ function StickyTooltip({
     xOffset,
     marginX,
     marginY,
+    active,
     // Pass-thru Props
     TooltipProps,
     ...passThruProps
@@ -167,27 +168,29 @@ function StickyTooltip({
                 {children}
             </div>
             {
-                createPortal(
-                    (
-                        <div
-                            ref={tooltipRef}
-                            data-is-hovered={tooltipDisplayed}
-                            {...TooltipProps}
-                            className={`
+                active
+                    ? createPortal(
+                        (
+                            <div
+                                ref={tooltipRef}
+                                data-is-hovered={tooltipDisplayed}
+                                {...TooltipProps}
+                                className={`
                                 ${localStyles.tooltip}
                                 ${TooltipProps?.className}
                             `}
-                            style={{
-                                left: `${tooltipLeftPos}px`,
-                                top:  `${tooltipTopPos}px`,
-                                ...(TooltipProps?.style || {}),
-                            }}
-                        >
-                            {content}
-                        </div>
-                    ),
-                    document.body,
-                )
+                                style={{
+                                    left: `${tooltipLeftPos}px`,
+                                    top:  `${tooltipTopPos}px`,
+                                    ...(TooltipProps?.style || {}),
+                                }}
+                            >
+                                {content}
+                            </div>
+                        ),
+                        document.body,
+                    )
+                    : null
             }
 
         </>
@@ -197,6 +200,11 @@ function StickyTooltip({
 }
 
 StickyTooltip.propTypes = {
+    /**
+     * Flag indicating whether the sticky tooltip is active or not. An inactive sticky tooltip will not be displayed
+     * at all. Makes it easier to conditionally use the `StickyTooltip` component.
+     */
+    active:             PropTypes.bool,
     /**
      * The React component(s) to render w/ the sticky tooltip attached.
      */
@@ -262,6 +270,7 @@ StickyTooltip.defaultProps = {
     xOffset: 0,
     marginX: 8,
     marginY: 8,
+    active:  true,
 };
 
 export default StickyTooltip;
