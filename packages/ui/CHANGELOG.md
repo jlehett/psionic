@@ -1,5 +1,11 @@
 # @psionic/ui
 
+## 1.5.1
+
+<i>February 13, 2023</i>
+
+* 🛠️ Fix the `IconLink` component's SVG icons not being properly sized in some cases.
+
 ## 1.5.0
 
 <i>February 13, 2023</i>

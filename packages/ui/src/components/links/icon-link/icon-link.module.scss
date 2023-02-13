@@ -11,6 +11,8 @@ $transitionDuration: 0.2s;
 
     svg {
         transition: fill $transitionDuration;
+        width: 24px;
+        height: 24px;
     }
 
     span {
@@ -26,4 +28,9 @@ $transitionDuration: 0.2s;
     gap: 8px;
     cursor: default;
     user-select: none;
+
+    svg {
+        width: 24px;
+        height: 24px;
+    }
 }
