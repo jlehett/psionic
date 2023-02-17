@@ -1,5 +1,4 @@
 import '@storybook/addon-console';
-import '@styles/main.scss';
 import './storybook.scss';
 import { StyleManager } from '@components/managers';
 import { BrowserRouter } from 'react-router-dom';

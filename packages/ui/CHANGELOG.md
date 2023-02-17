@@ -1,5 +1,11 @@
 # @psionic/ui
 
+## 1.5.2
+
+<i>February 16, 2023</i>
+
+* 🛠️ Remove accessibility outline defaults from the exported SCSS file since it can cause issues with other project's defaults.
+
 ## 1.5.1
 
 <i>February 13, 2023</i>
