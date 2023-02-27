@@ -152,7 +152,7 @@ FloatingActionButton.propTypes = {
     /**
      * The SVG icon to display in the button.
      */
-    SvgIcon:   PropTypes.func.isRequired,
+    SvgIcon:   PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
     /**
      * The color to use for the background of the button.
      * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.

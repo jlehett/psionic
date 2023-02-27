@@ -177,7 +177,7 @@ IconButton.propTypes = {
     /**
      * The SVG icon to use for the button.
      */
-    SvgIcon:                  PropTypes.func.isRequired,
+    SvgIcon:                  PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
     /**
      * Flag indicating if the button should enter a "running" state that prevents another `onClick` event
      * from being fired until the current `onClick` callback has finished running (if it is async).

@@ -1,0 +1,157 @@
+@import "@styles/colors.scss";
+@import "@styles/common-mixins.scss";
+
+.textField {
+    position: relative;
+    padding: 24px 0 0 0;
+    font-family: Roboto;
+
+    .labelWrapper {
+        position: absolute;
+        left: 12px;
+        pointer-events: none;
+
+        label {
+            font-size: 16px;
+        }
+    }
+
+    .inputWrapper {
+        border-radius: 4px;
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        &[data-is-dark-mode="true"] {
+            background: unset;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+
+            input {
+                color: white;
+            }
+        }
+        &[data-is-dark-mode="false"] {
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.25);
+
+            input {
+                color: black;
+            }
+        }
+
+        .textBlock {
+            position: relative;
+            background: none;
+            outline: none;
+            font-size: 16px;
+            padding: 12px;
+            width: 100%;
+            box-sizing: border-box;
+
+            * {
+                margin: 0;
+                padding: 0;
+                outline: none;
+                border: none;
+                outline-offset: 14px;
+            }
+        }
+
+        input {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 12px;
+            outline: none;
+            border: none;
+            font-size: 16px;
+            background: none;
+            box-sizing: border-box;
+            resize: none;
+
+            &:focus-visible {
+                outline: none;
+            }
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 4px;
+            margin-right: 4px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            @include hoverIfSupported {
+                background: rgba(0, 0, 0, 0.1);
+            }
+
+            &:active {
+                background: rgba(0, 0, 0, 0.2);
+            }
+
+            svg {
+                width: 24px;
+                height: 24px;
+                fill: $mediumEmphasis;
+            }
+        }
+    }
+
+    .helperMessage {
+        font-size: 13px;
+        color: $mediumEmphasis;
+        margin: 8px 0 0 12px;
+
+        &:empty {
+            height: 17px;
+        }
+    }
+
+    &[data-disabled="true"] {
+
+        .inputWrapper {
+            border: 1px solid rbga(0, 0, 0, 0.1);
+            box-shadow: none;
+
+            &[data-is-dark-mode="true"] {
+                background: #151515;
+
+                input {
+                    color: rgba(255, 255, 255, 0.4);
+                }
+            }
+
+            &[data-is-dark-mode="false"] {
+                background: #ebebeb;
+
+                input {
+                    color: rgba(0, 0, 0, 0.4);
+                }
+            }
+        }
+
+        .labelWrapper {
+            label {
+                color: rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        .textBlock {
+            pointer-events: none;
+            color: rgba(0, 0, 0, 0.4);
+        }
+    }
+
+    &[data-display-error="true"] {
+
+        .helperMessage {
+            color: $error;
+        }
+    }
+}

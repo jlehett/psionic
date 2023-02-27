@@ -1,0 +1,31 @@
+@import "@styles/colors.scss";
+
+.fieldSet {
+    border: none;
+    width: fit-content;
+    font-family: Roboto;
+
+    &[data-display-error="true"] {
+
+        .helperMessage {
+            color: $error;
+        }
+    }
+}
+
+.radioGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: fit-content;
+}
+
+.helperMessage {
+    font-size: 13px;
+    color: $mediumEmphasis;
+    margin: 8px 0 0 12px;
+
+    &:empty {
+        height: 17px;
+    }
+}

@@ -97,7 +97,7 @@ Snackbar.propTypes = {
     /**
      * The icon to display on the left side of the snackbar.
      */
-    SvgIcon:            PropTypes.func.isRequired,
+    SvgIcon:            PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
     /**
      * The text to display on the snackbar.
      */

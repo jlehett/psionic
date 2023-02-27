@@ -10,25 +10,25 @@ import { Theme } from '@contexts';
 import { StickyTooltip } from '@components/accessibility';
 import Visibility from '@assets/visibility.svg';
 import VisibilityOff from '@assets/visibility-off.svg';
-import { useFormField } from '@hooks/forms';
 import { usePseudoSelectors } from '@hooks/interactions';
-import localStyles from './text-field.module.scss';
+import localStyles from './controlled-text-field.module.scss';
 
 /**
- * A general text field with a label that can be used in `@psionic/ui`'s `Form`
- * component.
+ * A manually controlled text field with a label.
  */
-function TextField({
-    initialValue,
+function ControlledTextField({
+    value,
+    onChange,
     label,
-    fieldKey,
     type,
     required,
-    validator,
+    helperMessage,
+    hasError,
     disabled,
     multiline,
     color,
     darkMode,
+    id,
     // Specific Component Props
     InputProps,
     LabelProps,
@@ -79,26 +79,11 @@ function TextField({
     // #region Misc Hooks
 
     /**
-     * Use the form field hook.
-     */
-    const [
-        formField,
-        onChange,
-    ] = useFormField({
-        fieldKey,
-        type,
-        initialValue,
-        disabled,
-        validator,
-        required,
-    });
-
-    /**
      * Use the tiptap editor hook.
      */
     const editor = !multiline ? null : useEditor({
         editable:   !disabled,
-        content:    formField?.value,
+        content:    value,
         extensions: [
             StarterKit,
         ],
@@ -116,9 +101,9 @@ function TextField({
      */
     useEffect(() => {
         if (editor) {
-            editor.commands.setContent(formField?.value);
+            editor.commands.setContent(value);
         }
-    }, [formField]);
+    }, [value]);
 
     /**
      * Whenever the disabled state changes, make sure the tiptap editor stays up-to-date.
@@ -134,36 +119,12 @@ function TextField({
     // #region Variables
 
     /**
-     * Value that is currently stored in the input.
-     * @type {string}
-     */
-    const currentValue = formField?.value;
-
-    /**
      * String representing the type to use for the internal input element. If the given
      * input type is a password, we may want to represent it with a text input if the show
      * password button has been clicked.
      * @type {string}
      */
     const inputTypeToUse = type !== 'password' ? type : showHiddenText ? 'text' : 'password';
-
-    /**
-     * Helper message that is currently stored in the input's info.
-     * @type {string | null}
-     */
-    const currentHelperMessage = formField?.unmodifiedSinceLastSubmission ? formField?.message : null;
-
-    /**
-     * Flag indicating whether the value currently stored in the input is valid.
-     * @type {boolean}
-     */
-    const currentValidity = formField?.valid;
-
-    /**
-     * Flag indicating whether the field is unmodified since the last form submission or not.
-     * @type {boolean}
-     */
-    const unmodifiedSinceLastSubmission = formField?.unmodifiedSinceLastSubmission;
 
     // #endregion
 
@@ -173,12 +134,12 @@ function TextField({
      * Determine the styling for the input wrapper, based on state.
      */
     const getInputWrapperStyle = () => {
-        if (pseudoSelectorStates.isFocused && !(!currentValidity && unmodifiedSinceLastSubmission)) {
+        if (pseudoSelectorStates.isFocused && !(hasError)) {
             return {
                 boxShadow: `0 0 0 2px ${baseColor}`,
             };
         }
-        if (!currentValidity && unmodifiedSinceLastSubmission) {
+        if (hasError) {
             if (pseudoSelectorStates.isFocused) {
                 return {
                     boxShadow: '0 0 0 2px rgb(211, 47, 47)',
@@ -200,12 +161,12 @@ function TextField({
      * Determine the styling for the input label, based on state.
      */
     const getInputLabelStyle = () => {
-        if (pseudoSelectorStates.isFocused && !(!currentValidity && unmodifiedSinceLastSubmission)) {
+        if (pseudoSelectorStates.isFocused && !(hasError)) {
             return {
                 color: baseColor,
             };
         }
-        if (!currentValidity && unmodifiedSinceLastSubmission) {
+        if (hasError) {
             return {
                 color: 'rgb(211, 47, 47)',
             };
@@ -229,7 +190,7 @@ function TextField({
      */
     return (
         <motion.div
-            data-display-error={!currentValidity && unmodifiedSinceLastSubmission}
+            data-display-error={hasError}
             data-is-focused={pseudoSelectorStates.isFocused}
             data-disabled={disabled}
             {...passThruProps}
@@ -237,17 +198,17 @@ function TextField({
                 ${passThruProps?.className}
                 ${localStyles.textField}
             `}
-            animate={{ x: !currentValidity && unmodifiedSinceLastSubmission ? [0, 10, -10, 10, 0] : 0 }}
+            animate={{ x: hasError ? [0, 10, -10, 10, 0] : 0 }}
             transition={{ duration: 0.4 }}
         >
             <motion.div
-                initial={{ top: initialValue ? '0px' : '37px' }}
-                animate={{ top: currentValue ? '0px' : '37px' }}
+                initial={{ top: value ? '0px' : '37px' }}
+                animate={{ top: value ? '0px' : '37px' }}
                 className={localStyles.labelWrapper}
             >
                 <label
                     {...LabelProps}
-                    htmlFor={fieldKey}
+                    htmlFor={id}
                     style={{
                         ...getInputLabelStyle(),
                         ...(LabelProps?.style || {}),
@@ -276,11 +237,11 @@ function TextField({
                         : (
                             <input
                                 type={inputTypeToUse}
-                                value={currentValue || ''}
+                                value={value || ''}
                                 onChange={(event) => onChange(event.target.value)}
                                 disabled={disabled}
                                 {...pseudoSelectorProps}
-                                id={fieldKey}
+                                id={id}
                                 {...InputProps}
                             />
                         )
@@ -301,7 +262,7 @@ function TextField({
                 }
             </div>
             <p className={localStyles.helperMessage}>
-                {currentHelperMessage}
+                {helperMessage}
             </p>
         </motion.div>
     );
@@ -309,24 +270,24 @@ function TextField({
     // #endregion
 }
 
-TextField.propTypes = {
+ControlledTextField.propTypes = {
     /**
-     * The initial value for the text field.
+     * The value of the text field.
      */
-    initialValue: PropTypes.string,
+    value:    PropTypes.string,
+    /**
+     * The function to call when the text field is updated; should take in the new value
+     * as the only argument.
+     */
+    onChange: PropTypes.func.isRequired,
     /**
      * The label to display above the text field.
      */
-    label:        PropTypes.string.isRequired,
-    /**
-     * The key to use to represent the field in the parent form. This should be unique
-     * among all fields in the individual form.
-     */
-    fieldKey:     PropTypes.string.isRequired,
+    label:    PropTypes.string.isRequired,
     /**
      * The type of text field this is.
      */
-    type:         PropTypes.oneOf([
+    type:     PropTypes.oneOf([
         'email',
         'password',
         'text',
@@ -337,17 +298,13 @@ TextField.propTypes = {
      */
     required:           PropTypes.bool,
     /**
-     * Custom validation function that runs anytime the field updates, and displays
-     * the returned string as a helper message underneath the text field.
-     *
-     * This function should take in 2 args:
-     * - `string` The new value of the field
-     * - `Object` The form data object representing the form's current state before the most recent update
-     *
-     * This function should return either a string to display as a helper message (which also indicates
-     * that the validation failed), or null (which indicates that the validation passed).
+     * The helper message to display underneath the text field.
      */
-    validator:          PropTypes.func,
+    helperMessage:      PropTypes.string,
+    /**
+     * Flag indicating whether the text field has an error or not.
+     */
+    hasError:           PropTypes.bool,
     /**
      * Flag indicating whether the text field is disabled.
      */
@@ -371,6 +328,10 @@ TextField.propTypes = {
      */
     darkMode:           PropTypes.bool,
     /**
+     * The ID to use for the textfield.
+     */
+    id:                 PropTypes.string.isRequired,
+    /**
      * Any props to pass to the internal `input` HTML element.
      */
     InputProps:         PropTypes.object,
@@ -388,14 +349,13 @@ TextField.propTypes = {
     '...passThruProps': PropTypes.any,
 };
 
-TextField.defaultProps = {
-    initialValue: '',
-    type:         'text',
-    required:     false,
-    disabled:     false,
-    multiline:    false,
-    color:        'primary',
-    darkMode:     false,
+ControlledTextField.defaultProps = {
+    type:      'text',
+    required:  false,
+    disabled:  false,
+    multiline: false,
+    color:     'primary',
+    darkMode:  false,
 };
 
-export default TextField;
+export default ControlledTextField;

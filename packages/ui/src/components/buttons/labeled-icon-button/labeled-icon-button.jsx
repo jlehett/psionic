@@ -91,7 +91,7 @@ LabeledIconButton.propTypes = {
     /**
      * The SVG icon to use for the labeled icon button.
      */
-    SvgIcon:            PropTypes.func.isRequired,
+    SvgIcon:            PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
     /**
      * The label to display for the labeled icon button.
      */

@@ -31,6 +31,8 @@ module.exports = {
     ],
     rules: {
         indent:                              ['warn', 4, { SwitchCase: 1 }],
+        'import/named':                      'off',
+        'import/no-named-as-default-member': 'off',
         'import/no-unresolved':              'off',
         'max-len':                           'off',
         'key-spacing':                       [2, { align: 'value' }],
@@ -62,5 +64,10 @@ module.exports = {
         'linebreak-style':                   'off',
         'no-plusplus':                       'off',
         'no-minusminus':                     'off',
+        'import/no-relative-packages':       'off',
+        'import/no-cycle':                   'off',
+        'import/no-self-import':             'off',
+        'import/order':                      'off',
+        'import/no-duplicates':              'off',
     },
 };

@@ -3,22 +3,22 @@ import PropTypes from 'prop-types';
 import Color from 'color';
 import { motion } from 'framer-motion';
 import { Theme } from '@contexts';
-import { useFormField } from '@hooks/forms';
 import { usePseudoSelectors } from '@hooks/interactions';
-import localStyles from './icon-checkbox.module.scss';
+import localStyles from './controlled-icon-checkbox.module.scss';
 
 /**
- * An icon checkbox that can be used in `@psionic/ui`'s `Form` component.
+ * A manually controlled icon checkbox.
  */
-function IconCheckbox({
+function ControlledIconCheckbox({
+    checked,
+    onChange,
     SvgIcon,
-    initialValue,
     label,
-    fieldKey,
     color,
     size,
     disabled,
     ariaLabel,
+    id,
     // Specific Component Props
     InputProps,
     LabelProps,
@@ -48,23 +48,6 @@ function IconCheckbox({
 
     // #endregion
 
-    // #region Misc Hooks
-
-    /**
-     * Use the form field hook.
-     */
-    const [
-        formField,
-        onChange,
-    ] = useFormField({
-        fieldKey,
-        initialValue,
-        type: 'icon-checkbox',
-        disabled,
-    });
-
-    // #endregion
-
     // #region State
 
     /**
@@ -84,7 +67,7 @@ function IconCheckbox({
      * The value currently stored in input.
      * @type {boolean}
      */
-    const currentValue = formField?.checked || false;
+    const currentValue = checked || false;
 
     // #endregion
 
@@ -114,13 +97,13 @@ function IconCheckbox({
                 disabled={disabled}
                 aria-label={ariaLabel}
                 style={{ borderRadius: label ? 0 : '50%' }}
-                id={fieldKey}
+                id={id}
                 {...InputProps}
             />
             {
                 label
                     ? (
-                        <label htmlFor={fieldKey} {...LabelProps}>
+                        <label htmlFor={id} {...LabelProps}>
                             {label}
                         </label>
                     )
@@ -142,8 +125,8 @@ function IconCheckbox({
                 <motion.div
                     className={localStyles.waveSvg}
                     initial={{
-                        scale:   initialValue ? 2 : 1,
-                        opacity: initialValue ? 0 : 1,
+                        scale:   checked ? 2 : 1,
+                        opacity: checked ? 0 : 1,
                     }}
                     animate={{
                         scale:   currentValue ? [null, 2] : [1, 1],
@@ -169,7 +152,7 @@ function IconCheckbox({
                 <motion.div
                     className={localStyles.fillSvg}
                     initial={{
-                        scale: initialValue ? 1 : 0,
+                        scale: checked ? 1 : 0,
                     }}
                     animate={{
                         scale: currentValue ? [null, 1] : [null, 0],
@@ -193,33 +176,32 @@ function IconCheckbox({
     // #endregion
 }
 
-IconCheckbox.propTypes = {
+ControlledIconCheckbox.propTypes = {
+    /**
+     * Flag indicating whether the checkbox is checked.
+     */
+    checked:  PropTypes.bool,
+    /**
+     * The function to call when the checkbox is checked or unchecked.
+     */
+    onChange: PropTypes.func.isRequired,
     /**
      * The SVG icon component to use for the checkbox.
      */
-    SvgIcon:      PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
-    /**
-     * The initial value for the checkbox.
-     */
-    initialValue: PropTypes.bool,
+    SvgIcon:  PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
     /**
      * The label to display for the icon checkbox.
      */
-    label:        PropTypes.string,
-    /**
-     * The key to use to represent this checkbox in the parent form. This should be unique
-     * among all fields in the individual form.
-     */
-    fieldKey:     PropTypes.string.isRequired,
+    label:    PropTypes.string,
     /**
      * The color to use for the checkbox. Supports any of the formats listed here: https://www.npmjs.com/package/color-string.
      * You can also specify a theme key, specified in the `StyleManager`'s `theme` prop, to use a theme color.
      */
-    color:        PropTypes.string,
+    color:    PropTypes.string,
     /**
      * The size of the checkbox. Can be in any format accepted as a CSS value for `width` and `height`.
      */
-    size:         PropTypes.oneOfType([
+    size:     PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,
     ]),
@@ -231,6 +213,10 @@ IconCheckbox.propTypes = {
      * The aria label to use for the checkbox.
      */
     ariaLabel:          PropTypes.string,
+    /**
+     * The ID to use for the checkbox.
+     */
+    id:                 PropTypes.string.isRequired,
     /**
      * Any props to pass to the internal `input` HTML element.
      */
@@ -248,11 +234,10 @@ IconCheckbox.propTypes = {
     '...passThruProps': PropTypes.any,
 };
 
-IconCheckbox.defaultProps = {
-    initialValue: false,
-    color:        'primary',
-    size:         '28px',
-    disabled:     false,
+ControlledIconCheckbox.defaultProps = {
+    color:    'primary',
+    size:     '28px',
+    disabled: false,
 };
 
-export default IconCheckbox;
+export default ControlledIconCheckbox;

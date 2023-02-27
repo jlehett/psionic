@@ -1,5 +1,12 @@
 # @psionic/ui
 
+## 1.6.0
+
+<i>February 26, 2023</i>
+
+* 🚀 Add new `Controlled...` components as alternatives to the more restrictive (but convenient, when applicable) `Form`-based input components.
+* 🛠️ Update the `SvgIcon` prop type to accept a wider range of types.
+
 ## 1.5.2
 
 <i>February 16, 2023</i>

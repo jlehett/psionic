@@ -135,7 +135,7 @@ IconLink.propTypes = {
     /**
      * The SVG icon to use for the icon link.
      */
-    SvgIcon:            PropTypes.func.isRequired,
+    SvgIcon:            PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
     /**
      * The label to display for the icon link.
      */

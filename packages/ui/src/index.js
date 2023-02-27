@@ -8,6 +8,7 @@ export * from '@components/loaders';
 export * from '@components/managers';
 export * from '@components/modals';
 export * from '@components/text-animations';
+export * from '@components/controlled-inputs';
 
 export * from '@hooks/forms';
 export * from '@hooks/imperative-displays';
