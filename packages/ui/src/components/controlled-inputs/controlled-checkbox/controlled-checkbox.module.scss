@@ -123,4 +123,26 @@
             }
         }
     }
+
+    &[data-dark-mode="true"] {
+
+        .upperWrapper {
+
+            label {
+                color: white;
+            }
+
+            .customCheckbox {
+                background: none;
+                border: 1px solid rgba(255, 255, 255, 0.26);
+            }
+
+            @include hoverIfSupported {
+
+                .customCheckbox {
+                    border: 1px solid white;
+                }
+            }
+        }
+    }
 }

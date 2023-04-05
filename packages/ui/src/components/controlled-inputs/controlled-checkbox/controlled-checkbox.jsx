@@ -21,6 +21,7 @@ function ControlledCheckbox({
     disabled,
     ariaLabel,
     id,
+    darkMode,
     // Specific Component Props
     InputProps,
     LabelProps,
@@ -77,6 +78,7 @@ function ControlledCheckbox({
         <motion.div
             data-display-error={hasError}
             data-disabled={disabled}
+            data-dark-mode={darkMode}
             {...passThruProps}
             className={`
                 ${passThruProps?.className}
@@ -162,6 +164,10 @@ ControlledCheckbox.propTypes = {
      */
     disabled:           PropTypes.bool,
     /**
+     * Flag indicating whether the checkbox is in dark mode.
+     */
+    darkMode:           PropTypes.bool,
+    /**
      * The aria label to use for the checkbox.
      */
     ariaLabel:          PropTypes.string,
@@ -187,6 +193,7 @@ ControlledCheckbox.defaultProps = {
     required: false,
     color:    'primary',
     disabled: false,
+    darkMode: false,
 };
 
 export default ControlledCheckbox;

@@ -13,6 +13,7 @@ setAsCategory(argTypes, 'UI', [
     'helperMessage',
     'hasError',
     'color',
+    'darkMode',
 ]);
 setAsCategory(argTypes, 'Controls', [
     'checked',
@@ -89,4 +90,11 @@ export const Disabled = Template.bind({});
 Disabled.args = {
     label:    'I agree to the Terms of Service',
     disabled: true,
+};
+
+// Dark Mode Demo
+export const DarkMode = Template.bind({});
+DarkMode.args = {
+    label:    'I agree to the Terms of Service',
+    darkMode: true,
 };

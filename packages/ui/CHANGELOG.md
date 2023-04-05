@@ -1,5 +1,17 @@
 # @psionic/ui
 
+## 1.7.0
+
+<i>April 5, 2023</i>
+
+* 🛠️ Fixed issue with `TextField` and `ControlledTextField` components resetting cursor position every time their value was updated. To update the value of these components <i>outside</i> of the user typing, use the new `setContent` method on the component's ref.
+
+## 1.6.1
+
+<i>March 17, 2023</i>
+
+* 🚀 Add new `darkMode` support for the `ControlledCheckbox` component.
+
 ## 1.6.0
 
 <i>February 26, 2023</i>

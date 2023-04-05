@@ -1,5 +1,10 @@
 import {
-    useState, useRef, useEffect, useContext,
+    useState,
+    useRef,
+    useEffect,
+    useContext,
+    useImperativeHandle,
+    forwardRef,
 } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
@@ -18,24 +23,27 @@ import localStyles from './text-field.module.scss';
  * A general text field with a label that can be used in `@psionic/ui`'s `Form`
  * component.
  */
-function TextField({
-    initialValue,
-    label,
-    fieldKey,
-    type,
-    required,
-    validator,
-    disabled,
-    multiline,
-    color,
-    darkMode,
-    // Specific Component Props
-    InputProps,
-    LabelProps,
-    // Pass Thru Props
-    ...passThruProps
-}) {
-    // #region Context
+const TextField = forwardRef((
+    {
+        initialValue,
+        label,
+        fieldKey,
+        type,
+        required,
+        validator,
+        disabled,
+        multiline,
+        color,
+        darkMode,
+        // Specific Component Props
+        InputProps,
+        LabelProps,
+        // Pass Thru Props
+        ...passThruProps
+    },
+    ref,
+) => {
+// #region Context
 
     /**
      * Use the theme from context.
@@ -109,16 +117,15 @@ function TextField({
 
     // #endregion
 
-    // #region Effects
+    // #region Imperative Handle
 
-    /**
-     * Whenever the form field is updated, make sure the tiptap editor stays up-to-date.
-     */
-    useEffect(() => {
-        if (editor) {
-            editor.commands.setContent(formField?.value);
-        }
-    }, [formField]);
+    useImperativeHandle(ref, () => ({
+        setContent: (newValue) => editor.commands.setContent(newValue),
+    }));
+
+    // #endregion
+
+    // #region Effects
 
     /**
      * Whenever the disabled state changes, make sure the tiptap editor stays up-to-date.
@@ -307,7 +314,7 @@ function TextField({
     );
 
     // #endregion
-}
+});
 
 TextField.propTypes = {
     /**

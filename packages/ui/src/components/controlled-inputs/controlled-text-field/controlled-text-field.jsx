@@ -1,5 +1,10 @@
 import {
-    useState, useRef, useEffect, useContext,
+    useState,
+    useRef,
+    useEffect,
+    useContext,
+    useImperativeHandle,
+    forwardRef,
 } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
@@ -16,26 +21,29 @@ import localStyles from './controlled-text-field.module.scss';
 /**
  * A manually controlled text field with a label.
  */
-function ControlledTextField({
-    value,
-    onChange,
-    label,
-    type,
-    required,
-    helperMessage,
-    hasError,
-    disabled,
-    multiline,
-    color,
-    darkMode,
-    id,
-    // Specific Component Props
-    InputProps,
-    LabelProps,
-    // Pass Thru Props
-    ...passThruProps
-}) {
-    // #region Context
+const ControlledTextField = forwardRef((
+    {
+        value,
+        onChange,
+        label,
+        type,
+        required,
+        helperMessage,
+        hasError,
+        disabled,
+        multiline,
+        color,
+        darkMode,
+        id,
+        // Specific Component Props
+        InputProps,
+        LabelProps,
+        // Pass Thru Props
+        ...passThruProps
+    },
+    ref,
+) => {
+// #region Context
 
     /**
      * Use the theme from context.
@@ -94,16 +102,15 @@ function ControlledTextField({
 
     // #endregion
 
-    // #region Effects
+    // #region Imperative Handle
 
-    /**
-     * Whenever the form field is updated, make sure the tiptap editor stays up-to-date.
-     */
-    useEffect(() => {
-        if (editor) {
-            editor.commands.setContent(value);
-        }
-    }, [value]);
+    useImperativeHandle(ref, () => ({
+        setContent: (newValue) => editor.commands.setContent(newValue),
+    }));
+
+    // #endregion
+
+    // #region Effects
 
     /**
      * Whenever the disabled state changes, make sure the tiptap editor stays up-to-date.
@@ -268,7 +275,7 @@ function ControlledTextField({
     );
 
     // #endregion
-}
+});
 
 ControlledTextField.propTypes = {
     /**
