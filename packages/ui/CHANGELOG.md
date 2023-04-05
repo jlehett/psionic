@@ -1,6 +1,6 @@
 # @psionic/ui
 
-## 1.7.1
+## 1.8.0
 
 <i>April 5, 2023</i>
 
@@ -10,7 +10,7 @@
 
 <i>April 5, 2023</i>
 
-!!! THIS VERSION WASN'T UPLOADED CORRECTLY, PROCEED TO v1.7.1 !!!
+!!! THIS VERSION WASN'T UPLOADED CORRECTLY, PROCEED TO v1.8.0 !!!
 
 * 🛠️ Fixed issue with `TextField` and `ControlledTextField` components resetting cursor position every time their value was updated. To update the value of these components <i>outside</i> of the user typing, use the new `setContent` method on the component's ref.
 
