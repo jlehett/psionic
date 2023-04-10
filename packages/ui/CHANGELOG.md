@@ -1,5 +1,11 @@
 # @psionic/ui
 
+## 1.8.1
+
+<i>April 10, 2023</i>
+
+* 🛠️ Fix issue with `TextField` and `ControlledTextField` components not breaking words when needed to not overflow their bounds.
+
 ## 1.8.0
 
 <i>April 5, 2023</i>
