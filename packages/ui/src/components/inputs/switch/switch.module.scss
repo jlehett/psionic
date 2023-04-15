@@ -51,4 +51,16 @@
             cursor: default;
         }
     }
+
+    &[data-darkMode="true"] {
+        label {
+            color: white;
+        }
+
+        &[data-disabled="true"] {
+            label {
+                color: rgba(255, 255, 255, 0.6);
+            }
+        }
+    }
 }

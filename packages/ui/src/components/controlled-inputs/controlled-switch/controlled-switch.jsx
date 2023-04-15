@@ -19,6 +19,7 @@ function ControlledSwitch({
     height,
     ariaLabel,
     id,
+    darkMode,
     // Specific Component Props
     InputProps,
     LabelProps,
@@ -62,7 +63,9 @@ function ControlledSwitch({
      * The color to use for the switch background.
      * @type {Color}
      */
-    const switchBgColor = checked ? baseColor : Color('rgba(0, 0, 0, 0.38)');
+    const switchBgColor = darkMode
+        ? checked ? baseColor : Color('rgba(255, 255, 255, 0.33)')
+        : checked ? baseColor : Color('rgba(0, 0, 0, 0.38)');
 
     // #endregion
 
@@ -78,6 +81,7 @@ function ControlledSwitch({
     return (
         <div
             data-disabled={disabled}
+            data-darkMode={darkMode}
             {...passThruProps}
             className={`
                 ${passThruProps?.className}
@@ -112,12 +116,12 @@ function ControlledSwitch({
                         height: `${height * borderRatio}px`,
                     }}
                     initial={{
-                        backgroundColor: 'rgb(242, 242, 242)',
+                        backgroundColor: disabled ? 'rgb(155, 155, 155)' : 'rgb(242, 242, 242)',
                         x:               checked ? `${width - (height * borderRatio) - (height * (1 - borderRatio) / 2)}px` : `${height * (1 - borderRatio) / 2}px`,
                         y:               `${height * (1 - borderRatio) / 2}px`,
                     }}
                     animate={{
-                        backgroundColor: 'rgb(242, 242, 242)',
+                        backgroundColor: disabled ? 'rgb(155, 155, 155)' : 'rgb(242, 242, 242)',
                         x:               checked ? `${width - (height * borderRatio) - (height * (1 - borderRatio) / 2)}px` : `${height * (1 - borderRatio) / 2}px`,
                         y:               `${height * (1 - borderRatio) / 2}px`,
                     }}
@@ -170,6 +174,10 @@ ControlledSwitch.propTypes = {
      */
     color:              PropTypes.string,
     /**
+     * Flag indicating whether dark mode should be used or not.
+     */
+    darkMode:           PropTypes.bool,
+    /**
      * Whether or not the switch is disabled.
      */
     disabled:           PropTypes.bool,
@@ -208,6 +216,7 @@ ControlledSwitch.defaultProps = {
     disabled: false,
     width:    42,
     height:   24,
+    darkMode: false,
 };
 
 export default ControlledSwitch;

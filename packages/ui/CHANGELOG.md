@@ -1,5 +1,11 @@
 # @psionic/ui
 
+## 1.9.0
+
+<i>April 14, 2023</i>
+
+* 🚀 Add `darkMode` property support to the `ControlledSwitch` and `Switch` components.
+
 ## 1.8.1
 
 <i>April 10, 2023</i>

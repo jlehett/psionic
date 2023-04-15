@@ -12,6 +12,7 @@ setAsCategory(argTypes, 'UI', [
     'color',
     'width',
     'height',
+    'darkMode',
 ]);
 setAsCategory(argTypes, 'Controls', [
     'checked',
@@ -81,4 +82,11 @@ export const Colored = Template.bind({});
 Colored.args = {
     label: 'Label',
     color: '#2d9a00',
+};
+
+// Dark Mode Demo
+export const DarkMode = Template.bind({});
+DarkMode.args = {
+    label:    'Label',
+    darkMode: true,
 };

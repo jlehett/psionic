@@ -33,6 +33,10 @@ export const parameters = {
                 value: '#DAE0E6',
             },
             {
+                name: 'Dark Theme Background',
+                value: '#1a1a1b',
+            },
+            {
                 name: 'white',
                 value: '#ffffff',
             },

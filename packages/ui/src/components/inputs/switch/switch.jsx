@@ -18,6 +18,7 @@ function Switch({
     width,
     height,
     ariaLabel,
+    darkMode,
     // Specific Component Props
     InputProps,
     LabelProps,
@@ -84,7 +85,9 @@ function Switch({
      * The color to use for the switch background.
      * @type {Color}
      */
-    const switchBgColor = currentValue ? baseColor : Color('rgba(0, 0, 0, 0.38)');
+    const switchBgColor = darkMode
+        ? currentValue ? baseColor : Color('rgba(255, 255, 255, 0.33)')
+        : currentValue ? baseColor : Color('rgba(0, 0, 0, 0.38)');
 
     // #endregion
 
@@ -100,6 +103,7 @@ function Switch({
     return (
         <div
             data-disabled={disabled}
+            data-darkMode={darkMode}
             {...passThruProps}
             className={`
                 ${passThruProps?.className}
@@ -189,6 +193,10 @@ Switch.propTypes = {
      */
     color:              PropTypes.string,
     /**
+     * Flag indicating whether dark mode should be used or not.
+     */
+    darkMode:           PropTypes.bool,
+    /**
      * Whether or not the switch is disabled.
      */
     disabled:           PropTypes.bool,
@@ -228,6 +236,7 @@ Switch.defaultProps = {
     disabled:     false,
     width:        42,
     height:       24,
+    darkMode:     false,
 };
 
 export default Switch;
