@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import Color from 'color';
 import { Theme, FormSubmitting } from '@contexts';
@@ -9,7 +9,7 @@ import localStyles from './icon-button.module.scss';
 /**
  * A button that is represented by a single SVG icon instead of text.
  */
-function IconButton({
+const IconButton = forwardRef(({
     size,
     type,
     onClick,
@@ -21,8 +21,8 @@ function IconButton({
     disabledOnFormSubmitting,
     // Pass-thru Props
     ...passThruProps
-}) {
-    // #region Context
+}, ref) => {
+// #region Context
 
     /**
      * Use the theme from context.
@@ -119,6 +119,7 @@ function IconButton({
     return (
         <button
             type={type}
+            ref={ref}
             onClick={allowMultipleClicks ? onClick : augmentedOnClick}
             {...pseudoSelectorProps}
             {...passThruProps}
@@ -155,7 +156,7 @@ function IconButton({
     );
 
     // #endregion
-}
+});
 
 IconButton.propTypes = {
     /**

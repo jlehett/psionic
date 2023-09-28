@@ -10,7 +10,7 @@ import { QuarterSpinner } from '@components/loaders';
 import localStyles from './button.module.scss';
 
 /**
- * Replace this with a comment describing the component.
+ * A button that can be used to trigger an action.
  */
 const Button = forwardRef(({
     width,

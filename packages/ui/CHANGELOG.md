@@ -1,5 +1,12 @@
 # @psionic/ui
 
+## 1.9.1
+
+<i>September 28, 2023</i>
+
+* 🛠️ Add `forwardRef` support for the `IconButton` component.
+* 🛠️ Updated the documentation for the `Button` component.
+
 ## 1.9.0
 
 <i>April 14, 2023</i>
