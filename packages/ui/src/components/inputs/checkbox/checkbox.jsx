@@ -20,6 +20,7 @@ function Checkbox({
     color,
     disabled,
     ariaLabel,
+    darkMode,
     // Specific Component Props
     InputProps,
     LabelProps,
@@ -112,6 +113,7 @@ function Checkbox({
     return (
         <motion.div
             data-display-error={!currentValidity && unmodifiedSinceLastSubmission}
+            data-dark-mode={darkMode}
             data-disabled={disabled}
             {...passThruProps}
             className={`
@@ -195,6 +197,10 @@ Checkbox.propTypes = {
      */
     ariaLabel:          PropTypes.string,
     /**
+     * Flag indicating whether the component should use dark mode colors.
+     */
+    darkMode:           PropTypes.bool,
+    /**
      * Any props to pass to the internal `input` HTML element.
      */
     InputProps:         PropTypes.object,
@@ -218,6 +224,7 @@ Checkbox.defaultProps = {
     requiredMessage: 'This field is required',
     color:           'primary',
     disabled:        false,
+    darkMode:        false,
 };
 
 export default Checkbox;

@@ -120,3 +120,27 @@
         }
     }
 }
+
+// Dark Mode
+
+.checkbox[data-dark-mode="true"] {
+
+    .customCheckbox {
+        background: none;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .upperWrapper {
+
+        label {
+            color: white;
+        }
+
+        @include hoverIfSupported {
+
+            .customCheckbox {
+                border: 1px solid rgba(255, 255, 255, 0.5);
+            }
+        }
+    }
+}

@@ -20,6 +20,7 @@ setAsCategory(argTypes, 'UI', [
     'label',
     'requiredMessage',
     'color',
+    'darkMode',
 ]);
 setAsCategory(argTypes, 'Accessibility', [
     'ariaLabel',
@@ -268,4 +269,11 @@ export const Disabled = Template.bind({});
 Disabled.args = {
     label:    'I agree to the Terms of Service',
     disabled: true,
+};
+
+// Dark Mode Demo
+export const DarkMode = Template.bind({});
+DarkMode.args = {
+    label:    'I agree to the Terms of Service',
+    darkMode: true,
 };
